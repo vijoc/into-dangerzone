@@ -30,11 +30,11 @@ public class IntoDangerzone extends PApplet {
 			//particles[i] = new Particle()
 		}
 		
-		eyeX = width/2.0f;
-		eyeY = height/2.0f;
+		eyeX = 0;
+		eyeY = 0;
 		eyeZ = (float) ((height/2.0f) / Math.tan(PI*30.0 / 180.0f));
-		centerX = width/2.0f;
-		centerY = height/2.0f;
+		centerX = 0;
+		centerY = 0;
 		centerZ = 0;
 		upX = 0;
 		upY = 1;
@@ -55,12 +55,14 @@ public class IntoDangerzone extends PApplet {
 
 		stroke(255, 0, 0, 128);
 		
+		// FFT
 		for (int i = 0; i < fft.specSize(); i++) {
-			line(i, height, i, height - fft.getBand(i) * 4);
+			line(i, 0, i, fft.getBand(i) * 4);
 		}
 
 		stroke(255);
 
+		//Scope
 		for (int i = 0; i < width - 1; i++) {
 			line(i, 50 + song.left.get(i) * 50, i + 1,
 					50 + song.left.get(i + 1) * 50);
