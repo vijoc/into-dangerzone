@@ -5,6 +5,8 @@ public class Particle {
 	private Vector3D position;
 	private Vector3D velocity;
 	
+	private Particle following = null;
+	
 	public Particle(Vector3D position) {
 		this.position = position;
 	}
@@ -25,8 +27,15 @@ public class Particle {
 		this.velocity = velocity;
 	}
 	
+	public void follow(Particle other)
+	{
+		this.following = other;
+	}
+	
 	public void advance() {
-		this.position = this.position.add(this.velocity);
+		Vector3D centerVelocity = position.setDirectionTowards(new Vector3D(0,0,0)).elementwiseDivision(100);
+		this.velocity = this.velocity.setDirectionTowards(following.position);
+		this.position = this.position.add(this.velocity).add(centerVelocity);
 	}
 	
 	public void display(PApplet parent) {

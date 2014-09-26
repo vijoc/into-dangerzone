@@ -5,7 +5,7 @@ import ddf.minim.analysis.FFT;
 @SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
 	
-	public static final int PARTICLE_COUNT = 50;
+	public static final int PARTICLE_COUNT = 150;
 	public static final boolean DRAW_AXES = true;
 	
 	Minim minim;
@@ -34,17 +34,25 @@ public class IntoDangerzone extends PApplet {
 			particles[i] = new Particle(position);
 			
 			velocity = new Vector3D(
-					random(-5, 5),
-					random(-5, 5),
-					random(-5, 5)
+					random(-10, 10),
+					random(-10, 10),
+					random(-10, 10)
 					);
 			
 			particles[i].setVelocity(velocity);
 		}
 		
+		for(int i = 0; i < PARTICLE_COUNT; i++) {
+			if(i > 0){
+				particles[i].follow(particles[i-1]);
+			} else {
+				particles[i].follow(particles[PARTICLE_COUNT-1]);
+			}
+		}
+		
 		eyeX = 0;
 		eyeY = 0;
-		eyeZ = (float) ((height/2.0f) / Math.tan(PI*30.0 / 180.0f));
+		eyeZ = 1200; //(float) ((height/2.0f) / Math.tan(PI*30.0 / 180.0f));
 		centerX = 0;
 		centerY = 0;
 		centerZ = 0;
@@ -65,9 +73,14 @@ public class IntoDangerzone extends PApplet {
 		
 		fft.forward(song.mix);
 		
+		float xSum = 0, ySum = 0, zSum = 0;
+		
 		for(int i = 0; i < particles.length; i++) {
 			particles[i].display(this);
 			particles[i].advance();
+			xSum += particles[i].getPosition().getX();
+			ySum += particles[i].getPosition().getY();
+			zSum += particles[i].getPosition().getZ();
 		}
 
 		stroke(255, 0, 0, 128);
@@ -102,12 +115,16 @@ public class IntoDangerzone extends PApplet {
 			}
 		}
 		
+		centerX = xSum / PARTICLE_COUNT;
+		centerY = ySum / PARTICLE_COUNT;
+		centerZ = zSum / PARTICLE_COUNT;
+		
 		camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 		
 		// The following next two lines control 3D effect.
-		eyeX += 0.1f;
-		eyeY += 0.1f;
-		eyeZ += 0.1f;	
+		//eyeX += 0.1f;
+		//eyeY += 0.1f;
+		//eyeZ += 0.1f;	
 	}
 
 	public static void main(String args[]) {
