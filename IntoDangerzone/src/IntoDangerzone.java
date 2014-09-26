@@ -1,5 +1,6 @@
 import processing.core.*;
 
+@SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
 
   public void setup() {
