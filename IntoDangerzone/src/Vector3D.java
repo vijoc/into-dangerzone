@@ -33,6 +33,10 @@ public class Vector3D {
 	}
 	
 	public Vector3D setDirectionTowards(Vector3D other) {
+		if(x == other.x && y == other.y && z == other.z) {
+			return this;
+		}
+		
 		float length =  (float) Math.sqrt(
 				Math.pow(this.x, 2) + 
 				Math.pow(this.y, 2) +
