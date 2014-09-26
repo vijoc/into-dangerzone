@@ -25,11 +25,15 @@ public class Particle {
 		this.velocity = velocity;
 	}
 	
+	public void advance() {
+		this.position = this.position.add(this.velocity);
+	}
+	
 	public void display(PApplet parent) {
 		parent.pushMatrix();
 		parent.translate(position.getX(), position.getY(), position.getZ());
 		parent.stroke(255);
-		parent.ellipse(position.getX(), position.getY(), 10, 10);
+		parent.ellipse(0, 0, 10, 10);
 		parent.popMatrix();
 	}
 }

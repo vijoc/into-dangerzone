@@ -32,6 +32,14 @@ public class IntoDangerzone extends PApplet {
 					random(-200, 200)
 					);
 			particles[i] = new Particle(position);
+			
+			velocity = new Vector3D(
+					random(-5, 5),
+					random(-5, 5),
+					random(-5, 5)
+					);
+			
+			particles[i].setVelocity(velocity);
 		}
 		
 		eyeX = 0;
@@ -59,6 +67,7 @@ public class IntoDangerzone extends PApplet {
 		
 		for(int i = 0; i < particles.length; i++) {
 			particles[i].display(this);
+			particles[i].advance();
 		}
 
 		stroke(255, 0, 0, 128);
@@ -77,8 +86,6 @@ public class IntoDangerzone extends PApplet {
 			line(i, 150 + song.right.get(i) * 50, i + 1,
 					150 + song.right.get(i + 1) * 50);
 		}
-		
-		
 		
 		if(DRAW_AXES)
 		{
