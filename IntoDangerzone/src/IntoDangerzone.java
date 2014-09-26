@@ -119,6 +119,9 @@ public class IntoDangerzone extends PApplet {
 		centerY = ySum / PARTICLE_COUNT;
 		centerZ = zSum / PARTICLE_COUNT;
 		
+		eyeX = mouseX - width/2;
+		eyeY = mouseY - height/2;
+		
 		camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 		
 		// The following next two lines control 3D effect.
