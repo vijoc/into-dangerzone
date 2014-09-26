@@ -11,7 +11,7 @@ public class IntoDangerzone extends PApplet {
 	FFT fft;
 
 	public void setup() {
-		size(700, 200);
+		size(700, 200, P3D);
 		background(0);
 		
 		minim = new Minim(this);
