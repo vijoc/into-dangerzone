@@ -29,7 +29,7 @@ public class Particle {
 		parent.pushMatrix();
 		parent.translate(position.getX(), position.getY(), position.getZ());
 		parent.stroke(255);
-		parent.sphere(10);
+		parent.ellipse(position.getX(), position.getY(), 10, 10);
 		parent.popMatrix();
 	}
 }
