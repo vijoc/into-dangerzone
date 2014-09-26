@@ -26,8 +26,12 @@ public class IntoDangerzone extends PApplet {
 		
 		Vector3D position, velocity;
 		for(int i = 0; i < PARTICLE_COUNT; i++) {
-			//position = new Vector3D();
-			//particles[i] = new Particle()
+			position = new Vector3D(
+					random(-200, 200), 
+					random(-200, 200), 
+					random(-200, 200)
+					);
+			particles[i] = new Particle(position);
 		}
 		
 		eyeX = 0;
@@ -52,6 +56,10 @@ public class IntoDangerzone extends PApplet {
 		background(0);
 		
 		fft.forward(song.mix);
+		
+		for(int i = 0; i < particles.length; i++) {
+			particles[i].display(this);
+		}
 
 		stroke(255, 0, 0, 128);
 		

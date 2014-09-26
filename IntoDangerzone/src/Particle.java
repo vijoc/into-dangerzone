@@ -1,3 +1,5 @@
+import processing.core.*;
+
 public class Particle {
 	
 	private Vector3D position;
@@ -23,4 +25,11 @@ public class Particle {
 		this.velocity = velocity;
 	}
 	
+	public void display(PApplet parent) {
+		parent.pushMatrix();
+		parent.translate(position.getX(), position.getY(), position.getZ());
+		parent.stroke(255);
+		parent.sphere(10);
+		parent.popMatrix();
+	}
 }
