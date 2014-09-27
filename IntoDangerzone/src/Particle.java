@@ -33,8 +33,8 @@ public class Particle {
 	}
 	
 	public void advance() {
-		Vector3D centerVelocity = position.setDirectionTowards(new Vector3D(0,0,0)).elementwiseDivision(100);
-		this.velocity = this.velocity.setDirectionTowards(following.position);
+		Vector3D centerVelocity = position.directedTowards(new Vector3D(0,0,0)).scalarDivision(100);
+		this.velocity = this.velocity.directedTowards(following.position);
 		this.position = this.position.add(this.velocity).add(centerVelocity);
 	}
 	
