@@ -1,4 +1,3 @@
-import ddf.minim.AudioInput;
 import processing.core.*;
 import processing.event.MouseEvent;
 
@@ -75,26 +74,20 @@ public class IntoDangerzone extends PApplet {
 
 	public void drawScope() {
 		stroke(255);
-
+		float[] leftWaveform = audioAnalyser.getLeftWaveform(width);
+		float[] rightWaveform = audioAnalyser.getRightWaveform(width);
 		for (int i = 0; i < width - 1; i++) {
-			line(i, 50 + audioAnalyser.song.left.get(i) * 50, i + 1,
-					50 + audioAnalyser.song.left.get(i + 1) * 50);
-			line(i, 150 + audioAnalyser.song.right.get(i) * 50, i + 1,
-					150 + audioAnalyser.song.right.get(i + 1) * 50);
+			line(i, 50 + leftWaveform[i] * 50, i + 1,
+					50 + leftWaveform[i + 1] * 50);
+			line(i, 150 + rightWaveform[i] * 50, i + 1,
+					150 + rightWaveform[i + 1] * 50);
 		}
-
-		// Scope for line in
-		/*
-		 * AudioInput in = audioAnalyser.getAudioInput(); for(int i = 0; i <
-		 * in.bufferSize() - 1; i++) { line( i, 50 + in.left.get(i)*50, i+1, 50
-		 * + in.left.get(i+1)*50 ); line( i, 150 + in.right.get(i)*50, i+1, 150
-		 * + in.right.get(i+1)*50 ); }
-		 */
 	}
 
 	public void drawAxes() {
 		stroke(0, 255, 0);
 		fill(0, 255, 0);
+		textSize(32);
 		line(-1000, 0, 0, 1000, 0, 0);
 		line(0, -1000, 0, 0, 1000, 0);
 		line(0, 0, -1000, 0, 0, 1000);
