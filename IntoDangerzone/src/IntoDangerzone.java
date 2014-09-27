@@ -1,7 +1,5 @@
 import processing.core.*;
 import processing.event.MouseEvent;
-import ddf.minim.*;
-import ddf.minim.analysis.FFT;
 
 @SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
@@ -9,20 +7,29 @@ public class IntoDangerzone extends PApplet {
 	public static final int PARTICLE_COUNT = 150;
 	public static final boolean DRAW_AXES = true;
 
-	Minim minim;
-	AudioPlayer song;
-	AudioInput input;
-	FFT fft;
-
 	Particle[] particles = new Particle[PARTICLE_COUNT];
 
 	// Camera parameters
 	float eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ;
 
+	// Text size parameters for kick, snare and hat
+	float kickSize = 16, snareSize = 16, hatSize = 16;
+
+	AudioAnalyser audioAnalyser;
+
 	public void setup() {
 		size(1024, 768, P3D);
 		background(0);
+		audioAnalyser = new AudioAnalyser(this);
 
+		initializeParticles();
+		initializeCamera();
+	}
+
+	/**
+	 * Initialize the state of the particle system.
+	 */
+	public void initializeParticles() {
 		Vector3D position, velocity;
 		for (int i = 0; i < PARTICLE_COUNT; i++) {
 			position = new Vector3D(0, 0, 0);
@@ -41,7 +48,12 @@ public class IntoDangerzone extends PApplet {
 				particles[i].follow(particles[PARTICLE_COUNT - 1]);
 			}
 		}
+	}
 
+	/**
+	 * Initialize camera position.
+	 */
+	public void initializeCamera() {
 		eyeX = 0;
 		eyeY = 0;
 		eyeZ = 1200; // (float) ((height/2.0f) / Math.tan(PI*30.0 / 180.0f));
@@ -51,15 +63,11 @@ public class IntoDangerzone extends PApplet {
 		upX = 0;
 		upY = 1;
 		upZ = 0;
-
-		minim = new Minim(this);
-
-		song = minim.loadFile("test.mp3");
-		song.play();
-
-		fft = new FFT(song.bufferSize(), song.sampleRate());
 	}
 
+	/**
+	 * Advance the particle system model by one step.
+	 */
 	public void updateModel() {
 		for (int i = 0; i < particles.length; i++) {
 			particles[i].display(this);
@@ -69,24 +77,28 @@ public class IntoDangerzone extends PApplet {
 
 	public void drawFFT() {
 		stroke(255, 0, 0, 128);
-		for (int i = 0; i < fft.specSize(); i++) {
-			line(i, 0, i, fft.getBand(i) * 4);
+		float[] spectrum = audioAnalyser.getSpectrum();
+		for (int i = 0; i < spectrum.length; i++) {
+			line(i, 0, i, spectrum[i] * 10);
 		}
 	}
 
 	public void drawScope() {
 		stroke(255);
+		float[] leftWaveform = audioAnalyser.getLeftWaveform(width);
+		float[] rightWaveform = audioAnalyser.getRightWaveform(width);
 		for (int i = 0; i < width - 1; i++) {
-			line(i, 50 + song.left.get(i) * 50, i + 1,
-					50 + song.left.get(i + 1) * 50);
-			line(i, 150 + song.right.get(i) * 50, i + 1,
-					150 + song.right.get(i + 1) * 50);
+			line(i, 50 + leftWaveform[i] * 50, i + 1,
+					50 + leftWaveform[i + 1] * 50);
+			line(i, 150 + rightWaveform[i] * 50, i + 1,
+					150 + rightWaveform[i + 1] * 50);
 		}
 	}
 
 	public void drawAxes() {
 		stroke(0, 255, 0);
 		fill(0, 255, 0);
+		textSize(32);
 		line(-1000, 0, 0, 1000, 0, 0);
 		line(0, -1000, 0, 0, 1000, 0);
 		line(0, 0, -1000, 0, 0, 1000);
@@ -98,20 +110,57 @@ public class IntoDangerzone extends PApplet {
 
 	}
 
+	public void drawBeats() {
+		if (audioAnalyser.isKick())
+			kickSize = 32;
+		if (audioAnalyser.isSnare())
+			snareSize = 32;
+		if (audioAnalyser.isHat())
+			hatSize = 32;
+		textSize(kickSize);
+		text("KICK", width / 4, height / 2);
+		textSize(snareSize);
+		text("SNARE", width / 2, height / 2);
+		textSize(hatSize);
+		text("HAT", 3 * width / 4, height / 2);
+		kickSize = constrain((int) (kickSize * 0.95), 16, 32);
+		snareSize = constrain((int) (snareSize * 0.95), 16, 32);
+		hatSize = constrain((int) (hatSize * 0.95), 16, 32);
+	}
+
 	public void draw() {
-		background(0);
+		step();
+		render();
+	}
 
-		fft.forward(song.mix);
-
+	/**
+	 * Update physics models, forward audio buffers et cetera.
+	 */
+	public void step() {
+		audioAnalyser.fft.forward(audioAnalyser.song.mix);
 		updateModel();
+	}
+
+	/**
+	 * Render the scene.
+	 */
+	public void render() {
+		positionCamera();
+		background(0);
 		drawFFT();
 		drawScope();
+		drawBeats();
 
-		if (DRAW_AXES) drawAxes();
+		if (DRAW_AXES)
+			drawAxes();
+	}
 
+	/**
+	 * Position the camera.
+	 */
+	public void positionCamera() {
 		eyeX = mouseX - width / 2;
 		eyeY = mouseY - height / 2;
-
 		camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 	}
 
