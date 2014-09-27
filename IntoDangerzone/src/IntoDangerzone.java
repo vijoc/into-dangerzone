@@ -60,8 +60,9 @@ public class IntoDangerzone extends PApplet {
 
 	public void drawFFT() {
 		stroke(255, 0, 0, 128);
-		for (int i = 0; i < audioAnalyser.fft.specSize(); i++) {
-			line(i, 0, i, audioAnalyser.fft.getBand(i) * 4);
+		float[] spectrum = audioAnalyser.getSpectrum();
+		for (int i = 0; i < spectrum.length; i++) {
+			line(i, 0, i, spectrum[i] * 10);
 		}
 	}
 

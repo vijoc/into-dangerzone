@@ -13,6 +13,8 @@ public class AudioAnalyser {
 	BeatListener bl;
 	float kickSize, snareSize, hatSize;
 	
+	int numberOfBands;
+	
 	public AudioAnalyser(PApplet applet) {
 		minim = new Minim(applet);
 
@@ -20,6 +22,7 @@ public class AudioAnalyser {
 		song.play();
 
 		fft = new FFT(song.bufferSize(), song.sampleRate());
+		numberOfBands = fft.specSize();
 
 		// Beat detection
 		beat = new BeatDetect(song.bufferSize(), song.sampleRate());
@@ -29,7 +32,13 @@ public class AudioAnalyser {
 		
 	}
 	
-	
+	public float[] getSpectrum() {
+		float[] spectrum = new float[numberOfBands];
+		for (int i = 0; i < numberOfBands; i++){
+			spectrum[i] = fft.getBand(i);
+		}
+		return spectrum;
+	}
 	
 	
 	
