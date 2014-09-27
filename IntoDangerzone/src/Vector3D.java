@@ -19,6 +19,10 @@ public class Vector3D {
 		return z;
 	}
 	
+	public float getLength() {
+		return (float) Math.sqrt(x*x + y*y + z*z);
+	}
+	
 	public Vector3D add(Vector3D other) {
 		return new Vector3D(x + other.x, y + other.y, z + other.z);
 	}
@@ -28,31 +32,34 @@ public class Vector3D {
 		return new Vector3D(x - other.x, y - other.y, z - other.z);
 	}
 	
-	public Vector3D elementwiseDivision(float scalar) {
+	public Vector3D scalarDivision(float scalar) {
 		return new Vector3D(x / scalar, y / scalar, z / scalar);
 	}
 	
-	public Vector3D setDirectionTowards(Vector3D other) {
-		if(x == other.x && y == other.y && z == other.z) {
+	public Vector3D scalarMultiplication(float scalar) {
+		return new Vector3D(x * scalar, y * scalar, z * scalar);
+	}
+	
+	public Vector3D toLength(float length) {
+		return this.scalarDivision(getLength()).scalarMultiplication(length);
+	}
+	
+	public Vector3D crossProduct(Vector3D other) {
+		return new Vector3D(
+				(y*other.z - z*other.y),
+				(z*other.x - x*other.z),
+				(x*other.y - y*other.x));
+	}
+	
+	public float dotProduct(Vector3D other) {
+		return (x * other.x) + (y * other.y) + (z * other.z);
+	}
+	
+	public Vector3D directedTowards(Vector3D position) {
+		if(x == position.x && y == position.y && z == position.z) {
 			return this;
 		}
 		
-		float length =  (float) Math.sqrt(
-				Math.pow(this.x, 2) + 
-				Math.pow(this.y, 2) +
-				Math.pow(this.z, 2));
-		
-		Vector3D direction = new Vector3D(
-				other.x - x,
-				other.y - y,
-				other.z - z);
-		
-		float  dirLength = (float) Math.sqrt(
-				Math.pow(direction.x, 2) + 
-				Math.pow(direction.y, 2) +
-				Math.pow(direction.z, 2));
-		
-		direction = new Vector3D((direction.x / dirLength), (direction.y / dirLength), (direction.z / dirLength ));
-		return new Vector3D(direction.x * length, direction.y * length, direction.z * length);
+		return position.subtract(this).toLength(this.getLength());
 	}
 }
