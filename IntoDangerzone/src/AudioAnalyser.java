@@ -12,11 +12,12 @@ public class AudioAnalyser {
 	BeatDetect beat;
 	BeatListener bl;
 	float kickSize, snareSize, hatSize;
-	
 	int numberOfBands;
+	
 	
 	public AudioAnalyser(PApplet applet) {
 		minim = new Minim(applet);
+		input = minim.getLineIn();
 
 		song = minim.loadFile("test.mp3");
 		song.play();
@@ -40,6 +41,9 @@ public class AudioAnalyser {
 		return spectrum;
 	}
 	
+	public AudioInput getAudioInput() {
+		return input;
+	}
 	
 	
 	class BeatListener implements AudioListener {

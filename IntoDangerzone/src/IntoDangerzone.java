@@ -1,3 +1,4 @@
+import ddf.minim.AudioInput;
 import processing.core.*;
 import processing.event.MouseEvent;
 
@@ -7,18 +8,24 @@ public class IntoDangerzone extends PApplet {
 	public static final int PARTICLE_COUNT = 150;
 	public static final boolean DRAW_AXES = true;
 
-
 	Particle[] particles = new Particle[PARTICLE_COUNT];
 
 	// Camera parameters
 	float eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ;
 
 	AudioAnalyser audioAnalyser;
-	
+
 	public void setup() {
 		size(1024, 768, P3D);
 		background(0);
 
+		initializeParticles();
+		initializeCamera();
+
+		audioAnalyser = new AudioAnalyser(this);
+	}
+
+	public void initializeParticles() {
 		Vector3D position, velocity;
 		for (int i = 0; i < PARTICLE_COUNT; i++) {
 			position = new Vector3D(0, 0, 0);
@@ -37,7 +44,9 @@ public class IntoDangerzone extends PApplet {
 				particles[i].follow(particles[PARTICLE_COUNT - 1]);
 			}
 		}
+	}
 
+	public void initializeCamera() {
 		eyeX = 0;
 		eyeY = 0;
 		eyeZ = 1200; // (float) ((height/2.0f) / Math.tan(PI*30.0 / 180.0f));
@@ -47,8 +56,6 @@ public class IntoDangerzone extends PApplet {
 		upX = 0;
 		upY = 1;
 		upZ = 0;
-		
-		audioAnalyser = new AudioAnalyser(this);
 	}
 
 	public void updateModel() {
@@ -68,12 +75,21 @@ public class IntoDangerzone extends PApplet {
 
 	public void drawScope() {
 		stroke(255);
+
 		for (int i = 0; i < width - 1; i++) {
 			line(i, 50 + audioAnalyser.song.left.get(i) * 50, i + 1,
 					50 + audioAnalyser.song.left.get(i + 1) * 50);
 			line(i, 150 + audioAnalyser.song.right.get(i) * 50, i + 1,
 					150 + audioAnalyser.song.right.get(i + 1) * 50);
 		}
+
+		// Scope for line in
+		/*
+		 * AudioInput in = audioAnalyser.getAudioInput(); for(int i = 0; i <
+		 * in.bufferSize() - 1; i++) { line( i, 50 + in.left.get(i)*50, i+1, 50
+		 * + in.left.get(i+1)*50 ); line( i, 150 + in.right.get(i)*50, i+1, 150
+		 * + in.right.get(i+1)*50 ); }
+		 */
 	}
 
 	public void drawAxes() {
@@ -89,20 +105,26 @@ public class IntoDangerzone extends PApplet {
 		}
 
 	}
-	
+
 	public void drawBeats() {
-		if ( audioAnalyser.beat.isKick() ) audioAnalyser.kickSize = 32;
-		if ( audioAnalyser.beat.isSnare() ) audioAnalyser.snareSize = 32;
-		if ( audioAnalyser.beat.isHat() ) audioAnalyser.hatSize = 32;
+		if (audioAnalyser.beat.isKick())
+			audioAnalyser.kickSize = 32;
+		if (audioAnalyser.beat.isSnare())
+			audioAnalyser.snareSize = 32;
+		if (audioAnalyser.beat.isHat())
+			audioAnalyser.hatSize = 32;
 		textSize(audioAnalyser.kickSize);
-		text("KICK", width/4, height/2);
+		text("KICK", width / 4, height / 2);
 		textSize(audioAnalyser.snareSize);
-		text("SNARE", width/2, height/2);
+		text("SNARE", width / 2, height / 2);
 		textSize(audioAnalyser.hatSize);
-		text("HAT", 3*width/4, height/2);
-		audioAnalyser.kickSize = constrain((int) (audioAnalyser.kickSize * 0.95), 16, 32);
-		audioAnalyser.snareSize = constrain((int) (audioAnalyser.snareSize * 0.95), 16, 32);
-		audioAnalyser.hatSize = constrain((int) (audioAnalyser.hatSize * 0.95), 16, 32);
+		text("HAT", 3 * width / 4, height / 2);
+		audioAnalyser.kickSize = constrain(
+				(int) (audioAnalyser.kickSize * 0.95), 16, 32);
+		audioAnalyser.snareSize = constrain(
+				(int) (audioAnalyser.snareSize * 0.95), 16, 32);
+		audioAnalyser.hatSize = constrain((int) (audioAnalyser.hatSize * 0.95),
+				16, 32);
 	}
 
 	public void draw() {
