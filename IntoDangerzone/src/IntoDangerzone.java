@@ -1,6 +1,7 @@
 import processing.core.*;
 import processing.event.MouseEvent;
 import ddf.minim.*;
+import ddf.minim.analysis.BeatDetect;
 import ddf.minim.analysis.FFT;
 
 @SuppressWarnings("serial")
@@ -13,11 +14,33 @@ public class IntoDangerzone extends PApplet {
 	AudioPlayer song;
 	AudioInput input;
 	FFT fft;
+	BeatDetect beat;
+	BeatListener bl;
+	float kickSize, snareSize, hatSize;
 
 	Particle[] particles = new Particle[PARTICLE_COUNT];
 
 	// Camera parameters
 	float eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ;
+
+	class BeatListener implements AudioListener {
+		private BeatDetect beat;
+		private AudioPlayer source;
+
+		BeatListener(BeatDetect beat, AudioPlayer source) {
+			this.source = source;
+			this.source.addListener(this);
+			this.beat = beat;
+		}
+
+		public void samples(float[] samps) {
+			beat.detect(source.mix);
+		}
+
+		public void samples(float[] sampsL, float[] sampsR) {
+			beat.detect(source.mix);
+		}
+	}
 
 	public void setup() {
 		size(1024, 768, P3D);
@@ -58,6 +81,14 @@ public class IntoDangerzone extends PApplet {
 		song.play();
 
 		fft = new FFT(song.bufferSize(), song.sampleRate());
+
+		// Beat detection
+		beat = new BeatDetect(song.bufferSize(), song.sampleRate());
+		beat.setSensitivity(50);
+		kickSize = snareSize = hatSize = 16;
+		bl = new BeatListener(beat, song);
+		textFont(createFont("Helvetica", 16));
+		textAlign(CENTER);
 	}
 
 	public void updateModel() {
@@ -97,6 +128,21 @@ public class IntoDangerzone extends PApplet {
 		}
 
 	}
+	
+	public void drawBeats() {
+		if ( beat.isKick() ) kickSize = 32;
+		if ( beat.isSnare() ) snareSize = 32;
+		if ( beat.isHat() ) hatSize = 32;
+		textSize(kickSize);
+		text("KICK", width/4, height/2);
+		textSize(snareSize);
+		text("SNARE", width/2, height/2);
+		textSize(hatSize);
+		text("HAT", 3*width/4, height/2);
+		kickSize = constrain((int) (kickSize * 0.95), 16, 32);
+		snareSize = constrain((int) (snareSize * 0.95), 16, 32);
+		hatSize = constrain((int) (hatSize * 0.95), 16, 32);
+	}
 
 	public void draw() {
 		background(0);
@@ -106,13 +152,16 @@ public class IntoDangerzone extends PApplet {
 		updateModel();
 		drawFFT();
 		drawScope();
+		drawBeats();
 
-		if (DRAW_AXES) drawAxes();
+		if (DRAW_AXES)
+			drawAxes();
 
 		eyeX = mouseX - width / 2;
 		eyeY = mouseY - height / 2;
 
 		camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+
 	}
 
 	public void mouseWheel(MouseEvent event) {
