@@ -11,7 +11,6 @@ public class AudioAnalyser {
 	FFT fft;
 	BeatDetect beat;
 	BeatListener bl;
-	float kickSize, snareSize, hatSize;
 	int numberOfBands;
 	boolean readLineInput = false;
 
@@ -29,7 +28,6 @@ public class AudioAnalyser {
 		// Beat detection
 		beat = new BeatDetect(song.bufferSize(), song.sampleRate());
 		beat.setSensitivity(50);
-		kickSize = snareSize = hatSize = 16;
 		bl = new BeatListener(beat, song);
 
 	}
@@ -77,6 +75,22 @@ public class AudioAnalyser {
 
 	public AudioInput getAudioInput() {
 		return input;
+	}
+
+	public boolean isKick() {
+		return beat.isKick();
+	}
+
+	public boolean isSnare() {
+		return beat.isSnare();
+	}
+
+	public boolean isHat() {
+		return beat.isHat();
+	}
+	
+	public boolean isOnset() {
+		return beat.isOnset();
 	}
 
 	class BeatListener implements AudioListener {

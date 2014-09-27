@@ -11,6 +11,9 @@ public class IntoDangerzone extends PApplet {
 
 	// Camera parameters
 	float eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ;
+	
+	// Text size parameters for kick, snare and hat
+	float kickSize = 16, snareSize = 16, hatSize = 16;
 
 	AudioAnalyser audioAnalyser;
 
@@ -100,23 +103,23 @@ public class IntoDangerzone extends PApplet {
 	}
 
 	public void drawBeats() {
-		if (audioAnalyser.beat.isKick())
-			audioAnalyser.kickSize = 32;
-		if (audioAnalyser.beat.isSnare())
-			audioAnalyser.snareSize = 32;
-		if (audioAnalyser.beat.isHat())
-			audioAnalyser.hatSize = 32;
-		textSize(audioAnalyser.kickSize);
+		if (audioAnalyser.isKick())
+			kickSize = 32;
+		if (audioAnalyser.isSnare())
+			snareSize = 32;
+		if (audioAnalyser.isHat())
+			hatSize = 32;
+		textSize(kickSize);
 		text("KICK", width / 4, height / 2);
-		textSize(audioAnalyser.snareSize);
+		textSize(snareSize);
 		text("SNARE", width / 2, height / 2);
-		textSize(audioAnalyser.hatSize);
+		textSize(hatSize);
 		text("HAT", 3 * width / 4, height / 2);
-		audioAnalyser.kickSize = constrain(
-				(int) (audioAnalyser.kickSize * 0.95), 16, 32);
-		audioAnalyser.snareSize = constrain(
-				(int) (audioAnalyser.snareSize * 0.95), 16, 32);
-		audioAnalyser.hatSize = constrain((int) (audioAnalyser.hatSize * 0.95),
+		kickSize = constrain(
+				(int) (kickSize * 0.95), 16, 32);
+		snareSize = constrain(
+				(int) (snareSize * 0.95), 16, 32);
+		hatSize = constrain((int) (hatSize * 0.95),
 				16, 32);
 	}
 
