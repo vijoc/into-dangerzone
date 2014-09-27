@@ -60,64 +60,59 @@ public class IntoDangerzone extends PApplet {
 		fft = new FFT(song.bufferSize(), song.sampleRate());
 	}
 
-	public void draw() {
-		background(0);
-
-		fft.forward(song.mix);
-
-		float xSum = 0, ySum = 0, zSum = 0;
-
+	public void updateModel() {
 		for (int i = 0; i < particles.length; i++) {
 			particles[i].display(this);
 			particles[i].advance();
-			xSum += particles[i].getPosition().getX();
-			ySum += particles[i].getPosition().getY();
-			zSum += particles[i].getPosition().getZ();
 		}
+	}
 
+	public void drawFFT() {
 		stroke(255, 0, 0, 128);
-
-		// FFT
 		for (int i = 0; i < fft.specSize(); i++) {
 			line(i, 0, i, fft.getBand(i) * 4);
 		}
+	}
 
+	public void drawScope() {
 		stroke(255);
-
-		// Scope
 		for (int i = 0; i < width - 1; i++) {
 			line(i, 50 + song.left.get(i) * 50, i + 1,
 					50 + song.left.get(i + 1) * 50);
 			line(i, 150 + song.right.get(i) * 50, i + 1,
 					150 + song.right.get(i + 1) * 50);
 		}
+	}
 
-		if (DRAW_AXES) {
-			stroke(0, 255, 0);
-			fill(0, 255, 0);
-			line(-1000, 0, 0, 1000, 0, 0);
-			line(0, -1000, 0, 0, 1000, 0);
-			line(0, 0, -1000, 0, 0, 1000);
-			for (int i = -1000; i < 1001; i += 100) {
-				text(i, i, 0, 0);
-				text(i, 0, i, 0);
-				text(i, 0, 0, i);
-			}
+	public void drawAxes() {
+		stroke(0, 255, 0);
+		fill(0, 255, 0);
+		line(-1000, 0, 0, 1000, 0, 0);
+		line(0, -1000, 0, 0, 1000, 0);
+		line(0, 0, -1000, 0, 0, 1000);
+		for (int i = -1000; i < 1001; i += 100) {
+			text(i, i, 0, 0);
+			text(i, 0, i, 0);
+			text(i, 0, 0, i);
 		}
 
-		centerX = xSum / PARTICLE_COUNT;
-		centerY = ySum / PARTICLE_COUNT;
-		centerZ = zSum / PARTICLE_COUNT;
+	}
+
+	public void draw() {
+		background(0);
+
+		fft.forward(song.mix);
+
+		updateModel();
+		drawFFT();
+		drawScope();
+
+		if (DRAW_AXES) drawAxes();
 
 		eyeX = mouseX - width / 2;
 		eyeY = mouseY - height / 2;
 
 		camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-
-		// The following next two lines control 3D effect.
-		// eyeX += 0.1f;
-		// eyeY += 0.1f;
-		// eyeZ += 0.1f;
 	}
 
 	public void mouseWheel(MouseEvent event) {
