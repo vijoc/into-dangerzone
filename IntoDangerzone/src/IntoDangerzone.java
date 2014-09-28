@@ -4,10 +4,15 @@ import processing.event.MouseEvent;
 @SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
 
-	public static final int PARTICLE_COUNT = 150;
+	public static final int PARTICLE_COUNT = 500;
 	public static final boolean DRAW_AXES = true;
-
-	Particle[] particles = new Particle[PARTICLE_COUNT];
+	
+	ParticleCloud particleCloud;
+	ParticleCloudRenderer particleCloudRenderer;
+	PhysicsEngine physicsEngine = new PhysicsEngine();
+	
+	long t;
+	float dt;
 
 	// Camera parameters
 	float eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ;
@@ -21,6 +26,7 @@ public class IntoDangerzone extends PApplet {
 		size(1024, 768, P3D);
 		background(0);
 		audioAnalyser = new AudioAnalyser(this);
+		t = System.currentTimeMillis();
 
 		initializeParticles();
 		initializeCamera();
@@ -30,24 +36,14 @@ public class IntoDangerzone extends PApplet {
 	 * Initialize the state of the particle system.
 	 */
 	public void initializeParticles() {
-		Vector3D position, velocity;
-		for (int i = 0; i < PARTICLE_COUNT; i++) {
-			position = new Vector3D(0, 0, 0);
-			particles[i] = new Particle(position);
-
-			velocity = new Vector3D(random(-10, 10), random(-10, 10), random(
-					-10, 10));
-
-			particles[i].setVelocity(velocity);
+		particleCloud = new SimpleFollowerParticleCloud(PARTICLE_COUNT);
+		
+		for(Particle particle : particleCloud.particles) {
+			physicsEngine.registerObject(particle);
 		}
-
-		for (int i = 0; i < PARTICLE_COUNT; i++) {
-			if (i > 0) {
-				particles[i].follow(particles[i - 1]);
-			} else {
-				particles[i].follow(particles[PARTICLE_COUNT - 1]);
-			}
-		}
+		
+		particleCloudRenderer = new ParticleCloudEllipseRenderer(this, particleCloud);
+		particleCloudRenderer.setParticleSizeProvider(new SpectrumProvider(audioAnalyser));
 	}
 
 	/**
@@ -64,15 +60,9 @@ public class IntoDangerzone extends PApplet {
 		upY = 1;
 		upZ = 0;
 	}
-
-	/**
-	 * Advance the particle system model by one step.
-	 */
-	public void updateModel() {
-		for (int i = 0; i < particles.length; i++) {
-			particles[i].display(this);
-			particles[i].advance();
-		}
+	
+	public void drawParticles() {
+		particleCloudRenderer.render();
 	}
 
 	public void drawFFT() {
@@ -137,8 +127,14 @@ public class IntoDangerzone extends PApplet {
 	 * Update physics models, forward audio buffers et cetera.
 	 */
 	public void step() {
+		long newTime = System.currentTimeMillis();
+		dt = (newTime - t) / 1000.0f;
+		t = newTime;
+		
+		particleCloud.update();
+		
 		audioAnalyser.fft.forward(audioAnalyser.song.mix);
-		updateModel();
+		physicsEngine.step(dt);
 	}
 
 	/**
@@ -147,6 +143,7 @@ public class IntoDangerzone extends PApplet {
 	public void render() {
 		positionCamera();
 		background(0);
+		drawParticles();
 		drawFFT();
 		drawScope();
 		drawBeats();
