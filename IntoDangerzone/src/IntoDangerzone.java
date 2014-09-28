@@ -8,6 +8,7 @@ public class IntoDangerzone extends PApplet {
 	public static final boolean DRAW_AXES = true;
 	
 	ParticleCloud particleCloud;
+	ParticleCloudRenderer particleCloudRenderer;
 	PhysicsEngine physicsEngine = new PhysicsEngine();
 	
 	long t;
@@ -36,10 +37,13 @@ public class IntoDangerzone extends PApplet {
 	 */
 	public void initializeParticles() {
 		particleCloud = new SimpleFollowerParticleCloud(PARTICLE_COUNT);
-		particleCloud.setParticleSizeProvider(new SpectrumProvider(audioAnalyser));
+		
 		for(Particle particle : particleCloud.particles) {
 			physicsEngine.registerObject(particle);
 		}
+		
+		particleCloudRenderer = new ParticleCloudEllipseRenderer(this, particleCloud);
+		particleCloudRenderer.setParticleSizeProvider(new SpectrumProvider(audioAnalyser));
 	}
 
 	/**
@@ -58,7 +62,7 @@ public class IntoDangerzone extends PApplet {
 	}
 	
 	public void drawParticles() {
-		particleCloud.display(this);
+		particleCloudRenderer.render();
 	}
 
 	public void drawFFT() {

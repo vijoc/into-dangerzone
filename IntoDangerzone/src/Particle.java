@@ -1,5 +1,6 @@
-import processing.core.*;
-
+/**
+ * Particles are points of mass without any collision bodies.
+ */
 public class Particle extends PhysicsObject {
 	
 	public Particle(Vector3D position) {
@@ -8,14 +9,5 @@ public class Particle extends PhysicsObject {
 	
 	public Particle(Vector3D position, float mass) {
 		super(position, mass);
-	}
-	
-	public void display(PApplet parent) {
-		parent.pushMatrix();
-		Vector3D position = getPosition();
-		parent.translate(position.getX(), position.getY(), position.getZ());
-		parent.stroke(255);
-		parent.ellipse(0, 0, 10, 10);
-		parent.popMatrix();
 	}
 }

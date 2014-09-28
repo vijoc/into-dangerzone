@@ -1,6 +1,8 @@
 import java.util.Arrays;
 import java.util.Random;
 
+import processing.core.PApplet;
+
 public class SimpleFollowerParticleCloud extends ParticleCloud {
 
 	private Random random = new Random();
@@ -12,7 +14,7 @@ public class SimpleFollowerParticleCloud extends ParticleCloud {
 		for(int i = 0; i < particleCount; i++) {
 			Particle particle = new Particle(startPos);
 			particles.add(particle);
-			Vector3D startMomentum = generateRandomMomentum(250);
+			Vector3D startMomentum = generateRandomMomentum(150);
 			particle.setMomentum(startMomentum);
 		}
 		
