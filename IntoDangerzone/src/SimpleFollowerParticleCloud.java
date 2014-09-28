@@ -25,16 +25,14 @@ public class SimpleFollowerParticleCloud extends ParticleCloud {
 	@Override
 	public void update() {
 		for(int i = 0; i < particles.size(); i++) {
-			Particle particle = particles.get(i);
-			updateCentralPull(particle);
+			Particle particle, followed;
 			
-			if(i > 0) {
-				Particle followed = particles.get(i-1);
-				updateFollow(particle, followed);
-			}
+			particle = particles.get(i);
+			followed = i > 0 ? particles.get(i-1) : particles.get(particles.size()-1);
+			
+			updateCentralPull(particle);
+			updateFollow(particle, followed);
 		}
-		Particle last = particles.get(particles.size()-1);
-		updateFollow(last, particles.get(0));
 	}
 	
 	private Vector3D generateRandomMomentum(float scale) {
