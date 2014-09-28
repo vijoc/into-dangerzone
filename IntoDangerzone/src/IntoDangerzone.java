@@ -4,7 +4,7 @@ import processing.event.MouseEvent;
 @SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
 
-	public static final int PARTICLE_COUNT = 150;
+	public static final int PARTICLE_COUNT = 500;
 	public static final boolean DRAW_AXES = true;
 	
 	ParticleCloud particleCloud;
