@@ -1,9 +1,10 @@
-import processing.core.PApplet;
+import java.util.Arrays;
 import java.util.Random;
 
 public class SimpleFollowerParticleCloud extends ParticleCloud {
 
 	private Random random = new Random();
+	private float[] particleSizes;
 	
 	public SimpleFollowerParticleCloud(int particleCount) {
 		Vector3D startPos = new Vector3D(0,0,0);
@@ -11,9 +12,12 @@ public class SimpleFollowerParticleCloud extends ParticleCloud {
 		for(int i = 0; i < particleCount; i++) {
 			Particle particle = new Particle(startPos);
 			particles.add(particle);
-			Vector3D startMomentum = generateRandomMomentum(150);
+			Vector3D startMomentum = generateRandomMomentum(250);
 			particle.setMomentum(startMomentum);
 		}
+		
+		particleSizes = new float[particles.size()];
+		Arrays.fill(particleSizes, 10.0f);
 	}
 
 	@Override
@@ -29,13 +33,6 @@ public class SimpleFollowerParticleCloud extends ParticleCloud {
 		}
 		Particle last = particles.get(particles.size()-1);
 		updateFollow(last, particles.get(0));
-	}
-	
-	@Override
-	public void display(PApplet parent) {
-		for(Particle particle : particles) {
-			particle.display(parent);
-		}
 	}
 	
 	private Vector3D generateRandomMomentum(float scale) {
@@ -55,7 +52,7 @@ public class SimpleFollowerParticleCloud extends ParticleCloud {
 	}
 	
 	private void updateCentralPull(Particle particle) {
-		Vector3D pull = new Vector3D(0,0,0).subtract(particle.getPosition()).scalarDivision(5);
+		Vector3D pull = new Vector3D(0,0,0).subtract(particle.getPosition()).scalarDivision(3);
 		particle.addMomentum(pull);
 	}
 }
