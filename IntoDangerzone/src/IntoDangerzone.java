@@ -4,7 +4,7 @@ import processing.event.MouseEvent;
 @SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
 
-	public static final int PARTICLE_COUNT = 500;
+	public static final int PARTICLE_COUNT = 1500;
 	public static final boolean DRAW_AXES = true;
 	
 	ParticleCloud particleCloud;
@@ -36,7 +36,8 @@ public class IntoDangerzone extends PApplet {
 	 * Initialize the state of the particle system.
 	 */
 	public void initializeParticles() {
-		particleCloud = new SimpleFollowerParticleCloud(PARTICLE_COUNT);
+		particleCloud = new LayeredParticleCloud(PARTICLE_COUNT, 3);//new SimpleFollowerParticleCloud(PARTICLE_COUNT);
+		particleCloud.setExplosionEventProvider(new KickProvider(audioAnalyser));
 		
 		for(Particle particle : particleCloud.particles) {
 			physicsEngine.registerObject(particle);

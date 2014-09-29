@@ -18,6 +18,7 @@ public class ParticleCloudEllipseRenderer extends ParticleCloudRenderer {
 	@Override
 	public void render() {
 		updateParticleSizes();
+		updateParticleRotations();
 		for(ParticleEllipseRenderer particle : particles) {
 			particle.render();
 		}
@@ -40,6 +41,13 @@ public class ParticleCloudEllipseRenderer extends ParticleCloudRenderer {
 		for(int i = 0; i < particleSizes.length; i++) {
 			float size = 10 + (particleSizes[i] / max) * 40;
 			particles.get(i).setSize(size, size);
+		}
+	}
+	
+	protected void updateParticleRotations() {
+		Vector3D center = new Vector3D(0,0,0);
+		for(int i = 0; i < particles.size(); i++) {
+			particles.get(i).rotateTowards(center);
 		}
 	}
 

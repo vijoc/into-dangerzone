@@ -13,6 +13,10 @@ public class ParticleEllipseRenderer extends ParticleRenderer {
 	private int fill;
 	private int stroke;
 	
+	private float xRotation = 0.0f;
+	private float yRotation = 0.0f;
+	private float zRotation = 0.0f;
+	
 	public ParticleEllipseRenderer(PApplet parent, Particle particle) {
 		this(parent, particle, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_FILL, DEFAULT_STROKE);
 	}
@@ -53,6 +57,20 @@ public class ParticleEllipseRenderer extends ParticleRenderer {
 		this.width = width;
 		this.height = height;
 	}
+	
+	public void rotateTowards(Vector3D point) {
+		Vector3D position = particle.getPosition();
+		
+		Vector3D direction = position.subtract(point).normalize();
+		
+		float xDiff = position.getX() - point.getX();
+		float yDiff = position.getY() - point.getY();
+		float zDiff = position.getZ() - point.getZ();
+		
+		xRotation = (float) Math.atan2(zDiff, yDiff);
+		yRotation = (float) Math.atan2(xDiff, zDiff);
+		zRotation = (float) Math.atan2(-yDiff, xDiff);
+	}
 
 	@Override
 	public void render() {
@@ -61,6 +79,9 @@ public class ParticleEllipseRenderer extends ParticleRenderer {
 		parent.pushMatrix();
 		
 		parent.translate(position.getX(), position.getY(), position.getZ());
+		parent.rotateX(xRotation);
+		parent.rotateY(yRotation);
+		parent.rotateZ(zRotation);
 		
 		parent.stroke(stroke);
 		parent.fill(fill);
