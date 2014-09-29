@@ -1,3 +1,5 @@
+import java.awt.event.KeyEvent;
+
 import processing.core.*;
 import processing.event.MouseEvent;
 
@@ -13,9 +15,8 @@ public class IntoDangerzone extends PApplet {
 	
 	long t;
 	float dt;
-
-	// Camera parameters
-	float eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ;
+	
+	private Camera camera;
 
 	// Text size parameters for kick, snare and hat
 	float kickSize = 16, snareSize = 16, hatSize = 16;
@@ -50,15 +51,16 @@ public class IntoDangerzone extends PApplet {
 	 * Initialize camera position.
 	 */
 	public void initializeCamera() {
-		eyeX = 0;
-		eyeY = 0;
-		eyeZ = 1200; // (float) ((height/2.0f) / Math.tan(PI*30.0 / 180.0f));
-		centerX = 0;
-		centerY = 0;
-		centerZ = 0;
-		upX = 0;
-		upY = 1;
-		upZ = 0;
+		Vector3D cameraPos = new Vector3D(0,0,1200);
+		Vector3D cameraCenter = new Vector3D(0,0,0);
+		
+		camera = new Camera(this, cameraPos, cameraCenter, 0, 1, 0);
+		camera.setPositionXIncrementEventProvider(new KeyboardInputProvider(KeyEvent.VK_RIGHT));
+		camera.setPositionXDecrementEventProvider(new KeyboardInputProvider(KeyEvent.VK_LEFT));
+		camera.setPositionYDecrementEventProvider(new KeyboardInputProvider(KeyEvent.VK_UP, KeyEvent.VK_SHIFT));
+		camera.setPositionYIncrementEventProvider(new KeyboardInputProvider(KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT));
+		camera.setPositionZDecrementEventProvider(new KeyboardInputProvider(new int[] {KeyEvent.VK_UP, KeyEvent.VK_SHIFT}));
+		camera.setPositionZIncrementEventProvider(new KeyboardInputProvider(new int[] {KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT}));
 	}
 	
 	public void drawParticles() {
@@ -156,14 +158,13 @@ public class IntoDangerzone extends PApplet {
 	 * Position the camera.
 	 */
 	public void positionCamera() {
-		eyeX = mouseX - width / 2;
-		eyeY = mouseY - height / 2;
-		camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+		//camera.setPositionX(mouseX - width / 2);
+		//camera.setPositionY(mouseY - height / 2);
+		camera.update();
 	}
 
 	public void mouseWheel(MouseEvent event) {
-		float e = event.getCount();
-		eyeZ += e * 100;
+		camera.setPositionZ(camera.getPosition().getZ() + event.getCount() * 100);
 	}
 
 	public static void main(String args[]) {
