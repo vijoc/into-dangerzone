@@ -4,7 +4,7 @@ import java.util.Random;
 public class LayeredParticleCloud extends ParticleCloud {
 	
 	private int layerCount;
-	private float layerDistance = 150.0f;
+	private float layerDistance = 300.0f;
 	private Random random = new Random();
 	
 	public LayeredParticleCloud(int particleCount, int layerCount) {

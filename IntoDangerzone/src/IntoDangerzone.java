@@ -5,7 +5,7 @@ import processing.event.MouseEvent;
 public class IntoDangerzone extends PApplet {
 
 	public static final int PARTICLE_COUNT = 1500;
-	public static final boolean DRAW_AXES = true;
+	public static final boolean DRAW_AXES = false;
 	
 	ParticleCloud particleCloud;
 	ParticleCloudRenderer particleCloudRenderer;
@@ -120,6 +120,8 @@ public class IntoDangerzone extends PApplet {
 	}
 
 	public void draw() {
+		ambientLight(50, 50, 50);
+		directionalLight(128, 128, 128, 50, 50, -50);
 		step();
 		render();
 	}
