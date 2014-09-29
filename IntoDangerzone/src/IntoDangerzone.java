@@ -43,7 +43,7 @@ public class IntoDangerzone extends PApplet {
 			physicsEngine.registerObject(particle);
 		}
 		
-		particleCloudRenderer = new ParticleCloudEllipseRenderer(this, particleCloud);
+		particleCloudRenderer = new ParticleCloudCubeRenderer(this, particleCloud);
 		particleCloudRenderer.setParticleSizeProvider(new SpectrumProvider(audioAnalyser));
 	}
 
