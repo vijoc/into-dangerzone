@@ -54,7 +54,22 @@ public class AudioAnalyser {
 		 * + in.left.get(i+1)*50 ); line( i, 150 + in.right.get(i)*50, i+1, 150
 		 * + in.right.get(i+1)*50 ); }
 		 */
-
+	}
+	
+	public float getZCR() {
+		float zcr = 0;
+		boolean overZero = false;
+		float zeroCrossings = 0.f;
+		for (int i = 0; i < song.bufferSize(); i++){
+			if (
+					((song.mix.get(i) > 0) && overZero) 
+					|| ((song.mix.get(i) <= 0) && !overZero)){
+				zeroCrossings++;
+				overZero = !overZero;
+			}
+		}
+		zcr = zeroCrossings / song.bufferSize();
+		return zcr;
 	}
 
 	public float[] getLeftWaveform(int length) {

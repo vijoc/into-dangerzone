@@ -86,6 +86,14 @@ public class IntoDangerzone extends PApplet {
 					150 + rightWaveform[i + 1] * 50);
 		}
 	}
+	
+	public void drawZCR() {
+		stroke(255);
+		fill(255,0,0);
+		float zcr = audioAnalyser.getZCR();
+		textSize(32);
+		text("ZCR in last frame: " + zcr, 100, -100, 0);
+	}
 
 	public void drawAxes() {
 		stroke(0, 255, 0);
@@ -149,6 +157,7 @@ public class IntoDangerzone extends PApplet {
 		drawFFT();
 		drawScope();
 		drawBeats();
+		drawZCR();
 
 		if (DRAW_AXES)
 			drawAxes();
