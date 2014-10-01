@@ -1,3 +1,4 @@
+package util;
 public class ArrayInputMapper {
 
 	/**
@@ -13,7 +14,7 @@ public class ArrayInputMapper {
 	 * @param input
 	 * @param output
 	 */
-	static void map(float[] input, float[] output) {
+	public static void map(float[] input, float[] output) {
 		// TODO We need to verify this actually works.
 		// In case of more particles than input
 		if(input.length < output.length) {

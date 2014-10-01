@@ -1,3 +1,5 @@
+package particles;
+import math.Vector3D;
 import processing.core.PApplet;
 
 public class ParticleEllipseRenderer extends ParticleRenderer {

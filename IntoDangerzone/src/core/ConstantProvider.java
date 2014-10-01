@@ -1,3 +1,5 @@
+package core;
+
 public class ConstantProvider<E> implements InputProvider<E> {
 	private E constant;
 	

@@ -1,4 +1,7 @@
+package physics;
 import java.util.ArrayList;
+
+import math.Vector3D;
 
 /**
  * PhysicsEngine is responsible for stepping the physics simulation for 
@@ -6,18 +9,22 @@ import java.util.ArrayList;
  */
 public class PhysicsEngine {
 
-	private ArrayList<PhysicsObject> objects = new ArrayList<PhysicsObject>();
+	private PhysicsObjectManager objectManager;
 	
 	public PhysicsEngine() {
-		// TODO Auto-generated constructor stub
+		this(new PhysicsObjectManager());
 	}
 	
-	public void registerObject(PhysicsObject object) {
-		objects.add(object);
+	public PhysicsEngine(PhysicsObjectManager objectManager) {
+		this.objectManager = objectManager;
+	}
+	
+	public PhysicsObjectManager getPhysicsObjectManager() {
+		return objectManager;
 	}
 	
 	public void step(float dt) {
-		for(PhysicsObject object : this.objects) {
+		for(PhysicsObject object : this.objectManager.getObjects()) {
 			// We're using semi-implicit Euler integration, which means that we're using 
 			// the "future" velocity (velocity at subsequent time step) to integrate the 
 			// position at the next time step. This is in contrast to using the current 

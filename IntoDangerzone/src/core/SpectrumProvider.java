@@ -1,3 +1,6 @@
+package core;
+import audio.AudioAnalyser;
+
 public class SpectrumProvider implements InputProvider<float[]> {
 	
 	private AudioAnalyser audioAnalyser;

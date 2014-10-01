@@ -1,6 +1,9 @@
+package particles;
 import java.util.ArrayList;
 
+import math.Vector3D;
 import processing.core.PApplet;
+import util.ArrayInputMapper;
 
 public class ParticleCloudEllipseRenderer extends ParticleCloudRenderer {
 	

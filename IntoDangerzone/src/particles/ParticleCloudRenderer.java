@@ -1,3 +1,6 @@
+package particles;
+import graphics.Renderer;
+import core.InputProvider;
 import processing.core.PApplet;
 
 public abstract class ParticleCloudRenderer extends Renderer {

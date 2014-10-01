@@ -1,5 +1,16 @@
+package core;
+import graphics.Camera;
+
 import java.awt.event.KeyEvent;
 
+import audio.AudioAnalyser;
+import math.Vector3D;
+import particles.LayeredParticleCloud;
+import particles.Particle;
+import particles.ParticleCloud;
+import particles.ParticleCloudCubeRenderer;
+import particles.ParticleCloudRenderer;
+import physics.PhysicsEngine;
 import processing.core.*;
 import processing.event.MouseEvent;
 
@@ -66,12 +77,8 @@ public class IntoDangerzone extends PApplet {
 	 * Initialize the state of the particle system.
 	 */
 	private void initializeParticles() {
-		particleCloud = new LayeredParticleCloud(PARTICLE_COUNT, 3);//new SimpleFollowerParticleCloud(PARTICLE_COUNT);
+		particleCloud = new LayeredParticleCloud(physicsEngine.getPhysicsObjectManager(), PARTICLE_COUNT, 3);
 		particleCloud.setExplosionEventProvider(new KickProvider(audioAnalyser));
-		
-		for(Particle particle : particleCloud.particles) {
-			physicsEngine.registerObject(particle);
-		}
 		
 		particleCloudRenderer = new ParticleCloudCubeRenderer(this, particleCloud);
 		particleCloudRenderer.setParticleSizeProvider(new SpectrumProvider(audioAnalyser));
@@ -172,7 +179,7 @@ public class IntoDangerzone extends PApplet {
 		
 		while(dtAccumulator >= PHYSICS_STEP_SIZE) {
 			particleCloud.update();
-			audioAnalyser.fft.forward(audioAnalyser.song.mix);
+			audioAnalyser.getFft().forward(audioAnalyser.getSong().mix);
 			physicsEngine.step(PHYSICS_STEP_SIZE);
 			dtAccumulator -= PHYSICS_STEP_SIZE;
 		}
@@ -199,6 +206,6 @@ public class IntoDangerzone extends PApplet {
 	}
 
 	public static void main(String args[]) {
-		PApplet.main(new String[] { "IntoDangerzone" });
+		PApplet.main(new String[] { "core.IntoDangerzone" });
 	}
 }

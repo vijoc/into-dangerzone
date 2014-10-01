@@ -1,3 +1,4 @@
+package math;
 /**
  * Vector3D is an immutable vector in three-dimensional space.
  *
