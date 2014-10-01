@@ -1,4 +1,8 @@
+package particles;
 import java.util.Random;
+
+import physics.PhysicsObjectManager;
+import math.Vector3D;
 
 
 public class LayeredParticleCloud extends ParticleCloud {
@@ -7,13 +11,14 @@ public class LayeredParticleCloud extends ParticleCloud {
 	private float layerDistance = 300.0f;
 	private Random random = new Random();
 	
-	public LayeredParticleCloud(int particleCount, int layerCount) {
+	public LayeredParticleCloud(PhysicsObjectManager objectManager, int particleCount, int layerCount) {
+		super(objectManager);
 		this.layerCount = layerCount;
 		
 		for(int i = 0; i < particleCount; i++) {
 			int layer = (i % layerCount) + 1;
 			Vector3D position = generateRandomVector(1).toLength(layer * layerDistance);
-			Particle particle = new Particle(position);
+			Particle particle = new Particle(objectManager, position);
 			particles.add(particle);
 		}
 	}

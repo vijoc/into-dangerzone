@@ -1,3 +1,6 @@
+package core;
+import audio.AudioAnalyser;
+
 
 public class KickProvider implements InputProvider<Boolean> {
 

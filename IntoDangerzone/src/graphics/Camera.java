@@ -1,3 +1,7 @@
+package graphics;
+import core.ConstantProvider;
+import core.InputProvider;
+import math.Vector3D;
 import processing.core.PApplet;
 
 public class Camera {	

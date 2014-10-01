@@ -1,6 +1,9 @@
+package particles;
 import java.util.Arrays;
 import java.util.Random;
 
+import math.Vector3D;
+import physics.PhysicsObjectManager;
 import processing.core.PApplet;
 
 public class SimpleFollowerParticleCloud extends ParticleCloud {
@@ -8,11 +11,12 @@ public class SimpleFollowerParticleCloud extends ParticleCloud {
 	private Random random = new Random();
 	private float[] particleSizes;
 	
-	public SimpleFollowerParticleCloud(int particleCount) {
+	public SimpleFollowerParticleCloud(PhysicsObjectManager objectManager, int particleCount) {
+		super(objectManager);
 		Vector3D startPos = new Vector3D(0,0,0);
 		
 		for(int i = 0; i < particleCount; i++) {
-			Particle particle = new Particle(startPos);
+			Particle particle = new Particle(objectManager, startPos);
 			particles.add(particle);
 			Vector3D startMomentum = generateRandomMomentum(150);
 			particle.setImpulse(startMomentum);

@@ -1,3 +1,4 @@
+package audio;
 import processing.core.*;
 import ddf.minim.*;
 import ddf.minim.analysis.BeatDetect;
@@ -38,6 +39,14 @@ public class AudioAnalyser {
 			spectrum[i] = fft.getBand(i);
 		}
 		return spectrum;
+	}
+	
+	public FFT getFft() {
+		return fft;
+	}
+	
+	public AudioPlayer getSong() {
+		return song;
 	}
 
 	public float[] getWaveform(int length) {
