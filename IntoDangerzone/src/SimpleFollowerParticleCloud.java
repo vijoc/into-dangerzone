@@ -15,7 +15,7 @@ public class SimpleFollowerParticleCloud extends ParticleCloud {
 			Particle particle = new Particle(startPos);
 			particles.add(particle);
 			Vector3D startMomentum = generateRandomMomentum(150);
-			particle.setMomentum(startMomentum);
+			particle.setImpulse(startMomentum);
 		}
 		
 		particleSizes = new float[particles.size()];
@@ -48,11 +48,11 @@ public class SimpleFollowerParticleCloud extends ParticleCloud {
 	
 	private void updateFollow(Particle follower, Particle followed) {
 		Vector3D followThrust = followed.getPosition().subtract(follower.getPosition()).normalize().scalarMultiplication(25);
-		follower.addMomentum(followThrust);
+		follower.applyImpulse(followThrust);
 	}
 	
 	private void updateCentralPull(Particle particle) {
 		Vector3D pull = new Vector3D(0,0,0).subtract(particle.getPosition()).scalarDivision(3);
-		particle.addMomentum(pull);
+		particle.applyImpulse(pull);
 	}
 }

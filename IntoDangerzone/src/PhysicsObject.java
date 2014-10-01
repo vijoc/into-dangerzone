@@ -2,7 +2,8 @@ public abstract class PhysicsObject {
 	
 	// Primary
 	private Vector3D position = new Vector3D(0,0,0);
-	private Vector3D momentum = new Vector3D(0,0,0);
+	private Vector3D impulse = new Vector3D(0,0,0);
+	private Vector3D force = new Vector3D(0,0,0);
 	private float mass;
 	private float inverseMass;
 	
@@ -41,16 +42,28 @@ public abstract class PhysicsObject {
 		this.position = position;
 	}
 	
-	public Vector3D getMomentum() {
-		return this.momentum;
+	public Vector3D getImpulse() {
+		return this.impulse;
 	}
 	
-	public void setMomentum(Vector3D momentum) {
-		this.momentum = momentum;
+	public void setImpulse(Vector3D impulse) {
+		this.impulse = impulse;
 	}
 	
-	public void addMomentum(Vector3D momentum) {
-		this.momentum = this.momentum.add(momentum);
+	public void applyImpulse(Vector3D impulse) {
+		this.impulse = this.impulse.add(impulse);
+	}
+	
+	public Vector3D getForce() {
+		return this.force;
+	}
+	
+	public void setForce(Vector3D force) {
+		this.force = force;
+	}
+	
+	public void applyForce(Vector3D force) {
+		this.force = this.force.add(force);
 	}
 	
 	public Vector3D getVelocity() {
