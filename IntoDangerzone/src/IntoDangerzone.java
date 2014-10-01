@@ -9,12 +9,16 @@ public class IntoDangerzone extends PApplet {
 	public static final int PARTICLE_COUNT = 1500;
 	public static final boolean DRAW_AXES = false;
 	
+	public static final float DT_THRESHOLD = 0.25f;
+	public static final float DT_STEP = 0.01f;
+	
 	ParticleCloud particleCloud;
 	ParticleCloudRenderer particleCloudRenderer;
 	PhysicsEngine physicsEngine = new PhysicsEngine();
 	
 	long t;
 	float dt;
+	float dt_accumulator = 0.0f;
 	
 	private Camera camera;
 
@@ -27,10 +31,11 @@ public class IntoDangerzone extends PApplet {
 		size(1024, 768, P3D);
 		background(0);
 		audioAnalyser = new AudioAnalyser(this);
-		t = System.currentTimeMillis();
 
 		initializeParticles();
 		initializeCamera();
+		
+		t = System.currentTimeMillis();
 	}
 
 	/**
@@ -136,10 +141,16 @@ public class IntoDangerzone extends PApplet {
 		dt = (newTime - t) / 1000.0f;
 		t = newTime;
 		
-		particleCloud.update();
+		if(dt > DT_THRESHOLD) dt = DT_THRESHOLD;
 		
-		audioAnalyser.fft.forward(audioAnalyser.song.mix);
-		physicsEngine.step(dt);
+		dt_accumulator += dt;
+		
+		while(dt_accumulator >= DT_STEP) {
+			particleCloud.update();
+			audioAnalyser.fft.forward(audioAnalyser.song.mix);
+			physicsEngine.step(DT_STEP);
+			dt_accumulator -= DT_STEP;
+		}
 	}
 
 	/**

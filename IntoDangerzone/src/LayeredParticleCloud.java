@@ -34,16 +34,16 @@ public class LayeredParticleCloud extends ParticleCloud {
 	
 	private void applyExplosion(Particle particle) {
 		Vector3D force = particle.getPosition().subtract(new Vector3D(0,0,0))
-				.toLength(15000);
+				.toLength(150);
 		
-		particle.addMomentum(force);
+		particle.applyImpulse(force);
 	}
 	
 	private void applySpring(Particle particle, float distance)  {
-		float springConstant = 50.0f;
+		float springConstant = 20.0f;
 		Vector3D force = new Vector3D(0,0,0).subtract(particle.getPosition())
 				.toLength(springConstant * (particle.getPosition().getLength() - distance));
-		particle.addMomentum(force);
+		particle.applyForce(force);
 	}
 	
 	private void applyFriction(Particle particle) {
