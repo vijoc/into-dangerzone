@@ -1,5 +1,4 @@
 package physics;
-import java.util.ArrayList;
 
 import math.Vector3D;
 
@@ -24,30 +23,48 @@ public class PhysicsEngine {
 	}
 	
 	public void step(float dt) {
-		for(PhysicsObject object : this.objectManager.getObjects()) {
-			// We're using semi-implicit Euler integration, which means that we're using 
-			// the "future" velocity (velocity at subsequent time step) to integrate the 
-			// position at the next time step. This is in contrast to using the current 
-			// velocity for determining the next position, which would be explicit Euler
-			// integration.
+		stepParticles(dt); // Particles don't participate in collisions
+		// TODO detect and resolve collisions
+		stepRigidBodies(dt);
+	}
+	
+	private void stepRigidBodies(float dt) {
+		for(RigidBody body : this.objectManager.getRigidBodies()) {
+			Vector3D v = integrateVelocity(body, dt);
+			Vector3D x = integratePosition(body, v, dt);
 			
-			// a = F/m = F * (1/m)
-			Vector3D a = object.getForce().scalarMultiplication(object.getInverseMass());
+			body.setVelocity(v);
+			body.setPosition(x);
 			
-			// v(t+dt) = v(t) * a(t+dt)*dt
-			Vector3D v = object.getVelocity()
-					.add(a.scalarMultiplication(dt))
-					.add(object.getImpulse().scalarMultiplication(object.getInverseMass()));
-			
-			// x(t+dt) = x(t) + v(t+dt)*dt
-			Vector3D x = object.getPosition().add(v.scalarMultiplication(dt));
+			body.setImpulse(new Vector3D(0,0,0));
+			body.setForce(new Vector3D(0,0,0));
+		}
+	}
+	
+	private void stepParticles(float dt) {
+		for(Particle object : this.objectManager.getParticles()) {
+			Vector3D v = integrateVelocity(object, dt);
+			Vector3D x = integratePosition(object, v, dt);
 			
 			object.setPosition(x);
 			object.setVelocity(v);
 			
-			// External forces are cleared on every time step.
 			object.setImpulse(new Vector3D(0,0,0));
 			object.setForce(new Vector3D(0,0,0));
 		}
+	}
+	
+	private Vector3D integrateVelocity(PhysicsObject object, float dt) {
+		Vector3D a = Vector3D.multiply(object.getForce(), object.getInverseMass());
+		Vector3D impulse = Vector3D.multiply(object.getImpulse(), object.getInverseMass());
+		return integrate(object.getVelocity(), a, dt).add(impulse);
+	}
+	
+	private Vector3D integratePosition(PhysicsObject object, Vector3D velocity, float dt) {
+		return integrate(object.getPosition(), velocity, dt);
+	}
+	
+	private Vector3D integrate(Vector3D x, Vector3D dx, float dt) {
+		return Vector3D.add(x, dx.scalarMultiplication(dt));
 	}
 }

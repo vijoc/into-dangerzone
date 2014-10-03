@@ -2,6 +2,7 @@ package particles;
 import java.util.ArrayList;
 
 import math.Vector3D;
+import physics.Particle;
 import processing.core.PApplet;
 import util.ArrayInputMapper;
 

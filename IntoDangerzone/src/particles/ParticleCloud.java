@@ -1,6 +1,7 @@
 package particles;
 import java.util.ArrayList;
 
+import physics.Particle;
 import physics.PhysicsObjectManager;
 import core.InputProvider;
 

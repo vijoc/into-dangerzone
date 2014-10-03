@@ -1,5 +1,6 @@
 package particles;
 import graphics.Renderer;
+import physics.Particle;
 import processing.core.PApplet;
 
 

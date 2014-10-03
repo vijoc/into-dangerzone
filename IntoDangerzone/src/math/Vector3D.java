@@ -7,6 +7,39 @@ public class Vector3D {
 	private float x, y, z;
 	private float length;
 	
+	/**
+	 * Sum two vectors and return the result.
+	 * @param a first vector of the sum operation
+	 * @param b second vector of the sum operation
+	 * @return resulting vector
+	 */
+	public static Vector3D add(Vector3D a, Vector3D b) {
+		return new Vector3D(a.x + b.x, a.y + b.y, a.z + b.z);
+	}
+	
+	public static Vector3D subtract(Vector3D a, Vector3D b) {
+		return new Vector3D(a.x - b.x, a.y - b.y, a.z - b.z);
+	}
+	
+	public static Vector3D divide(Vector3D a, float scalar) {
+		return new Vector3D(a.x / scalar, a.y / scalar, a.z / scalar);
+	}
+	
+	public static Vector3D multiply(Vector3D a, float scalar) {
+		return new Vector3D(a.x * scalar, a.y * scalar, a.z * scalar);
+	}
+	
+	public static Vector3D crossProduct(Vector3D a, Vector3D b) {
+		return new Vector3D(
+				(a.y*b.z - a.z*b.y),
+				(a.z*b.x - a.x*b.z),
+				(a.x*b.y - a.y*b.x));
+	}
+	
+	public static float dotProduct(Vector3D a, Vector3D b) {
+		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+	}
+	
 	public Vector3D(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
@@ -55,13 +88,17 @@ public class Vector3D {
 		return length;
 	}
 	
+	public Vector3D inverse() {
+		return new Vector3D(-x, -y, -z);
+	}
+	
 	/**
 	 * Adds given vector to this vector and returns the resulting vector.
 	 * @param other the vector to add to this
 	 * @return the resulting vector
 	 */
 	public Vector3D add(Vector3D other) {
-		return new Vector3D(x + other.x, y + other.y, z + other.z);
+		return Vector3D.add(this, other);
 	}
 	
 	/**
@@ -70,7 +107,7 @@ public class Vector3D {
 	 * @return the resulting vector
 	 */
 	public Vector3D subtract(Vector3D other) {
-		return new Vector3D(x - other.x, y - other.y, z - other.z);
+		return Vector3D.subtract(this, other);
 	}
 	
 	/**
@@ -79,7 +116,7 @@ public class Vector3D {
 	 * @return the resulting vector
 	 */
 	public Vector3D scalarDivision(float scalar) {
-		return new Vector3D(x / scalar, y / scalar, z / scalar);
+		return Vector3D.divide(this, scalar);
 	}
 	
 	/**
@@ -88,7 +125,7 @@ public class Vector3D {
 	 * @return the resulting vector
 	 */
 	public Vector3D scalarMultiplication(float scalar) {
-		return new Vector3D(x * scalar, y * scalar, z * scalar);
+		return Vector3D.multiply(this, scalar);
 	}
 	
 	/**
@@ -98,10 +135,7 @@ public class Vector3D {
 	 * @return the resulting vector
 	 */
 	public Vector3D crossProduct(Vector3D other) {
-		return new Vector3D(
-				(y*other.z - z*other.y),
-				(z*other.x - x*other.z),
-				(x*other.y - y*other.x));
+		return Vector3D.crossProduct(this, other);
 	}
 	
 	/**
@@ -111,7 +145,7 @@ public class Vector3D {
 	 * @return the resulting scalar
 	 */
 	public float dotProduct(Vector3D other) {
-		return (x * other.x) + (y * other.y) + (z * other.z);
+		return Vector3D.dotProduct(this, other);
 	}
 	
 	/**

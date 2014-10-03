@@ -13,16 +13,19 @@ public abstract class PhysicsObject {
 	// Secondary
 	private Vector3D velocity = new Vector3D(0,0,0);
 	
-	public PhysicsObject(PhysicsObjectManager manager, Vector3D position) {
-		this(manager, position, 1.0f);
+	PhysicsObject() {
+		
 	}
 	
-	public PhysicsObject(PhysicsObjectManager manager, Vector3D position, float mass) {
+	PhysicsObject(Vector3D position) {
+		this(position, 1.0f);
+	}
+	
+	PhysicsObject(Vector3D position, float mass) {
 		if(mass <= 0.0f) throw new IllegalArgumentException("Mass must be positive.");
 		this.position = position;
 		this.mass = mass;
 		this.inverseMass = 1.0f / mass;
-		manager.addObject(this);
 	}
 	
 	public float getMass() {
