@@ -21,10 +21,10 @@ class GameOfLife {
 	public GameOfLife(int colCount, int rowCount) {
 		this.colCount = colCount;
 		this.rowCount = rowCount;
+		states = new boolean[colCount][rowCount];
 	}
 	
 	public void seed() {
-		states = new boolean[colCount][rowCount];
 		Random rand = new Random();
 		for(int i = 0; i < colCount; i++) {
 			for(int j = 0; j < rowCount; j++) {
@@ -63,14 +63,19 @@ class GameOfLife {
 		int sum = 0;	
 		int row, col;
 		
+		int maxCol = colCount-1;
+		int maxRow = rowCount-1;
+		
 		for(int i = -1; i <= 1; i++) {
 			for(int j = -1; j <= 1; j++) {
+				if(i == 0 && j == 0) continue;
+				
 				col = x + i;
-				row = y + i;
-				if(col < 0) col = colCount-1;
-				if(col > colCount-1) col = 0;
-				if(row < 0) row = rowCount-1;
-				if(row > rowCount-1) row = 0;
+				row = y + j;
+				if(col < 0) col = maxCol;
+				if(col > maxCol) col = 0;
+				if(row < 0) row = maxRow;
+				if(row > maxRow) row = 0;
 				
 				if(getCellState(col, row)) sum += 1;
 			}
