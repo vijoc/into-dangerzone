@@ -13,12 +13,14 @@ import particles.ParticleCloudRenderer;
 import physics.PhysicsEngine;
 import processing.core.*;
 import processing.event.MouseEvent;
+import scenes.lTree.*;
 
 @SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
 
+	
 	/** Number of particles drawn */
-	public static final int PARTICLE_COUNT = 1500;
+	//public static final int PARTICLE_COUNT = 1500;
 	
 	/** Whether to draw the xyz-axes */
 	public static final boolean DRAW_AXES = false;
@@ -45,24 +47,29 @@ public class IntoDangerzone extends PApplet {
 	// Text size parameters for kick, snare and hat
 	private float kickSize = 16, snareSize = 16, hatSize = 16;
 
+	private Scene scene;
+	
 	@Override
 	public void setup() {
 		size(1024, 768, P3D);
 		background(0);
 		audioAnalyser = new AudioAnalyser(this);
 
-		initializeParticles();
-		initializeCamera();
+		scene = new LTree(this, audioAnalyser);
+		//initializeParticles();
+		//initializeCamera();
 		
 		t = System.currentTimeMillis();
 	}
 	
 	@Override
 	public void draw() {
-		ambientLight(50, 50, 50);
-		directionalLight(128, 128, 128, 50, 50, -50);
-		step();
-		render();
+		//ambientLight(50, 50, 50);
+		//directionalLight(128, 128, 128, 50, 50, -50);
+//		step();
+//		render();
+		scene.update(0);
+		scene.render();
 	}
 	
 	/**
@@ -76,13 +83,13 @@ public class IntoDangerzone extends PApplet {
 	/**
 	 * Initialize the state of the particle system.
 	 */
-	private void initializeParticles() {
-		particleCloud = new LayeredParticleCloud(physicsEngine.getPhysicsObjectManager(), PARTICLE_COUNT, 3);
-		particleCloud.setExplosionEventProvider(new KickProvider(audioAnalyser));
+	//private void initializeParticles() {
+	//	particleCloud = new LayeredParticleCloud(physicsEngine.getPhysicsObjectManager(), PARTICLE_COUNT, 3);
+	//	particleCloud.setExplosionEventProvider(new KickProvider(audioAnalyser));
 		
-		particleCloudRenderer = new ParticleCloudCubeRenderer(this, particleCloud);
-		particleCloudRenderer.setParticleSizeProvider(new SpectrumProvider(audioAnalyser));
-	}
+	//	particleCloudRenderer = new ParticleCloudCubeRenderer(this, particleCloud);
+	//	particleCloudRenderer.setParticleSizeProvider(new SpectrumProvider(audioAnalyser));
+	//}
 
 	/**
 	 * Initialize camera position.
@@ -98,6 +105,10 @@ public class IntoDangerzone extends PApplet {
 		camera.setPositionYIncrementEventProvider(new KeyboardInputProvider(KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT));
 		camera.setPositionZDecrementEventProvider(new KeyboardInputProvider(new int[] {KeyEvent.VK_UP, KeyEvent.VK_SHIFT}));
 		camera.setPositionZIncrementEventProvider(new KeyboardInputProvider(new int[] {KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT}));
+	}
+	
+	public AudioAnalyser getAudioAnalyser(){
+		return audioAnalyser;
 	}
 	
 	private void drawParticles() {
@@ -178,9 +189,9 @@ public class IntoDangerzone extends PApplet {
 		dtAccumulator += dt;
 		
 		while(dtAccumulator >= PHYSICS_STEP_SIZE) {
-			particleCloud.update();
+			//particleCloud.update();
 			audioAnalyser.getFft().forward(audioAnalyser.getSong().mix);
-			physicsEngine.step(PHYSICS_STEP_SIZE);
+			//physicsEngine.step(PHYSICS_STEP_SIZE);
 			dtAccumulator -= PHYSICS_STEP_SIZE;
 		}
 	}
@@ -189,20 +200,20 @@ public class IntoDangerzone extends PApplet {
 	 * Render the scene.
 	 */
 	public void render() {
-		camera.update();
-		background(0);
-		drawParticles();
-		drawFFT();
-		drawScope();
-		drawBeats();
-		drawZCR();
+		//camera.update();
+		//background(0);
+		//drawParticles();
+		//drawFFT();
+		//drawScope();
+		//drawBeats();
+		//drawZCR();
 
 		if (DRAW_AXES)
 			drawAxes();
 	}
 
 	public void mouseWheel(MouseEvent event) {
-		camera.setPositionZ(camera.getPosition().getZ() + event.getCount() * 100);
+		//camera.setPositionZ(camera.getPosition().getZ() + event.getCount() * 100);
 	}
 
 	public static void main(String args[]) {
