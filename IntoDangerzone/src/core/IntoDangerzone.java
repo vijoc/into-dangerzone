@@ -2,7 +2,6 @@ package core;
 import graphics.Camera;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 import audio.AudioAnalyser;
 import math.Vector3D;
@@ -17,19 +16,14 @@ public class IntoDangerzone extends PApplet {
 	/** Whether to draw the xyz-axes */
 	public static final boolean DRAW_AXES = false;
 	
+	private SceneManager sceneManager = new SceneManager();
+	private GameOfLifeScene golScene;
+	private LTree lTreeScene;
+	
 	private Camera camera;
 	private AudioAnalyser audioAnalyser;
 	
 	private long currentTime;
-	
-	private ArrayList<Scene> scenes = new ArrayList<Scene>();
-	private int activeScene = 0;
-	
-	private GameOfLifeScene golScene;
-	private LTree lTreeScene;
-
-	// Text size parameters for kick, snare and hat
-	private float kickSize = 16, snareSize = 16, hatSize = 16;
 	
 	@Override
 	public void setup() {
@@ -43,8 +37,6 @@ public class IntoDangerzone extends PApplet {
 	
 	@Override
 	public void draw() {
-		ambientLight(50, 50, 50);
-		directionalLight(128, 128, 128, 50, 50, -50);
 		step();
 		render();
 	}
@@ -73,48 +65,18 @@ public class IntoDangerzone extends PApplet {
 		camera.setPositionZIncrementEventProvider(new KeyboardInputProvider(new int[] {KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT}));
 	}
 	
-	public AudioAnalyser getAudioAnalyser(){
-		return audioAnalyser;
-	}
-	
 	private void initializeTimer() {
 		currentTime = System.currentTimeMillis();
 	}
 	
 	private void initializeScenes() {
-		golScene = new GameOfLifeScene(this, 0.2f, width/2, height/2);
-		scenes.add(golScene);
+		golScene = new GameOfLifeScene(this, 0.2f, 50, 50);
+		sceneManager.addScene(golScene);
 		
 		lTreeScene = new LTree(this, audioAnalyser);
-		scenes.add(lTreeScene);
-	}
-
-	private void drawFFT() {
-		stroke(255, 0, 0, 128);
-		float[] spectrum = audioAnalyser.getSpectrum();
-		for (int i = 0; i < spectrum.length; i++) {
-			line(i, 0, i, spectrum[i] * 10);
-		}
-	}
-
-	private void drawScope() {
-		stroke(255);
-		float[] leftWaveform = audioAnalyser.getLeftWaveform(width);
-		float[] rightWaveform = audioAnalyser.getRightWaveform(width);
-		for (int i = 0; i < width - 1; i++) {
-			line(i, 50 + leftWaveform[i] * 50, i + 1,
-					50 + leftWaveform[i + 1] * 50);
-			line(i, 150 + rightWaveform[i] * 50, i + 1,
-					150 + rightWaveform[i + 1] * 50);
-		}
-	}
-	
-	public void drawZCR() {
-		stroke(255);
-		fill(255,0,0);
-		float zcr = audioAnalyser.getZCR();
-		textSize(32);
-		text("ZCR in last frame: " + zcr, 100, -100, 0);
+		sceneManager.addScene(lTreeScene);
+		
+		sceneManager.setActiveScene(0);
 	}
 
 	private void drawAxes() {
@@ -132,31 +94,13 @@ public class IntoDangerzone extends PApplet {
 
 	}
 
-	private void drawBeats() {
-		if (audioAnalyser.isKick())
-			kickSize = 32;
-		if (audioAnalyser.isSnare())
-			snareSize = 32;
-		if (audioAnalyser.isHat())
-			hatSize = 32;
-		textSize(kickSize);
-		text("KICK", width / 4, height / 2);
-		textSize(snareSize);
-		text("SNARE", width / 2, height / 2);
-		textSize(hatSize);
-		text("HAT", 3 * width / 4, height / 2);
-		kickSize = constrain((int) (kickSize * 0.95), 16, 32);
-		snareSize = constrain((int) (snareSize * 0.95), 16, 32);
-		hatSize = constrain((int) (hatSize * 0.95), 16, 32);
-	}
-
 	/**
 	 * Update physics models, forward audio buffers et cetera.
 	 */
 	public void step() {
 		long newTime = System.currentTimeMillis();
 		float dtSeconds = (float) ((newTime - currentTime) / 1000.0);
-		updateActiveScene(dtSeconds);
+		sceneManager.updateActiveScene(dtSeconds);
 		currentTime = newTime;
 		audioAnalyser.getFft().forward(audioAnalyser.getSong().mix);
 	}
@@ -167,22 +111,26 @@ public class IntoDangerzone extends PApplet {
 	public void render() {
 		camera.update();
 		background(0);
-		drawFFT();
-		drawScope();
-		drawBeats();
-		drawZCR();
-		renderActiveScene();
+		sceneManager.renderActiveScene();
 
 		if (DRAW_AXES)
 			drawAxes();
 	}
 	
-	private void updateActiveScene(float dtSeconds) {
-		scenes.get(activeScene).update(dtSeconds);
-	}
-	
-	private void renderActiveScene() {
-		scenes.get(activeScene).render();
+	@Override
+	public void keyPressed() {
+		switch(key) {
+		case '0': sceneManager.setActiveScene(0); break;
+		case '1': sceneManager.setActiveScene(1); break;
+		case '2': sceneManager.setActiveScene(2); break;
+		case '3': sceneManager.setActiveScene(3); break;
+		case '4': sceneManager.setActiveScene(4); break;
+		case '5': sceneManager.setActiveScene(5); break;
+		case '6': sceneManager.setActiveScene(6); break;
+		case '7': sceneManager.setActiveScene(7); break;
+		case '8': sceneManager.setActiveScene(8); break;
+		case '9': sceneManager.setActiveScene(9); break;
+		}
 	}
 
 	public void mouseWheel(MouseEvent event) {
