@@ -70,7 +70,7 @@ public class IntoDangerzone extends PApplet {
 	}
 	
 	private void initializeScenes() {
-		golScene = new GameOfLifeScene(this, 0.2f, 50, 50);
+		golScene = new GameOfLifeScene(this, 0.1f, 200, 200);
 		sceneManager.addScene(golScene);
 		
 		lTreeScene = new LTree(this, audioAnalyser);
@@ -134,7 +134,7 @@ public class IntoDangerzone extends PApplet {
 	}
 
 	public void mouseWheel(MouseEvent event) {
-		//camera.setPositionZ(camera.getPosition().getZ() + event.getCount() * 100);
+		camera.setPositionZ(camera.getPosition().getZ() + event.getCount() * 100);
 	}
 
 	public static void main(String args[]) {

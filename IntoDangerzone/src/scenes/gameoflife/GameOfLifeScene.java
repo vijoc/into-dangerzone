@@ -25,13 +25,14 @@ public class GameOfLifeScene extends Scene {
 	public void update(float dtSeconds) {
 		generationTimer -= dtSeconds;
 		if(generationTimer < 0) {
-			generationTimer += stepTime;
+			generationTimer = stepTime;
 			gol.nextGeneration();
 		}
 	}
 
 	@Override
 	public void render() {
+		parent.ambientLight(20, 255, 20);
 		golRenderer.render();
 	}
 
