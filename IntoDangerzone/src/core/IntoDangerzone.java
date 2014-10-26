@@ -13,7 +13,7 @@ import particles.ParticleCloudRenderer;
 import physics.PhysicsEngine;
 import processing.core.*;
 import processing.event.MouseEvent;
-import scenes.LTree;
+import scenes.lTree.*;
 
 @SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
