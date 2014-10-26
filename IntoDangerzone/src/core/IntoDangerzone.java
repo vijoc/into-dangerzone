@@ -2,74 +2,51 @@ package core;
 import graphics.Camera;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import audio.AudioAnalyser;
 import math.Vector3D;
-import particles.LayeredParticleCloud;
-import particles.Particle;
-import particles.ParticleCloud;
-import particles.ParticleCloudCubeRenderer;
-import particles.ParticleCloudRenderer;
-import physics.PhysicsEngine;
 import processing.core.*;
 import processing.event.MouseEvent;
 import scenes.lTree.*;
+import scenes.gameoflife.GameOfLifeScene;
 
 @SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
-
-	
-	/** Number of particles drawn */
-	//public static final int PARTICLE_COUNT = 1500;
 	
 	/** Whether to draw the xyz-axes */
 	public static final boolean DRAW_AXES = false;
 	
-	/** Threshold for clamping physics simulation, in seconds */
-	public static final float DT_THRESHOLD = 0.25f;
-	
-	/** Size of one physics step, in seconds */
-	public static final float PHYSICS_STEP_SIZE = 0.01f;
-	
 	private Camera camera;
 	private AudioAnalyser audioAnalyser;
-	private PhysicsEngine physicsEngine = new PhysicsEngine();
 	
-	// TODO: These don't belong here. Wrap in RenderMode or something like that.
-	private ParticleCloud particleCloud;
-	private ParticleCloudRenderer particleCloudRenderer;
+	private long currentTime;
 	
-	// Physics-related time variables
-	private long t;						// current time
-	private float dt;						// time since previous update
-	private float dtAccumulator = 0.0f;	// accumulator for time since previous update
+	private ArrayList<Scene> scenes = new ArrayList<Scene>();
+	private int activeScene = 0;
+	
+	private GameOfLifeScene golScene;
+	private LTree lTreeScene;
 
 	// Text size parameters for kick, snare and hat
 	private float kickSize = 16, snareSize = 16, hatSize = 16;
-
-	private Scene scene;
 	
 	@Override
 	public void setup() {
 		size(1024, 768, P3D);
 		background(0);
 		audioAnalyser = new AudioAnalyser(this);
-
-		scene = new LTree(this, audioAnalyser);
-		//initializeParticles();
-		//initializeCamera();
-		
-		t = System.currentTimeMillis();
+		initializeCamera();
+		initializeScenes();
+		initializeTimer();
 	}
 	
 	@Override
 	public void draw() {
-		//ambientLight(50, 50, 50);
-		//directionalLight(128, 128, 128, 50, 50, -50);
-//		step();
-//		render();
-		scene.update(0);
-		scene.render();
+		ambientLight(50, 50, 50);
+		directionalLight(128, 128, 128, 50, 50, -50);
+		step();
+		render();
 	}
 	
 	/**
@@ -79,17 +56,6 @@ public class IntoDangerzone extends PApplet {
 	public boolean sketchFullScreen() {
 		return false;
 	}
-
-	/**
-	 * Initialize the state of the particle system.
-	 */
-	//private void initializeParticles() {
-	//	particleCloud = new LayeredParticleCloud(physicsEngine.getPhysicsObjectManager(), PARTICLE_COUNT, 3);
-	//	particleCloud.setExplosionEventProvider(new KickProvider(audioAnalyser));
-		
-	//	particleCloudRenderer = new ParticleCloudCubeRenderer(this, particleCloud);
-	//	particleCloudRenderer.setParticleSizeProvider(new SpectrumProvider(audioAnalyser));
-	//}
 
 	/**
 	 * Initialize camera position.
@@ -111,8 +77,16 @@ public class IntoDangerzone extends PApplet {
 		return audioAnalyser;
 	}
 	
-	private void drawParticles() {
-		particleCloudRenderer.render();
+	private void initializeTimer() {
+		currentTime = System.currentTimeMillis();
+	}
+	
+	private void initializeScenes() {
+		golScene = new GameOfLifeScene(this, 0.2f, width/2, height/2);
+		scenes.add(golScene);
+		
+		lTreeScene = new LTree(this, audioAnalyser);
+		scenes.add(lTreeScene);
 	}
 
 	private void drawFFT() {
@@ -181,35 +155,34 @@ public class IntoDangerzone extends PApplet {
 	 */
 	public void step() {
 		long newTime = System.currentTimeMillis();
-		dt = (newTime - t) / 1000.0f;
-		t = newTime;
-		
-		if(dt > DT_THRESHOLD) dt = DT_THRESHOLD;
-		
-		dtAccumulator += dt;
-		
-		while(dtAccumulator >= PHYSICS_STEP_SIZE) {
-			//particleCloud.update();
-			audioAnalyser.getFft().forward(audioAnalyser.getSong().mix);
-			//physicsEngine.step(PHYSICS_STEP_SIZE);
-			dtAccumulator -= PHYSICS_STEP_SIZE;
-		}
+		float dtSeconds = (float) ((newTime - currentTime) / 1000.0);
+		updateActiveScene(dtSeconds);
+		currentTime = newTime;
+		audioAnalyser.getFft().forward(audioAnalyser.getSong().mix);
 	}
 
 	/**
 	 * Render the scene.
 	 */
 	public void render() {
-		//camera.update();
-		//background(0);
-		//drawParticles();
-		//drawFFT();
-		//drawScope();
-		//drawBeats();
-		//drawZCR();
+		camera.update();
+		background(0);
+		drawFFT();
+		drawScope();
+		drawBeats();
+		drawZCR();
+		renderActiveScene();
 
 		if (DRAW_AXES)
 			drawAxes();
+	}
+	
+	private void updateActiveScene(float dtSeconds) {
+		scenes.get(activeScene).update(dtSeconds);
+	}
+	
+	private void renderActiveScene() {
+		scenes.get(activeScene).render();
 	}
 
 	public void mouseWheel(MouseEvent event) {
