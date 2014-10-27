@@ -38,12 +38,13 @@ public class LTree extends core.Scene {
 
 	@Override
 	public void render() {
-		parent.background(250);
-		parent.stroke(0, 0, 0, 100);
+		parent.background(250, 250, 250, 10);
+		parent.stroke(0, 0, 0, 25);
 		curlX += (PApplet.radians((float) (curlXTarget)) - curlX) / delay;
 		curlY += (PApplet.radians((float) (curlYTarget)) - curlY) / delay;
 		parent.translate(0, parent.height / 2);
-		parent.line(0, 0, 0, parent.height);
+		parent.point(0,0);
+//		parent.line(0, 0, 0, parent.height);
 		branch(parent.height * 0.5, 17);
 		growth += (growthTarget / 10 - growth + 1.) / delay;
 		renderDebugTexts();
@@ -57,6 +58,8 @@ public class LTree extends core.Scene {
 		parent.text("curl Y: " + curlY, parent.width / 2, 64);
 		parent.text("growth target: " + growthTarget, parent.width / 2, 128);
 		parent.text("f: " + f, parent.width / 2, 192);
+		parent.text("growth: " + growth, parent.width / 2, 256);
+		parent.text("fps: " + parent.frameRate, parent.width/2, 320);
 	}
 
 	private void branch(double d, int num) {
@@ -65,7 +68,8 @@ public class LTree extends core.Scene {
 		if ((d > 1) && (num > 0)) {
 			parent.pushMatrix();
 			parent.rotate(curlX);
-			parent.line(0, 0, 0, (float) -d);
+			parent.point(0, 0);
+			//parent.line(0, 0, 0, (float) -d);
 			parent.translate(0, (float) -d);
 			branch(d, num);
 			parent.popMatrix();
@@ -73,7 +77,8 @@ public class LTree extends core.Scene {
 			d *= growth;
 			parent.pushMatrix();
 			parent.rotate(curlX - curlY);
-			parent.line(0, 0, 0, (float) -d);
+			parent.point(0, 0);
+			//parent.line(0, 0, 0, (float) -d);
 			parent.translate(0, (float) -d);
 			branch(d, num);
 			parent.popMatrix();
