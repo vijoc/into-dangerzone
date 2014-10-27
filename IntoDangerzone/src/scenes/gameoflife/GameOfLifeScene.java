@@ -2,10 +2,22 @@ package scenes.gameoflife;
 
 import math.Vector3D;
 import graphics.Camera;
+import audio.BeatListener;
+import core.ConstantProvider;
+import core.InputProvider;
+import core.KickProvider;
+import core.PositiveEdgeTrigger;
 import core.Scene;
+import ddf.minim.AudioSource;
 import processing.core.PApplet;
 
 public class GameOfLifeScene extends Scene {
+	
+	private enum StepMode {
+		EVENTED, TIMED
+	}
+	
+	private StepMode stepMode = StepMode.EVENTED;
 	
 	private float generationTimer;
 	private float stepTime;
@@ -14,33 +26,47 @@ public class GameOfLifeScene extends Scene {
 	private GameOfLifeRenderer golRenderer;
 	
 	private Camera camera;
+	private InputProvider<Boolean> stepEventProvider = new ConstantProvider<Boolean>(false);
 
 	public GameOfLifeScene(PApplet parent, float stepTime, int columns, int rows) {
-		super(parent);
-		
-		this.camera = new Camera(parent);
+		this(parent, null, columns, rows);
 		
 		gol = new GameOfLife(columns, rows);
 		gol.seedRandom();
 		
 		this.golRenderer = new GameOfLifeRenderer(parent, gol);
 		
+		stepMode = StepMode.TIMED;
 		initializeStepTimer(stepTime);
 	}
 	
+	public GameOfLifeScene(PApplet parent, AudioSource audioSource, int columns, int rows) {
+		super(parent);
+		gol = new GameOfLife(columns, rows);
+		gol.seedRandom();
+		golRenderer = new GameOfLifeRenderer(parent, gol);
+		setStepEventProvider(new PositiveEdgeTrigger(new KickProvider(new BeatListener(audioSource))));
+		this.camera = new Camera(parent);
+	}
+
 	@Override
 	public void update(float dtSeconds) {
-		generationTimer -= dtSeconds;
-		if(generationTimer < 0) {
-			generationTimer = stepTime;
-			gol.stepGeneration();
+		if(stepMode == StepMode.TIMED) {
+			generationTimer -= dtSeconds;
+			if(generationTimer < 0) {
+				generationTimer = stepTime;
+				gol.stepGeneration();
+			}
+		} else {
+			if(stepEventProvider.readInput()) {
+				gol.stepGeneration();
+			}
 		}
 	}
 
 	@Override
 	public void render() {
 		updateCamera();
-		parent.ambientLight(20, 255, 20);
 		golRenderer.render();
 	}
 	
@@ -57,6 +83,10 @@ public class GameOfLifeScene extends Scene {
 	private void initializeStepTimer(float stepTime) {
 		this.stepTime = stepTime;
 		generationTimer = stepTime;
+	}
+	
+	public void setStepEventProvider(InputProvider<Boolean> provider) {
+		stepEventProvider = provider;
 	}
 
 }
