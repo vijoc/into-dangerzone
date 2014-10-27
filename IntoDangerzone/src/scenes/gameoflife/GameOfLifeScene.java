@@ -2,19 +2,11 @@ package scenes.gameoflife;
 
 import math.Vector3D;
 import graphics.Camera;
-import core.ConstantProvider;
-import core.InputProvider;
 import core.Scene;
 import ddf.minim.AudioSource;
 import processing.core.PApplet;
 
 public class GameOfLifeScene extends Scene {
-	
-	private enum StepMode {
-		EVENTED, TIMED
-	}
-	
-	private StepMode stepMode = StepMode.EVENTED;
 	
 	private float generationTimer;
 	private float stepTime;
@@ -23,7 +15,6 @@ public class GameOfLifeScene extends Scene {
 	private GameOfLifeRenderer golRenderer;
 	
 	private Camera camera;
-	private InputProvider<Boolean> stepEventProvider = new ConstantProvider<Boolean>(false);
 
 
 	public GameOfLifeScene(PApplet parent, AudioSource audioSource, float stepTime, int columns, int rows) {
@@ -33,8 +24,6 @@ public class GameOfLifeScene extends Scene {
 		gol.seedRandom();
 		
 		this.golRenderer = new GameOfLifeRenderer(parent, gol);
-		
-		stepMode = StepMode.TIMED;
 		initializeStepTimer(stepTime);
 		this.camera = new Camera(parent);
 	}
@@ -45,16 +34,10 @@ public class GameOfLifeScene extends Scene {
 
 	@Override
 	public void update(float dtSeconds) {
-		if(stepMode == StepMode.TIMED) {
-			generationTimer -= dtSeconds;
-			if(generationTimer < 0) {
-				generationTimer = stepTime;
-				gol.stepGeneration();
-			}
-		} else {
-			if(stepEventProvider.readInput()) {
-				gol.stepGeneration();
-			}
+		generationTimer -= dtSeconds;
+		if(generationTimer < 0) {
+			generationTimer = stepTime;
+			gol.stepGeneration();
 		}
 	}
 
@@ -77,10 +60,6 @@ public class GameOfLifeScene extends Scene {
 	private void initializeStepTimer(float stepTime) {
 		this.stepTime = stepTime;
 		generationTimer = stepTime;
-	}
-	
-	public void setStepEventProvider(InputProvider<Boolean> provider) {
-		stepEventProvider = provider;
 	}
 
 }
