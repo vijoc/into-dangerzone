@@ -19,13 +19,15 @@ class Boid {
 	private float width;
 	private float height;
 	
-	private float desiredSeparation = 25;
+	private float desiredSeparation = 15;
 	private float alignNeighborDist = 50;
 	private float cohesionNeighborDist = 50;
 	
-	private float separationWeight = 1.0f;
+	private float separationWeight = 1.5f;
 	private float alignmentWeight = 1.0f;
 	private float cohesionWeight = 1.0f;
+	
+	private float deceleration = 0.3f; // must be between [0, 1)
 
 	Boid(float x, float y, float width, float height) {
 		acceleration = new Vector2D(0, 0);
@@ -75,8 +77,8 @@ class Boid {
 			velocity = velocity.toLength(maxSpeed);
 		}
 		location = location.add(velocity);
-		// Reset acceleration to 0 each cycle
-		acceleration = acceleration.scalarMultiplication(0);
+		// Decrease acceleration
+		acceleration = acceleration.scalarMultiplication(deceleration);
 	}
 
 	Vector2D seek(Vector2D target) {
