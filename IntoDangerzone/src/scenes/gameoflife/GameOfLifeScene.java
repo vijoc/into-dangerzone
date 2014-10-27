@@ -1,5 +1,7 @@
 package scenes.gameoflife;
 
+import math.Vector3D;
+import graphics.Camera;
 import core.Scene;
 import processing.core.PApplet;
 
@@ -11,14 +13,19 @@ public class GameOfLifeScene extends Scene {
 	private GameOfLife gol;
 	private GameOfLifeRenderer golRenderer;
 	
+	private Camera camera;
 
-	public GameOfLifeScene(PApplet applet, float stepTime, int columns, int rows) {
-		super(applet);
-		this.stepTime = stepTime;
-		generationTimer = stepTime;
+	public GameOfLifeScene(PApplet parent, float stepTime, int columns, int rows) {
+		super(parent);
+		
+		this.camera = new Camera(parent);
+		
 		gol = new GameOfLife(columns, rows);
-		gol.seed();
-		golRenderer = new GameOfLifeRenderer(applet, gol);
+		gol.seedRandom();
+		
+		this.golRenderer = new GameOfLifeRenderer(parent, gol);
+		
+		initializeStepTimer(stepTime);
 	}
 	
 	@Override
@@ -26,14 +33,30 @@ public class GameOfLifeScene extends Scene {
 		generationTimer -= dtSeconds;
 		if(generationTimer < 0) {
 			generationTimer = stepTime;
-			gol.nextGeneration();
+			gol.stepGeneration();
 		}
 	}
 
 	@Override
 	public void render() {
+		updateCamera();
 		parent.ambientLight(20, 255, 20);
 		golRenderer.render();
+	}
+	
+	private void updateCamera() {
+		float fovRadians = (float) Math.toRadians(75); // ?
+		float zDistW = (float) ((parent.width/2.0f) / Math.tan(fovRadians/2.0f));
+		float zDistH = (float) ((parent.height/2.0f) / Math.tan(fovRadians/2.0f));
+		float zDist = Math.max(zDistW, zDistH);
+		camera.setPosition(new Vector3D(0, 0, zDist));
+		camera.setCenter(new Vector3D(0,0,0));
+		camera.update();
+	}
+	
+	private void initializeStepTimer(float stepTime) {
+		this.stepTime = stepTime;
+		generationTimer = stepTime;
 	}
 
 }
