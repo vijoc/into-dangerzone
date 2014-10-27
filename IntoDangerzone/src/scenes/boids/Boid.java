@@ -18,7 +18,9 @@ class Boid {
 	float maxSpeed;
 	private float width;
 	private float height;
-	private float desiredSeparation = 25;
+	private float desiredSeparation = 55;
+	private float alignNeighborDist = 50;
+	private float cohesionNeighborDist = 50;
 
 	Boid(float x, float y, float width, float height) {
 		acceleration = new Vector2D(0, 0);
@@ -53,9 +55,9 @@ class Boid {
 		Vector2D cohesion = cohesion(boids);
 
 		// Weighing
-		separation = separation.scalarMultiplication(1.5f);
-		alignment = alignment.scalarMultiplication(1.0f);
-		cohesion = cohesion.scalarMultiplication(1.0f);
+		separation = separation.scalarMultiplication(1.f);
+		alignment = alignment.scalarMultiplication(1.f);
+		cohesion = cohesion.scalarMultiplication(0.5f);
 
 		applyForce(separation);
 		applyForce(alignment);
@@ -84,7 +86,7 @@ class Boid {
 		return steer;
 	}
 
-	// TODO this not really belong here
+	// TODO this not really belongs here
 	void checkBoundaries() {
 		if (location.getX() < -r)
 			this.location = new Vector2D(width + r, this.location.getY());
@@ -126,12 +128,11 @@ class Boid {
 	}
 
 	Vector2D align(ArrayList<Boid> boids) {
-		float neighbordist = 50;
 		Vector2D sum = new Vector2D(0, 0);
 		int count = 0;
 		for (Boid other : boids) {
 			float d = location.distanceTo(other.location);
-			if ((d > 0) && (d < neighbordist)) {
+			if ((d > 0) && (d < alignNeighborDist)) {
 				sum = sum.add(other.velocity);
 				count++;
 			}
@@ -151,13 +152,12 @@ class Boid {
 	}
 
 	Vector2D cohesion(ArrayList<Boid> boids) {
-		float neighbordist = 50;
 		Vector2D sum = new Vector2D(0, 0);
 
 		int count = 0;
 		for (Boid other : boids) {
 			float d = location.distanceTo(other.location);
-			if ((d > 0) && (d < neighbordist)) {
+			if ((d > 0) && (d < cohesionNeighborDist)) {
 				sum = sum.add(other.location);
 				count++;
 			}

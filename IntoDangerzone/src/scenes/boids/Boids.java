@@ -23,7 +23,7 @@ public class Boids extends core.Scene {
 
 		rand = new Random();
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < maxBoids; i++) {
 			flock.addBoid(new Boid(0, 0, parent.width, parent.height));
 		}
 	}
