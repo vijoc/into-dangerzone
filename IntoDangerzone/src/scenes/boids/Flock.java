@@ -25,6 +25,7 @@ class Flock {
 			applet.fill(0);
 			applet.stroke(0);
 			applet.pushMatrix();
+			applet.translate(-applet.width/2, -applet.height/2);
 			applet.translate(b.location.getX(), b.location.getY());
 			applet.rotate(theta);
 			applet.beginShape(processing.core.PShape.TRIANGLES);

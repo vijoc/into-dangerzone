@@ -63,8 +63,10 @@ class Boid {
 	}
 
 	void update() {
-		if (velocity.getLength() < maxSpeed)
-			velocity = velocity.add(acceleration);
+		velocity = velocity.add(acceleration);
+		if (velocity.getLength() > maxSpeed) {
+			velocity = velocity.toLength(maxSpeed);
+		}
 		location = location.add(velocity);
 		// Reset acceleration to 0 each cycle
 		acceleration = acceleration.scalarMultiplication(0);
