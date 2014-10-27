@@ -35,7 +35,6 @@ class Flock {
 			applet.endShape();
 			applet.popMatrix();
 		}
-		applet.text("boids: " + boids.size(), 0, 0);
 	}
 
 	void addBoid(Boid b) {
