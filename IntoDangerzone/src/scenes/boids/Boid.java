@@ -18,9 +18,14 @@ class Boid {
 	float maxSpeed;
 	private float width;
 	private float height;
-	private float desiredSeparation = 55;
+	
+	private float desiredSeparation = 25;
 	private float alignNeighborDist = 50;
 	private float cohesionNeighborDist = 50;
+	
+	private float separationWeight = 1.0f;
+	private float alignmentWeight = 1.0f;
+	private float cohesionWeight = 1.0f;
 
 	Boid(float x, float y, float width, float height) {
 		acceleration = new Vector2D(0, 0);
@@ -55,9 +60,9 @@ class Boid {
 		Vector2D cohesion = cohesion(boids);
 
 		// Weighing
-		separation = separation.scalarMultiplication(1.f);
-		alignment = alignment.scalarMultiplication(1.f);
-		cohesion = cohesion.scalarMultiplication(0.5f);
+		separation = separation.scalarMultiplication(separationWeight);
+		alignment = alignment.scalarMultiplication(alignmentWeight);
+		cohesion = cohesion.scalarMultiplication(cohesionWeight);
 
 		applyForce(separation);
 		applyForce(alignment);
