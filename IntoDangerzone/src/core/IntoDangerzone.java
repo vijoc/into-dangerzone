@@ -101,7 +101,7 @@ public class IntoDangerzone extends PApplet {
 	}
 	
 	private void initializeScenes() {
-		golScene = new GameOfLifeScene(this, getAudioSource(), width/4, height/4);
+		golScene = new GameOfLifeScene(this, getAudioSource(), width/3, height/3);
 		sceneManager.addScene(golScene);
 		
 		lTreeScene = new LTree(this, audioAnalyser);

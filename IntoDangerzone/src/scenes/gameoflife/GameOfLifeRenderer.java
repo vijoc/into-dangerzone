@@ -26,8 +26,9 @@ public class GameOfLifeRenderer extends Renderer {
 		
 		parent.translate(-parent.width/2, -parent.height / 2);
 
-		parent.color(255, 255, 255);
-		parent.fill(255, 255, 255);
+		parent.background(255, 255, 255);
+		parent.color(0, 0, 0);
+		parent.fill(0, 0, 0);
 		
 		for (int i = 0; i < cols; i++) {
 			for (int j = 0; j < rows; j++) {

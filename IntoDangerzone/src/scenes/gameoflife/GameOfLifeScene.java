@@ -2,11 +2,8 @@ package scenes.gameoflife;
 
 import math.Vector3D;
 import graphics.Camera;
-import audio.BeatListener;
 import core.ConstantProvider;
 import core.InputProvider;
-import core.KickProvider;
-import core.PositiveEdgeTrigger;
 import core.Scene;
 import ddf.minim.AudioSource;
 import processing.core.PApplet;
@@ -28,8 +25,9 @@ public class GameOfLifeScene extends Scene {
 	private Camera camera;
 	private InputProvider<Boolean> stepEventProvider = new ConstantProvider<Boolean>(false);
 
-	public GameOfLifeScene(PApplet parent, float stepTime, int columns, int rows) {
-		this(parent, null, columns, rows);
+
+	public GameOfLifeScene(PApplet parent, AudioSource audioSource, float stepTime, int columns, int rows) {
+		super(parent);
 		
 		gol = new GameOfLife(columns, rows);
 		gol.seedRandom();
@@ -38,15 +36,11 @@ public class GameOfLifeScene extends Scene {
 		
 		stepMode = StepMode.TIMED;
 		initializeStepTimer(stepTime);
+		this.camera = new Camera(parent);
 	}
 	
 	public GameOfLifeScene(PApplet parent, AudioSource audioSource, int columns, int rows) {
-		super(parent);
-		gol = new GameOfLife(columns, rows);
-		gol.seedRandom();
-		golRenderer = new GameOfLifeRenderer(parent, gol);
-		setStepEventProvider(new PositiveEdgeTrigger(new KickProvider(new BeatListener(audioSource))));
-		this.camera = new Camera(parent);
+		this(parent, audioSource, 0.05f, columns, rows);		
 	}
 
 	@Override
