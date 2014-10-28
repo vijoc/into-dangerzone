@@ -19,10 +19,13 @@ public class JuliaSceneRenderer extends Renderer{
 	
 	float colorStep;
 	
+	private JuliaSet set;
+	
 	PGraphics context;
 	
-	public JuliaSceneRenderer(PApplet parent) {
+	public JuliaSceneRenderer(PApplet parent, JuliaSet set) {
 		super(parent);
+		this.set = set;
 		translateX = parent.width / 2;
 		translateY = parent.height / 2;
 		shrink = 2.0f / parent.width;
@@ -40,9 +43,6 @@ public class JuliaSceneRenderer extends Renderer{
 		context.clear(); // Doesn't seem to work?
 		Arrays.fill(context.pixels, context.color(255));
 		
-		cx = (parent.mouseX - translateX) * shrink;
-		cy = (parent.mouseY - translateY) * shrink;
-		
 		for(float x = 0; x < context.width; x++) {
 			for(float y = 0; y < context.height; y++) {
 				
@@ -51,12 +51,10 @@ public class JuliaSceneRenderer extends Renderer{
 						(y-translateY)*shrinkv
 				);
 				
-				for(int i = 0; i < iterations; i++) {
-					z = Complex.add(z.squared(), new Complex(cx, cy));
-					
-					if(Math.sqrt(z.squaredModule()) < 2) {
-						context.pixels[(int) ( (context.width * y) + x)] = context.color(255-i*colorStep);
-					}
+				int iter = set.calc(z);
+				
+				if(iter >= 0) {
+					context.pixels[(int) (y*context.width + x)] = context.color(255 - iter*colorStep);
 				}
 			}
 		}

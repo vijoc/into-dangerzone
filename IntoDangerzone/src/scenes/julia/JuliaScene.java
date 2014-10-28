@@ -3,17 +3,28 @@ package scenes.julia;
 import math.Vector3D;
 import graphics.Camera;
 import processing.core.PApplet;
+import core.ConstantProvider;
+import core.InputProvider;
 import core.Scene;
 
 public class JuliaScene extends Scene {
 	
 	private JuliaSceneRenderer renderer;
 	private Camera camera;
+	private JuliaSet set;
+	
+	private InputProvider<Float> realProvider = new ConstantProvider<Float>(0.5f);
 
 	public JuliaScene(PApplet parent) {
 		super(parent);
-		renderer = new JuliaSceneRenderer(parent);
+		set = new JuliaSet();
+		renderer = new JuliaSceneRenderer(parent, set);
 		camera = new Camera(parent);
+	}
+	
+	public JuliaScene(Papplet parent, AudioSource audioSource) {
+		this(parent);
+		this.realProvider = new SpectrumListener()
 	}
 
 	@Override
@@ -32,6 +43,10 @@ public class JuliaScene extends Scene {
 		camera.setCenter(new Vector3D(0,0,0));
 		camera.update();
 		renderer.render();
+	}
+	
+	public void setRealProvider(InputProvider<Float> provider) {
+		this.realProvider = provider;
 	}
 
 }

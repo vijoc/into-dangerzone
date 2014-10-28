@@ -33,6 +33,7 @@ public class GameOfLifeScene extends Scene {
 		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
 		this.beatListener = new BeatListener(audioSource);
 
+
 		gol = new GameOfLife(columns, rows);
 		gol.seedRandom();
 
