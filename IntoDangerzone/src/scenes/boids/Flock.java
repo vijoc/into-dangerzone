@@ -51,7 +51,7 @@ class Flock {
 
 	void addBoid(Boid b) {
 		boids.add(b);
-		float f = 2*rand.nextFloat();
+		float f = 1;//2*rand.nextFloat();
 		b.weight = f;
 		b.boidSize = f;
 	}
