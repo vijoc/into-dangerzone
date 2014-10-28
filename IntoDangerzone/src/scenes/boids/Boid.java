@@ -13,8 +13,8 @@ class Boid {
 	Vector2D location;
 	Vector2D velocity;
 	Vector2D acceleration;
-	float boidSize = 2.0f;
-	float weight = 10.0f;
+	float boidSize = 1.0f;
+	float weight = 1.0f;
 	float maxSteering = 0.03f;
 	float maxSpeed = 2;
 	private float width;
