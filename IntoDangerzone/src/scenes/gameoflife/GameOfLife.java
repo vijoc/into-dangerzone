@@ -15,6 +15,8 @@ class GameOfLife {
 	private int rowCount;
 	private int colCount;
 	
+	private float density = 0.05f;
+	
 	private final int maxRowIndex;
 	private final int maxColIndex;
 	
@@ -43,7 +45,7 @@ class GameOfLife {
 		Random rand = new Random();
 		for(int i = 0; i < colCount; i++) {
 			for(int j = 0; j < rowCount; j++) {
-				if(rand.nextBoolean()) setCellState(i, j, true);
+				if(rand.nextFloat() < density) setCellState(i, j, true);
 			}
 		}
 	}
