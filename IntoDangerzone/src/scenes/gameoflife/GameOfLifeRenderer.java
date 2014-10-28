@@ -1,8 +1,6 @@
 package scenes.gameoflife;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
 import graphics.Renderer;
 
 public class GameOfLifeRenderer extends Renderer {

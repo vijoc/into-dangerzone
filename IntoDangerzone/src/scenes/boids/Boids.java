@@ -3,7 +3,6 @@ package scenes.boids;
 import java.util.Random;
 
 import ddf.minim.AudioSource;
-import audio.AudioAnalyser;
 import audio.BeatListener;
 import processing.core.PApplet;
 
@@ -11,7 +10,6 @@ public class Boids extends core.Scene {
 
 	Flock flock;
 
-	private AudioSource audioSource;
 	private BeatListener beatListener;
 
 	private int maxBoids = 500;
@@ -21,7 +19,6 @@ public class Boids extends core.Scene {
 	public Boids(PApplet parent, AudioSource audioSource) {
 		super(parent);
 		this.parent = parent;
-		this.audioSource = audioSource;
 		this.beatListener = new BeatListener(audioSource);
 		flock = new Flock(parent);
 

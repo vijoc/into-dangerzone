@@ -1,7 +1,6 @@
 package scenes.lTree;
 
 import ddf.minim.AudioSource;
-import audio.AudioAnalyser;
 import audio.BeatListener;
 import processing.core.PApplet;
 
