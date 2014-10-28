@@ -18,6 +18,7 @@ class GameOfLife {
 	private int generation;
 
 	private float density = 0.0f;
+	private float initialDensity = 0.0f;
 
 	private final int maxRowIndex;
 	private final int maxColIndex;
@@ -51,7 +52,7 @@ class GameOfLife {
 		Random rand = new Random();
 		for (int i = 0; i < colCount; i++) {
 			for (int j = 0; j < rowCount; j++) {
-				if (rand.nextFloat() < density)
+				if (rand.nextFloat() < initialDensity)
 					setCellState(i, j, true);
 			}
 		}
@@ -63,6 +64,18 @@ class GameOfLife {
 	public void stepGeneration() {
 		states = calculateNextStates();
 		generation++;
+		calculateDensity();
+	}
+
+	private void calculateDensity() {
+		int liveCells = 0;
+		for (boolean[] row : states) {
+			for (boolean cell : row) {
+				if (cell)
+					liveCells++;
+			}
+		}
+		density = liveCells / ((float) rowCount * colCount);
 	}
 
 	/**
@@ -196,7 +209,7 @@ class GameOfLife {
 		return generation;
 	}
 
-	public void setGeneration(int generation) {
-		this.generation = generation;
+	public float getDensity() {
+		return density;
 	}
 }
