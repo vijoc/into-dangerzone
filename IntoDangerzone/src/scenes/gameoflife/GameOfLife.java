@@ -64,7 +64,7 @@ class GameOfLife {
 	 * @return
 	 */
 	public boolean getCellState(int x, int y) {
-		return states[x][y];
+		return states[wrapColumn(x)][wrapRow(y)];
 	}
 	
 	/**
@@ -74,7 +74,7 @@ class GameOfLife {
 	 * @param state new state
 	 */
 	public void setCellState(int x, int y, boolean state) {
-		states[x][y] = state;
+		states[wrapColumn(x)][wrapRow(y)] = state;
 	}
 
 	public int getColumnCount() {
