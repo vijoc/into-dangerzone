@@ -3,6 +3,9 @@ import graphics.Camera;
 
 import java.awt.event.KeyEvent;
 
+import ddf.minim.AudioPlayer;
+import ddf.minim.AudioSource;
+import ddf.minim.Minim;
 import audio.AudioAnalyser;
 import math.Vector3D;
 import processing.core.*;
@@ -14,6 +17,14 @@ import scenes.gameoflife.GameOfLifeScene;
 @SuppressWarnings("serial")
 public class IntoDangerzone extends PApplet {
 	
+	public enum AudioMode {
+		FILE, LINE_IN
+	}
+	
+	public static AudioMode audioMode = AudioMode.LINE_IN;
+	public static String audioFilePath;
+	private AudioSource audioSource;
+	
 	/** Whether to draw the xyz-axes */
 	public static final boolean DRAW_AXES = false;
 	
@@ -23,6 +34,7 @@ public class IntoDangerzone extends PApplet {
 	private Boids boidsScene;
 	
 	private Camera camera;
+	
 	private AudioAnalyser audioAnalyser;
 	
 	private long currentTime;
@@ -31,10 +43,15 @@ public class IntoDangerzone extends PApplet {
 	public void setup() {
 		size(1024, 768, P3D);
 		background(0);
+		initializeAudioSource();
 		audioAnalyser = new AudioAnalyser(this);
 		initializeCamera();
 		initializeScenes();
 		initializeTimer();
+	}
+	
+	public AudioSource getAudioSource() {
+		return audioSource;
 	}
 	
 	@Override
@@ -49,6 +66,20 @@ public class IntoDangerzone extends PApplet {
 	@Override
 	public boolean sketchFullScreen() {
 		return false;
+	}
+	
+	/**
+	 * Initialize the audio source, depending on program arguments.
+	 */
+	private void initializeAudioSource() {
+		if(audioMode == AudioMode.LINE_IN) {
+			audioSource = new Minim(this).getLineIn();
+		} else {
+			Minim minim = new Minim(this);
+			AudioPlayer player = minim.loadFile(audioFilePath);
+			player.play();
+			audioSource = player;
+		}
 	}
 
 	/**
@@ -72,13 +103,13 @@ public class IntoDangerzone extends PApplet {
 	}
 	
 	private void initializeScenes() {
-		golScene = new GameOfLifeScene(this, 0.15f, width/4, height/4);
+		golScene = new GameOfLifeScene(this, getAudioSource(), width/3, height/3);
 		sceneManager.addScene(golScene);
 		
-		lTreeScene = new LTree(this, audioAnalyser);
+		lTreeScene = new LTree(this, getAudioSource());
 		sceneManager.addScene(lTreeScene);
 		
-		boidsScene = new Boids(this, audioAnalyser);
+		boidsScene = new Boids(this, getAudioSource());
 		sceneManager.addScene(boidsScene);
 		
 		sceneManager.setActiveScene(0);
@@ -143,6 +174,12 @@ public class IntoDangerzone extends PApplet {
 	}
 
 	public static void main(String args[]) {
+		if(args.length > 0) {
+			IntoDangerzone.audioMode = AudioMode.FILE;
+			IntoDangerzone.audioFilePath = args[0];
+		}
+		
+		
 		PApplet.main(new String[] { "core.IntoDangerzone" });
 	}
 }

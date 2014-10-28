@@ -19,7 +19,7 @@ public class AudioAnalyser {
 		minim = new Minim(applet);
 
 		song = minim.loadFile("test.mp3");
-		song.play();
+		//song.play();
 
 		input = minim.getLineIn();
 

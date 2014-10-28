@@ -3,6 +3,7 @@ package scenes.gameoflife;
 import math.Vector3D;
 import graphics.Camera;
 import core.Scene;
+import ddf.minim.AudioSource;
 import processing.core.PApplet;
 
 public class GameOfLifeScene extends Scene {
@@ -15,19 +16,22 @@ public class GameOfLifeScene extends Scene {
 	
 	private Camera camera;
 
-	public GameOfLifeScene(PApplet parent, float stepTime, int columns, int rows) {
+
+	public GameOfLifeScene(PApplet parent, AudioSource audioSource, float stepTime, int columns, int rows) {
 		super(parent);
-		
-		this.camera = new Camera(parent);
 		
 		gol = new GameOfLife(columns, rows);
 		gol.seedRandom();
 		
 		this.golRenderer = new GameOfLifeRenderer(parent, gol);
-		
 		initializeStepTimer(stepTime);
+		this.camera = new Camera(parent);
 	}
 	
+	public GameOfLifeScene(PApplet parent, AudioSource audioSource, int columns, int rows) {
+		this(parent, audioSource, 0.05f, columns, rows);		
+	}
+
 	@Override
 	public void update(float dtSeconds) {
 		generationTimer -= dtSeconds;
@@ -40,7 +44,6 @@ public class GameOfLifeScene extends Scene {
 	@Override
 	public void render() {
 		updateCamera();
-		parent.ambientLight(20, 255, 20);
 		golRenderer.render();
 	}
 	
