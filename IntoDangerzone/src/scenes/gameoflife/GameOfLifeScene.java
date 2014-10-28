@@ -22,14 +22,14 @@ public class GameOfLifeScene extends Scene {
 
 	private Random rand;
 	private boolean[][] bomb;
-	
+
 	private AudioAnalyser audioAnalyser;
 	private BeatListener beatListener;
 
 	public GameOfLifeScene(PApplet parent, AudioSource audioSource,
 			float stepDuration, int columns, int rows) {
 		super(parent);
-		
+
 		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
 		this.beatListener = new BeatListener(audioSource);
 
@@ -58,11 +58,10 @@ public class GameOfLifeScene extends Scene {
 	@Override
 	public void update(float dtSeconds) {
 		generationTimer -= dtSeconds;
-		System.out.println(audioAnalyser.getZCR());
 		if (generationTimer < 0) {
 			generationTimer = stepDuration;
 			gol.stepGeneration();
-			if (gol.getGeneration() % 50 == 0) {
+			if (beatListener.isKick()) {
 				gol.insertShape(bomb, rand.nextInt(gol.getColumnCount()),
 						rand.nextInt(gol.getRowCount()));
 			}
