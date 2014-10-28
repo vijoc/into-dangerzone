@@ -1,4 +1,5 @@
 package audio;
+
 import processing.core.*;
 import ddf.minim.*;
 import ddf.minim.analysis.FFT;
@@ -6,8 +7,6 @@ import ddf.minim.analysis.FFT;
 public class AudioAnalyser {
 
 	Minim minim;
-	AudioPlayer song;
-	AudioInput input;
 	AudioSource audioSource;
 	FFT fft;
 	int numberOfBands;
@@ -17,10 +16,6 @@ public class AudioAnalyser {
 		minim = new Minim(applet);
 
 		this.audioSource = audioSource;
-		song = minim.loadFile("test.mp3");
-
-		input = minim.getLineIn();
-
 		fft = new FFT(audioSource.bufferSize(), audioSource.sampleRate());
 		numberOfBands = fft.specSize();
 	}
@@ -32,13 +27,9 @@ public class AudioAnalyser {
 		}
 		return spectrum;
 	}
-	
+
 	public FFT getFft() {
 		return fft;
-	}
-	
-	public AudioPlayer getSong() {
-		return song;
 	}
 
 	public float[] getWaveform(int length) {
@@ -48,15 +39,14 @@ public class AudioAnalyser {
 		}
 		return waveform;
 	}
-	
+
 	public float getZCR() {
 		float zcr = 0;
 		boolean overZero = false;
 		float zeroCrossings = 0.f;
-		for (int i = 0; i < audioSource.bufferSize(); i++){
-			if (
-					((audioSource.mix.get(i) > 0) && overZero) 
-					|| ((audioSource.mix.get(i) <= 0) && !overZero)){
+		for (int i = 0; i < audioSource.bufferSize(); i++) {
+			if (((audioSource.mix.get(i) > 0) && overZero)
+					|| ((audioSource.mix.get(i) <= 0) && !overZero)) {
 				zeroCrossings++;
 				overZero = !overZero;
 			}
@@ -81,10 +71,6 @@ public class AudioAnalyser {
 		return waveform;
 	}
 
-	public AudioInput getAudioInput() {
-		return input;
-	}
-	
 	public AudioSource getAudioSource() {
 		return audioSource;
 	}
