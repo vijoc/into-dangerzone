@@ -44,7 +44,7 @@ public class IntoDangerzone extends PApplet {
 		size(1024, 768, P3D);
 		background(0);
 		initializeAudioSource();
-		audioAnalyser = new AudioAnalyser(this);
+		audioAnalyser = new AudioAnalyser(this, audioSource);
 		initializeCamera();
 		initializeScenes();
 		initializeTimer();
