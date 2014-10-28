@@ -11,7 +11,7 @@ public class Boids extends core.Scene {
 
 	private AudioAnalyser audioAnalyser;
 
-	private int maxBoids = 1000;
+	private int maxBoids = 500;
 	private Random rand;
 	private float newBoidProbability = 1f;
 

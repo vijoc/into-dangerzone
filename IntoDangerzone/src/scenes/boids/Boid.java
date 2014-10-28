@@ -13,7 +13,8 @@ class Boid {
 	Vector2D location;
 	Vector2D velocity;
 	Vector2D acceleration;
-	float r = 2.0f;
+	float boidSize = 2.0f;
+	float weight = 10.0f;
 	float maxSteering = 0.03f;
 	float maxSpeed = 2;
 	private float width;
@@ -49,8 +50,7 @@ class Boid {
 	}
 
 	void applyForce(Vector2D force) {
-		// TODO add mass here?
-		acceleration = acceleration.add(force);
+		acceleration = acceleration.add(force.scalarDivision(weight));
 	}
 
 	void flock(ArrayList<Boid> boids) {
@@ -92,14 +92,14 @@ class Boid {
 
 	// TODO this not really belongs here
 	void checkBoundaries() {
-		if (location.getX() < -r)
-			this.location = new Vector2D(width + r, this.location.getY());
-		if (location.getY() < -r)
-			this.location = new Vector2D(this.location.getX(), height + r);
-		if (location.getX() > width + r)
-			this.location = new Vector2D(-r, this.location.getY());
-		if (location.getY() > height + r)
-			this.location = new Vector2D(this.location.getX(), -r);
+		if (location.getX() < -boidSize)
+			this.location = new Vector2D(width + boidSize, this.location.getY());
+		if (location.getY() < -boidSize)
+			this.location = new Vector2D(this.location.getX(), height + boidSize);
+		if (location.getX() > width + boidSize)
+			this.location = new Vector2D(-boidSize, this.location.getY());
+		if (location.getY() > height + boidSize)
+			this.location = new Vector2D(this.location.getX(), -boidSize);
 	}
 
 	Vector2D separate(ArrayList<Boid> boids) {
