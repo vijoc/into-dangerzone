@@ -114,7 +114,7 @@ public class IntoDangerzone extends PApplet {
 		boidsScene = new Boids(this, getAudioSource());
 		sceneManager.addScene(boidsScene);
 		
-		juliaScene = new JuliaScene(this);
+		juliaScene = new JuliaScene(this, getAudioSource());
 		sceneManager.addScene(juliaScene);
 		
 		sceneManager.setActiveScene(0);

@@ -1,10 +1,5 @@
 package scenes.julia;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import math.Complex;
 import math.ComplexFunction;
 
@@ -13,7 +8,7 @@ public class JuliaSet {
 	private Complex parameterC = new Complex(0.5f, 0.5f);
 	private ComplexFunction fn;
 	
-	private int iterations = 10;
+	private int iterations = 8;
 	
 	private float translateX;
 	private float translateY;
@@ -32,9 +27,6 @@ public class JuliaSet {
 			}
 		};
 		
-		this.realRange = realRange;
-		this.imaginaryRange = imaginaryRange;
-		
 		this.translateX = realRange * 0.5f;
 		this.translateY = imaginaryRange * 0.5f;
 		
@@ -47,7 +39,20 @@ public class JuliaSet {
 	public void setC(Complex c) {
 		if(!parameterC.equals(c)) {
 			parameterC = c;
+			fn = new ComplexFunction() {
+				public Complex function(Complex z) {
+					return Complex.add(z.squared(), parameterC);
+				}
+			};
 		}
+	}
+	
+	public void setCx(float cx) {
+		setC(new Complex(cx, parameterC.y()));
+	}
+	
+	public void setCy(float cy) {
+		setC(new Complex(parameterC.x(), cy));
 	}
 	
 	public void setFunction(ComplexFunction fn) {
