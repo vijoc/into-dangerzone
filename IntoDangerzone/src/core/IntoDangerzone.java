@@ -44,7 +44,7 @@ public class IntoDangerzone extends PApplet {
 		size(1024, 768, P3D);
 		background(0);
 		initializeAudioSource();
-		audioAnalyser = new AudioAnalyser(this);
+		audioAnalyser = new AudioAnalyser(this, audioSource);
 		initializeCamera();
 		initializeScenes();
 		initializeTimer();
@@ -138,7 +138,7 @@ public class IntoDangerzone extends PApplet {
 		float dtSeconds = (float) ((newTime - currentTime) / 1000.0);
 		sceneManager.updateActiveScene(dtSeconds);
 		currentTime = newTime;
-		audioAnalyser.getFft().forward(audioAnalyser.getSong().mix);
+		audioAnalyser.getFft().forward(audioAnalyser.getAudioSource().mix);
 	}
 
 	/**

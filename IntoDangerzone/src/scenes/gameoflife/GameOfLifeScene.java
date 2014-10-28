@@ -2,6 +2,8 @@ package scenes.gameoflife;
 
 import java.util.Random;
 
+import audio.AudioAnalyser;
+import audio.BeatListener;
 import math.Vector3D;
 import graphics.Camera;
 import core.Scene;
@@ -11,7 +13,7 @@ import processing.core.PApplet;
 public class GameOfLifeScene extends Scene {
 
 	private float generationTimer;
-	private float stepTime;
+	private float stepDuration;
 
 	private GameOfLife gol;
 	private GameOfLifeRenderer golRenderer;
@@ -20,16 +22,22 @@ public class GameOfLifeScene extends Scene {
 
 	private Random rand;
 	private boolean[][] bomb;
+	
+	private AudioAnalyser audioAnalyser;
+	private BeatListener beatListener;
 
 	public GameOfLifeScene(PApplet parent, AudioSource audioSource,
-			float stepTime, int columns, int rows) {
+			float stepDuration, int columns, int rows) {
 		super(parent);
+		
+		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
+		this.beatListener = new BeatListener(audioSource);
 
 		gol = new GameOfLife(columns, rows);
 		gol.seedRandom();
 
 		this.golRenderer = new GameOfLifeRenderer(parent, gol);
-		initializeStepTimer(stepTime);
+		initializeStepTimer(stepDuration);
 		this.camera = new Camera(parent);
 
 		this.rand = new Random();
@@ -50,8 +58,9 @@ public class GameOfLifeScene extends Scene {
 	@Override
 	public void update(float dtSeconds) {
 		generationTimer -= dtSeconds;
+		System.out.println(audioAnalyser.getZCR());
 		if (generationTimer < 0) {
-			generationTimer = stepTime;
+			generationTimer = stepDuration;
 			gol.stepGeneration();
 			if (gol.getGeneration() % 50 == 0) {
 				gol.insertShape(bomb, rand.nextInt(gol.getColumnCount()),
@@ -78,9 +87,9 @@ public class GameOfLifeScene extends Scene {
 		camera.update();
 	}
 
-	private void initializeStepTimer(float stepTime) {
-		this.stepTime = stepTime;
-		generationTimer = stepTime;
+	private void initializeStepTimer(float stepDuration) {
+		this.stepDuration = stepDuration;
+		generationTimer = stepDuration;
 	}
 
 }
