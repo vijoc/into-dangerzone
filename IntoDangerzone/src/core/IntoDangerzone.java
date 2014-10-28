@@ -138,7 +138,7 @@ public class IntoDangerzone extends PApplet {
 		float dtSeconds = (float) ((newTime - currentTime) / 1000.0);
 		sceneManager.updateActiveScene(dtSeconds);
 		currentTime = newTime;
-		audioAnalyser.getFft().forward(audioAnalyser.getSong().mix);
+		audioAnalyser.getFft().forward(audioAnalyser.getAudioSource().mix);
 	}
 
 	/**
