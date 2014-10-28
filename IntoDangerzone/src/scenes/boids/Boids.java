@@ -14,7 +14,7 @@ public class Boids extends core.Scene {
 
 	private int maxBoids = 500;
 	private Random rand;
-	private float newBoidProbability = 0.1f;
+	private float newBoidProbability = 1f;
 
 	public Boids(PApplet parent, AudioSource audioSource) {
 		super(parent);
@@ -25,17 +25,18 @@ public class Boids extends core.Scene {
 		rand = new Random();
 
 		for (int i = 0; i < 1; i++) {
-			flock.addBoid(new Boid(0, 0, parent.width, parent.height));
+			flock.addBoid(new Boid(parent.width / 2, parent.height / 2,
+					parent.width, parent.height));
 		}
 	}
 
 	@Override
 	public void update(float dtSeconds) {
-		if (beatListener.isKick()) {
-			if (flock.boids.size() < maxBoids) {
-				if (rand.nextFloat() < newBoidProbability){
-					flock.addBoid(new Boid(0, 0, parent.width, parent.height));
-				}
+		if (beatListener.isSnare()) {
+			if (rand.nextFloat() < newBoidProbability) {
+				if (flock.boids.size() < maxBoids)
+					flock.addBoid(new Boid(parent.width / 2, parent.height / 2,
+							parent.width, parent.height));
 			}
 		}
 		flock.run();

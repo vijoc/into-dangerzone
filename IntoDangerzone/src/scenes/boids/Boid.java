@@ -13,12 +13,22 @@ class Boid {
 	Vector2D location;
 	Vector2D velocity;
 	Vector2D acceleration;
-	float r;
-	float maxSteering;
-	float maxSpeed;
+	float boidSize = 1.0f;
+	float weight = 1.0f;
+	float maxSteering = 0.03f;
+	float maxSpeed = 2;
 	private float width;
 	private float height;
+
 	private float desiredSeparation = 25;
+	private float alignNeighborDist = 50;
+	private float cohesionNeighborDist = 50;
+
+	private float separationWeight = 1.5f;
+	private float alignmentWeight = 1.0f;
+	private float cohesionWeight = 1.0f;
+
+	private float deceleration = 0.3f; // must be between [0, 1)
 
 	Boid(float x, float y, float width, float height) {
 		acceleration = new Vector2D(0, 0);
@@ -31,9 +41,6 @@ class Boid {
 				(float) Math.sin(angle));
 
 		location = new Vector2D(x, y);
-		r = 2.0f;
-		maxSpeed = 2;
-		maxSteering = 0.03f;
 	}
 
 	void run(ArrayList<Boid> boids) {
@@ -43,8 +50,7 @@ class Boid {
 	}
 
 	void applyForce(Vector2D force) {
-		// TODO add mass here?
-		acceleration = acceleration.add(force);
+		acceleration = acceleration.add(force.scalarDivision(weight));
 	}
 
 	void flock(ArrayList<Boid> boids) {
@@ -53,9 +59,9 @@ class Boid {
 		Vector2D cohesion = cohesion(boids);
 
 		// Weighing
-		separation = separation.scalarMultiplication(1.5f);
-		alignment = alignment.scalarMultiplication(1.0f);
-		cohesion = cohesion.scalarMultiplication(1.0f);
+		separation = separation.scalarMultiplication(separationWeight);
+		alignment = alignment.scalarMultiplication(alignmentWeight);
+		cohesion = cohesion.scalarMultiplication(cohesionWeight);
 
 		applyForce(separation);
 		applyForce(alignment);
@@ -68,8 +74,8 @@ class Boid {
 			velocity = velocity.toLength(maxSpeed);
 		}
 		location = location.add(velocity);
-		// Reset acceleration to 0 each cycle
-		acceleration = acceleration.scalarMultiplication(0);
+		// Decrease acceleration
+		acceleration = acceleration.scalarMultiplication(deceleration);
 	}
 
 	Vector2D seek(Vector2D target) {
@@ -84,16 +90,16 @@ class Boid {
 		return steer;
 	}
 
-	// TODO this not really belong here
+	// TODO this not really belongs here
 	void checkBoundaries() {
-		if (location.getX() < -r)
-			this.location = new Vector2D(width + r, this.location.getY());
-		if (location.getY() < -r)
-			this.location = new Vector2D(this.location.getX(), height + r);
-		if (location.getX() > width + r)
-			this.location = new Vector2D(-r, this.location.getY());
-		if (location.getY() > height + r)
-			this.location = new Vector2D(this.location.getX(), -r);
+		if (location.getX() < -boidSize)
+			this.location = new Vector2D(width + boidSize, this.location.getY());
+		if (location.getY() < -boidSize)
+			this.location = new Vector2D(this.location.getX(), height + boidSize);
+		if (location.getX() > width + boidSize)
+			this.location = new Vector2D(-boidSize, this.location.getY());
+		if (location.getY() > height + boidSize)
+			this.location = new Vector2D(this.location.getX(), -boidSize);
 	}
 
 	Vector2D separate(ArrayList<Boid> boids) {
@@ -126,12 +132,11 @@ class Boid {
 	}
 
 	Vector2D align(ArrayList<Boid> boids) {
-		float neighbordist = 50;
 		Vector2D sum = new Vector2D(0, 0);
 		int count = 0;
 		for (Boid other : boids) {
 			float d = location.distanceTo(other.location);
-			if ((d > 0) && (d < neighbordist)) {
+			if ((d > 0) && (d < alignNeighborDist)) {
 				sum = sum.add(other.velocity);
 				count++;
 			}
@@ -151,13 +156,12 @@ class Boid {
 	}
 
 	Vector2D cohesion(ArrayList<Boid> boids) {
-		float neighbordist = 50;
 		Vector2D sum = new Vector2D(0, 0);
 
 		int count = 0;
 		for (Boid other : boids) {
 			float d = location.distanceTo(other.location);
-			if ((d > 0) && (d < neighbordist)) {
+			if ((d > 0) && (d < cohesionNeighborDist)) {
 				sum = sum.add(other.location);
 				count++;
 			}

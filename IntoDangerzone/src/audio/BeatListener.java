@@ -42,4 +42,8 @@ public class BeatListener implements AudioListener {
 	public boolean isOnset() {
 		return beat.isOnset();
 	}
+	
+	public boolean isOnset(int i) {
+		return beat.isOnset(i);
+	}
 }
