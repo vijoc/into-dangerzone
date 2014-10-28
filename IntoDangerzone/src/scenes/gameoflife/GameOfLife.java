@@ -14,6 +14,9 @@ class GameOfLife {
 	
 	private int rowCount;
 	private int colCount;
+	private int generation;
+	
+	private float density = 0.0f;
 	
 	private final int maxRowIndex;
 	private final int maxColIndex;
@@ -34,6 +37,7 @@ class GameOfLife {
 		maxColIndex = colCount-1;
 		
 		states = new boolean[colCount][rowCount];
+		generation = 0;
 	}
 	
 	/**
@@ -43,7 +47,7 @@ class GameOfLife {
 		Random rand = new Random();
 		for(int i = 0; i < colCount; i++) {
 			for(int j = 0; j < rowCount; j++) {
-				if(rand.nextBoolean()) setCellState(i, j, true);
+				if(rand.nextFloat() < density) setCellState(i, j, true);
 			}
 		}
 	}
@@ -53,6 +57,7 @@ class GameOfLife {
 	 */
 	public void stepGeneration() {
 		states = calculateNextStates();
+		generation++;
 	}
 	
 	/**
@@ -62,7 +67,7 @@ class GameOfLife {
 	 * @return
 	 */
 	public boolean getCellState(int x, int y) {
-		return states[x][y];
+		return states[wrapColumn(x)][wrapRow(y)];
 	}
 	
 	/**
@@ -72,7 +77,21 @@ class GameOfLife {
 	 * @param state new state
 	 */
 	public void setCellState(int x, int y, boolean state) {
-		states[x][y] = state;
+		states[wrapColumn(x)][wrapRow(y)] = state;
+	}
+	
+	/**
+	 * Insert a shape specified by boolean[x][y] array
+	 * @param shape
+	 * @param x leftmost x coordinate
+	 * @param y upmost y coordinate
+	 */
+	public void insertShape(boolean[][] shape, int x, int y){
+		for (int i = 0; i < shape.length; i++){
+			for (int j = 0; j < shape[0].length; j++){
+				setCellState(x+i, y+j, shape[i][j]);
+			}
+		}
 	}
 
 	public int getColumnCount() {
@@ -148,5 +167,13 @@ class GameOfLife {
 			return max + number;
 		else // greater than max, wrap around
 			return number - max;	
+	}
+
+	public int getGeneration() {
+		return generation;
+	}
+
+	public void setGeneration(int generation) {
+		this.generation = generation;
 	}
 }

@@ -1,18 +1,18 @@
 package core;
-import audio.AudioAnalyser;
+import audio.BeatListener;
 
 
 public class KickProvider implements InputProvider<Boolean> {
-
-	private AudioAnalyser audioAnalyser;
 	
-	public KickProvider(AudioAnalyser audioAnalyser) {
-		this.audioAnalyser = audioAnalyser;
+	private BeatListener listener;
+	
+	public KickProvider(BeatListener listener) {
+		this.listener = listener;
 	}
 
 	@Override
 	public Boolean readInput() {
-		return Boolean.valueOf(audioAnalyser.isKick());
+		return Boolean.valueOf(listener.isKick());
 	}
 
 }
