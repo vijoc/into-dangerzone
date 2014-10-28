@@ -1,10 +1,13 @@
 package scenes.lTree;
 
+import ddf.minim.AudioSource;
 import audio.AudioAnalyser;
+import audio.BeatListener;
 import processing.core.PApplet;
 
 public class LTree extends core.Scene {
-	AudioAnalyser audioAnalyser;
+	AudioSource audioSource;
+	BeatListener beatListener;
 	float curlX = 0;
 	float curlY = 0;
 	float f = 0; // (float) (Math.sqrt(2) / 2.0f);
@@ -14,21 +17,22 @@ public class LTree extends core.Scene {
 	float curlXTarget = 0;
 	float curlYTarget = 0;
 
-	public LTree(PApplet parent, AudioAnalyser audioAnalyser) {
+	public LTree(PApplet parent, AudioSource audioSource) {
 		super(parent);
-		this.audioAnalyser = audioAnalyser;
+		this.audioSource = audioSource;
+		this.beatListener = new BeatListener(audioSource);
 	}
 
 	@Override
 	public void update(float dtSeconds) {
-		if (audioAnalyser.isKick()) {
+		if (beatListener.isKick()) {
 			curlYTarget += parent.random(200) - 100;
 			curlXTarget += parent.random(200) - 100;
 		}
-		if (audioAnalyser.isSnare()) {
+		if (beatListener.isSnare()) {
 			// curlYTarget += parent.random(200)-100;
 		}
-		if (audioAnalyser.isHat()) {
+		if (beatListener.isHat()) {
 			if (growthTarget < -3)
 				growthTarget += 0.01;
 			if (f < 0.9)

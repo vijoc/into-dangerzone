@@ -2,23 +2,27 @@ package scenes.boids;
 
 import java.util.Random;
 
+import ddf.minim.AudioSource;
 import audio.AudioAnalyser;
+import audio.BeatListener;
 import processing.core.PApplet;
 
 public class Boids extends core.Scene {
 
 	Flock flock;
 
-	private AudioAnalyser audioAnalyser;
+	private AudioSource audioSource;
+	private BeatListener beatListener;
 
 	private int maxBoids = 500;
 	private Random rand;
 	private float newBoidProbability = 0.1f;
 
-	public Boids(PApplet parent, AudioAnalyser audioAnalyser) {
+	public Boids(PApplet parent, AudioSource audioSource) {
 		super(parent);
 		this.parent = parent;
-		this.audioAnalyser = audioAnalyser;
+		this.audioSource = audioSource;
+		this.beatListener = new BeatListener(audioSource);
 		flock = new Flock(parent);
 
 		rand = new Random();
@@ -30,7 +34,7 @@ public class Boids extends core.Scene {
 
 	@Override
 	public void update(float dtSeconds) {
-		if (audioAnalyser.isKick()) {
+		if (beatListener.isKick()) {
 			if (flock.boids.size() < maxBoids) {
 				if (rand.nextFloat() < newBoidProbability){
 					flock.addBoid(new Boid(0, 0, parent.width, parent.height));
