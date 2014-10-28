@@ -7,6 +7,7 @@ import audio.AudioAnalyser;
 import math.Vector3D;
 import processing.core.*;
 import processing.event.MouseEvent;
+import scenes.julia.JuliaScene;
 import scenes.lTree.*;
 import scenes.boids.Boids;
 import scenes.gameoflife.GameOfLifeScene;
@@ -21,6 +22,7 @@ public class IntoDangerzone extends PApplet {
 	private GameOfLifeScene golScene;
 	private LTree lTreeScene;
 	private Boids boidsScene;
+	private JuliaScene juliaScene;
 	
 	private Camera camera;
 	private AudioAnalyser audioAnalyser;
@@ -80,6 +82,9 @@ public class IntoDangerzone extends PApplet {
 		
 		boidsScene = new Boids(this, audioAnalyser);
 		sceneManager.addScene(boidsScene);
+		
+		juliaScene = new JuliaScene(this);
+		sceneManager.addScene(juliaScene);
 		
 		sceneManager.setActiveScene(0);
 	}
