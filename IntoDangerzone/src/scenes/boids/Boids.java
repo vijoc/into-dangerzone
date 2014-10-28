@@ -31,7 +31,7 @@ public class Boids extends core.Scene {
 
 	@Override
 	public void update(float dtSeconds) {
-		if (audioAnalyser.isKick()) {
+		if (audioAnalyser.isSnare()) {
 			if (rand.nextFloat() < newBoidProbability) {
 				if (flock.boids.size() < maxBoids)
 					flock.addBoid(new Boid(parent.width / 2, parent.height / 2,

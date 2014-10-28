@@ -113,8 +113,8 @@ public class AudioAnalyser {
 		return beat.isHat();
 	}
 	
-	public boolean isOnset() {
-		return beat.isOnset();
+	public boolean isOnset(int i) {
+		return beat.isOnset(i);
 	}
 
 	class BeatListener implements AudioListener {

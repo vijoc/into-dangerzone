@@ -33,9 +33,9 @@ class Flock {
 			applet.translate(b.location.getX(), b.location.getY());
 			applet.rotate(theta);
 			applet.beginShape(processing.core.PShape.TRIANGLES);
-			applet.vertex(0, -b.boidSize * 6);
-			applet.vertex(-b.boidSize * 4, b.boidSize * 4);
-			applet.vertex(b.boidSize * 4, b.boidSize * 4);
+			applet.vertex(0, -b.boidSize * 10);
+			applet.vertex(-b.boidSize * 6, b.boidSize * 6);
+			applet.vertex(b.boidSize * 6, b.boidSize * 6);
 			applet.endShape();
 			applet.popMatrix();
 		}
@@ -51,7 +51,7 @@ class Flock {
 
 	void addBoid(Boid b) {
 		boids.add(b);
-		float f = 4*rand.nextFloat();
+		float f = 2*rand.nextFloat();
 		b.weight = f;
 		b.boidSize = f;
 	}
