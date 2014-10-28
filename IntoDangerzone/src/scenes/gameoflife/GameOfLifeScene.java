@@ -1,5 +1,7 @@
 package scenes.gameoflife;
 
+import java.util.Random;
+
 import math.Vector3D;
 import graphics.Camera;
 import core.Scene;
@@ -15,6 +17,9 @@ public class GameOfLifeScene extends Scene {
 	private GameOfLifeRenderer golRenderer;
 	
 	private Camera camera;
+	
+	private Random rand;
+	private boolean[][] bomb;
 
 
 	public GameOfLifeScene(PApplet parent, AudioSource audioSource, float stepTime, int columns, int rows) {
@@ -26,6 +31,15 @@ public class GameOfLifeScene extends Scene {
 		this.golRenderer = new GameOfLifeRenderer(parent, gol);
 		initializeStepTimer(stepTime);
 		this.camera = new Camera(parent);
+		
+		this.rand = new Random();
+		
+		this.bomb = new boolean[3][3];
+		bomb[0][1] = true;
+		bomb[1][0] = true;
+		bomb[1][1] = true;
+		bomb[1][2] = true;
+		bomb[2][0] = true;
 	}
 	
 	public GameOfLifeScene(PApplet parent, AudioSource audioSource, int columns, int rows) {
@@ -38,6 +52,9 @@ public class GameOfLifeScene extends Scene {
 		if(generationTimer < 0) {
 			generationTimer = stepTime;
 			gol.stepGeneration();
+		}
+		if(gol.getGeneration() == 50){
+			gol.insertShape(bomb, 50, 50);
 		}
 	}
 
