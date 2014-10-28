@@ -87,7 +87,6 @@ class GameOfLife {
 	 * @param y upmost y coordinate
 	 */
 	public void insertShape(boolean[][] shape, int x, int y){
-		System.out.println("generation: " + generation);
 		for (int i = 0; i < shape.length; i++){
 			for (int j = 0; j < shape[0].length; j++){
 				setCellState(x+i, y+j, shape[i][j]);
