@@ -26,16 +26,16 @@ class Flock {
 	void render() {
 		for (Boid b : boids) {
 			float theta = (float) (b.velocity.getHeading() + Math.toRadians(90));
-			applet.fill(0);
-			applet.stroke(0);
+			applet.fill(0,0,0);
+			applet.stroke(0,0,0);
 			applet.pushMatrix();
 			applet.translate(-applet.width / 2, -applet.height / 2);
 			applet.translate(b.location.getX(), b.location.getY());
 			applet.rotate(theta);
 			applet.beginShape(processing.core.PShape.TRIANGLES);
-			applet.vertex(0, -b.r * 2);
-			applet.vertex(-b.r, b.r * 2);
-			applet.vertex(b.r, b.r * 2);
+			applet.vertex(0, -b.r * 6);
+			applet.vertex(-b.r*4, b.r * 4);
+			applet.vertex(b.r*4, b.r * 4);
 			applet.endShape();
 			applet.popMatrix();
 		}

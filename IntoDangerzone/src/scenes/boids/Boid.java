@@ -13,20 +13,20 @@ class Boid {
 	Vector2D location;
 	Vector2D velocity;
 	Vector2D acceleration;
-	float r;
-	float maxSteering;
-	float maxSpeed;
+	float r = 2.0f;
+	float maxSteering = 0.03f;
+	float maxSpeed = 2;
 	private float width;
 	private float height;
-	
-	private float desiredSeparation = 15;
+
+	private float desiredSeparation = 25;
 	private float alignNeighborDist = 50;
 	private float cohesionNeighborDist = 50;
-	
+
 	private float separationWeight = 1.5f;
 	private float alignmentWeight = 1.0f;
 	private float cohesionWeight = 1.0f;
-	
+
 	private float deceleration = 0.3f; // must be between [0, 1)
 
 	Boid(float x, float y, float width, float height) {
@@ -40,9 +40,6 @@ class Boid {
 				(float) Math.sin(angle));
 
 		location = new Vector2D(x, y);
-		r = 2.0f;
-		maxSpeed = 2;
-		maxSteering = 0.03f;
 	}
 
 	void run(ArrayList<Boid> boids) {
