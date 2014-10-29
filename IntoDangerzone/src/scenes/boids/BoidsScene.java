@@ -31,8 +31,7 @@ public class BoidsScene extends core.Scene {
 		rand = new Random();
 
 		for (int i = 0; i < 1; i++) {
-			flock.addBoid(new Boid(rand.nextInt(parent.width), rand.nextInt(parent.height),
-					parent.width, parent.height));
+			flock.addBoid(new Boid(parent.width, parent.height));
 		}
 	}
 
@@ -42,8 +41,7 @@ public class BoidsScene extends core.Scene {
 			if (rand.nextFloat() < newBoidProbability) {
 				if (flock.boids.size() < maxBoids)
 					boidSize *= decayRate;
-					flock.addBoid(new Boid(parent.width / 2, parent.height / 2,
-							parent.width, parent.height));
+				flock.addBoid(new Boid(parent.width, parent.height));
 				flock.setBoidSizes(boidSize);
 			}
 		}

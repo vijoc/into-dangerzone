@@ -18,7 +18,7 @@ class Boid {
 	Vector2D velocity;
 	Vector2D acceleration;
 
-	Boid(float x, float y, float width, float height) {
+	Boid(float width, float height) {
 		this.rules = new Rules();
 		acceleration = new Vector2D(0, 0);
 		this.width = width;
@@ -28,7 +28,9 @@ class Boid {
 		float angle = rand.nextFloat() * Constants.TWO_PI;
 		velocity = new Vector2D((float) Math.cos(angle),
 				(float) Math.sin(angle));
-
+		
+		float x = rand.nextFloat()*width;
+		float y = rand.nextFloat()*height;
 		this.location = new Vector2D(x, y);
 	}
 
