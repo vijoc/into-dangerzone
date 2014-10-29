@@ -7,12 +7,12 @@ import math.Vector2D;
 import processing.core.PApplet;
 
 class Flock {
-	ArrayList<Boid> boids; // An ArrayList for all the boids
+	ArrayList<Boid> boids;
 	PApplet applet;
 	Random rand;
 
 	Flock(PApplet applet) {
-		boids = new ArrayList<Boid>(); // Initialize the ArrayList
+		boids = new ArrayList<Boid>();
 		this.applet = applet;
 		this.rand = new Random();
 	}
@@ -37,17 +37,29 @@ class Flock {
 
 	void addBoid(Boid b) {
 		boids.add(b);
-		float f = 1;//2*rand.nextFloat();
-		b.weight = f;
-		b.boidSize = f;
 	}
 	
-	// TODO more elaborate randomization, parameterization etc
+	// TODO ugly hack with trying to get size to stay constant
 	void newRules() {
-		float size = rand.nextFloat()*4;
+		Rules rules = new Rules(boids.get(0).rules.boidSize);
+		rules.randomizeSomething();
+		
 		for (Boid b : boids) {
-			b.boidSize = size;
-			b.weight = size;
+			b.rules = rules;
+		}
+	}
+	
+	void setBoidSizes(float size){
+		for (Boid b : boids) {
+			b.rules.boidSize = size;
+			b.rules.weight = size;
+		}
+	}
+	
+	void scaleBoidSizes(float scalingFactor){
+		for (Boid b : boids) {
+			b.rules.boidSize *= scalingFactor;
+			b.rules.weight *= scalingFactor;
 		}
 	}
 
