@@ -73,7 +73,7 @@ public class Rules {
 			break;
 		case 2:
 			this.setSeparationWeight(0.5f + rand.nextFloat() * 2.f);
-			this.setAlignmentWeight(0.5f + rand.nextFloat() * 1.f);
+			this.setAlignmentWeight(0.5f + rand.nextFloat() * 1.5f);
 			this.setCohesionWeight(0.5f + rand.nextFloat() * 1.f);
 			break;
 		default:

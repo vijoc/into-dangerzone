@@ -13,6 +13,7 @@ class Boid {
 	Rules rules;
 	private float width;
 	private float height;
+	private int margin = 100; // Arbitrary margin for beautiful rendering
 
 	Vector2D location;
 	Vector2D velocity;
@@ -90,14 +91,14 @@ class Boid {
 
 	// TODO this not really belongs here
 	void checkBoundaries() {
-		if (location.getX() < 0)
-			this.location = new Vector2D(width, this.location.getY());
-		if (location.getY() < 0)
-			this.location = new Vector2D(this.location.getX(), height);
-		if (location.getX() > width)
-			this.location = new Vector2D(0, this.location.getY());
-		if (location.getY() > height)
-			this.location = new Vector2D(this.location.getX(), 0);
+		if (location.getX() < -margin)
+			this.location = new Vector2D(width + margin, this.location.getY());
+		if (location.getY() < -margin)
+			this.location = new Vector2D(this.location.getX(), height + margin);
+		if (location.getX() > width + margin)
+			this.location = new Vector2D(-margin, this.location.getY());
+		if (location.getY() > height + margin)
+			this.location = new Vector2D(this.location.getX(), -margin);
 	}
 
 	Vector2D separate(ArrayList<Boid> boids) {
