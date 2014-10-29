@@ -55,4 +55,16 @@ public class BoidsScene extends core.Scene {
 		boidsRenderer.render();
 	}
 
+	@Override
+	public void activated() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deactivated() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

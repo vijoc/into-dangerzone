@@ -42,6 +42,7 @@ public class GameOfLifeScene extends Scene {
 		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
 		this.beatListener = new BeatListener(audioSource);
 
+
 		gol = new GameOfLife(columns, rows);
 		gol.seedRandom();
 
@@ -102,6 +103,18 @@ public class GameOfLifeScene extends Scene {
 	private void initializeStepTimer(float stepDuration) {
 		this.stepDuration = stepDuration;
 		generationTimer = stepDuration;
+	}
+
+	@Override
+	public void activated() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deactivated() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
