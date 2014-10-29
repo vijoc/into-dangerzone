@@ -5,6 +5,13 @@ public class Complex {
 	private final float x;
 	private final float y;
 	
+	public static Complex fromPolar(float r, float phase) {
+		return new Complex(
+				(float) (r * Math.cos(phase)), 
+				(float) (r * Math.sin(phase))
+		);
+	}
+	
 	public static Complex add(Complex c1, Complex c2) {
 		return new Complex(c1.x + c2.x, c1.y + c2.y);
 	}
@@ -37,6 +44,15 @@ public class Complex {
 	
 	public float squaredModule() {
 		return x*x + y*y;
+	}
+	
+	public float magnitude() {
+		return (float) Math.sqrt(squaredModule());
+	}
+	
+	public float phase() {
+		if(x == 0 && y == 0) return 0;
+		else return (float) Math.atan2(y, x);
 	}
 	
 	public Complex squared() {
