@@ -1,5 +1,7 @@
 package scenes.lTree;
 
+import math.Vector3D;
+import graphics.Camera;
 import ddf.minim.AudioSource;
 import audio.BeatListener;
 import processing.core.PApplet;
@@ -7,9 +9,12 @@ import processing.core.PApplet;
 public class LTree extends core.Scene {
 	AudioSource audioSource;
 	BeatListener beatListener;
+	
+	private Camera camera;
+	
 	float curlX = 0;
 	float curlY = 0;
-	float f = 0; // (float) (Math.sqrt(2) / 2.0f);
+	float f = 0;
 	float delay = 50;
 	float growth = 0;
 	float growthTarget = -8;
@@ -20,6 +25,7 @@ public class LTree extends core.Scene {
 		super(parent);
 		this.audioSource = audioSource;
 		this.beatListener = new BeatListener(audioSource);
+		this.camera = new Camera(parent);
 	}
 
 	@Override
@@ -33,21 +39,21 @@ public class LTree extends core.Scene {
 		}
 		if (beatListener.isHat()) {
 			if (growthTarget < -3)
-				growthTarget += 0.01;
+				growthTarget += 0.1;
 			if (f < 0.9)
-				f += 0.001;
+				f += 0.01;
 		}
 	}
 
 	@Override
 	public void render() {
-		parent.background(250, 250, 250, 10);
-		parent.stroke(0, 0, 0, 25);
+		parent.background(250, 250, 250);
+		parent.stroke(0, 0, 0);
 		curlX += (PApplet.radians((float) (curlXTarget)) - curlX) / delay;
 		curlY += (PApplet.radians((float) (curlYTarget)) - curlY) / delay;
 		parent.translate(0, parent.height / 2);
 		parent.point(0,0);
-//		parent.line(0, 0, 0, parent.height);
+		parent.line(0, 0, 0, parent.height);
 		branch(parent.height * 0.5, 17);
 		growth += (growthTarget / 10 - growth + 1.) / delay;
 		renderDebugTexts();
@@ -91,8 +97,19 @@ public class LTree extends core.Scene {
 
 	@Override
 	public void activated() {
-		// TODO Auto-generated method stub
-		
+		updateCamera();
+	}
+
+	private void updateCamera() {
+		float fovRadians = (float) Math.toRadians(75); // ?
+		float zDistW = (float) ((parent.width / 2.0f) / Math
+				.tan(fovRadians / 2.0f));
+		float zDistH = (float) ((parent.height / 2.0f) / Math
+				.tan(fovRadians / 2.0f));
+		float zDist = Math.max(zDistW, zDistH);
+		camera.setPosition(new Vector3D(0, 0, zDist));
+		camera.setCenter(new Vector3D(0, 0, 0));
+		camera.update();
 	}
 
 	@Override
