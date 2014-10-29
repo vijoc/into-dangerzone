@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import math.Complex;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import graphics.Renderer;
 
@@ -20,9 +21,13 @@ public class JuliaSceneRenderer extends Renderer {
 	float shrink;
 	float shrinkv;
 	
+	float red = 255, green = 255, blue = 255;
+	
 	float colorStep;
 	
 	private JuliaSet set;
+	
+	private boolean renderDebug;
 	
 	PGraphics context;
 	
@@ -41,6 +46,7 @@ public class JuliaSceneRenderer extends Renderer {
 
 	@Override
 	public void render() {
+		parent.colorMode(PConstants.RGB, 255.0f);
 		parent.background(255);
 		
 		context.beginDraw();		
@@ -70,13 +76,25 @@ public class JuliaSceneRenderer extends Renderer {
 		context.endDraw();
 		
 		parent.image(context, -parent.width/2, -parent.height/2, parent.width, parent.height);
-		parent.textSize(16);
-		parent.color(255, 0, 0);
-		parent.text("FPS: "+parent.frameRate, parent.width/3, parent.height/3);
+		if(renderDebug) {
+			parent.textSize(16);
+			parent.color(255, 0, 0);
+			parent.text("FPS: "+parent.frameRate, parent.width/3, parent.height/3);
+			parent.text("c: " + set.getC().toString(), parent.width/3, parent.height/3 + 20);
+			parent.text("Iterations: " + set.getIterations(), parent.width/3, parent.height/3 + 40);
+		}
 	}
 	
 	public void setMode(RenderMode mode) {
 		this.mode = mode;
+	}
+	
+	public void setDebug(boolean d) {
+		this.renderDebug = d;
+	}
+	
+	public void toggleDebug() {
+		setDebug(!renderDebug);
 	}
 	
 	private int pixelIndex(float x, float y) {
@@ -92,8 +110,16 @@ public class JuliaSceneRenderer extends Renderer {
 	private void renderStepped(Complex z, float x, float y) {
 		int iter = set.lastIterationContaining(z);
 		
-		if(iter >= 0) {
-			context.pixels[pixelIndex(x, y)] = context.color(255 - iter*colorStep);
+		if(iter >= 1) {
+			float val = (float) iter / set.getIterations();
+			int color;
+			if(val < 0.5) {
+				color = context.lerpColor(context.color(255, 255, 255), context.color(0,0,0), val * 2);
+			} else {
+				color = context.lerpColor(context.color(0, 0, 0), context.color(255, 255, 255), (val-0.5f)*2);
+			}
+			
+			context.pixels[pixelIndex(x, y)] = color;
 		}
 	}
 
