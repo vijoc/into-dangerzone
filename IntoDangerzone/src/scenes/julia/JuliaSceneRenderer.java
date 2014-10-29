@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import math.Complex;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import graphics.Renderer;
 
@@ -20,6 +21,8 @@ public class JuliaSceneRenderer extends Renderer {
 	float shrink;
 	float shrinkv;
 	
+	float red = 255, green = 255, blue = 255;
+	
 	float colorStep;
 	
 	private JuliaSet set;
@@ -30,7 +33,7 @@ public class JuliaSceneRenderer extends Renderer {
 		super(parent);
 		this.set = set;
 		
-		context = parent.createGraphics(2*parent.width/5, 2*parent.height/5);
+		context = parent.createGraphics(parent.width/2, parent.height/2);
 		context.loadPixels();
 		translateX = context.width / 2;
 		translateY = context.height / 2;
@@ -41,6 +44,7 @@ public class JuliaSceneRenderer extends Renderer {
 
 	@Override
 	public void render() {
+		parent.colorMode(PConstants.RGB, 255.0f);
 		parent.background(255);
 		
 		context.beginDraw();		
@@ -73,6 +77,7 @@ public class JuliaSceneRenderer extends Renderer {
 		parent.textSize(16);
 		parent.color(255, 0, 0);
 		parent.text("FPS: "+parent.frameRate, parent.width/3, parent.height/3);
+		parent.text("c: " + set.getC().toString(), parent.width/3, parent.height/3 + 20);
 	}
 	
 	public void setMode(RenderMode mode) {
@@ -92,8 +97,16 @@ public class JuliaSceneRenderer extends Renderer {
 	private void renderStepped(Complex z, float x, float y) {
 		int iter = set.lastIterationContaining(z);
 		
-		if(iter >= 0) {
-			context.pixels[pixelIndex(x, y)] = context.color(255 - iter*colorStep);
+		if(iter >= 1) {
+			float val = (float) iter / set.getIterations();
+			int color;
+			if(val < 0.5) {
+				color = context.lerpColor(context.color(255, 255, 255), context.color(0,0,0), val * 2);
+			} else {
+				color = context.lerpColor(context.color(0, 0, 0), context.color(255, 255, 255), (val-0.5f)*2);
+			}
+			
+			context.pixels[pixelIndex(x, y)] = color;
 		}
 	}
 

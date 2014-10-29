@@ -1,13 +1,19 @@
 package scenes.julia;
 
+import java.util.Random;
+
 import audio.AudioAnalyser;
 import audio.BeatListener;
+import audio.TriggeredBeatListener;
 import audio.ZcrListener;
 import math.Complex;
 import math.Vector3D;
 import graphics.Camera;
 import processing.core.PApplet;
 import scenes.julia.JuliaSceneRenderer.RenderMode;
+import core.InputProvider;
+import core.KickProvider;
+import core.PositiveEdgeTrigger;
 import core.Scene;
 import ddf.minim.AudioSource;
 
@@ -38,13 +44,19 @@ public class JuliaScene extends Scene {
 	private JuliaSet set;
 	private ZcrListener zcrListener;
 	private AudioAnalyser audioAnalyser;
-	private BeatListener beatListener;
+	private TriggeredBeatListener beatListener;
 	
-	private float minMagnitude = 0.3f;
-	private float maxMagnitude = 1.75f;
+	private float minMagnitude = 0.75f;
+	private float maxMagnitude = 1.25f;
+	private float magnitudeChange = -0.01f;
 	
 	private float angularVelocity = 0.1f;
 	private float magnitude = maxMagnitude;
+	
+	private int angularDirection = 1;
+	private Random rand = new Random();
+	
+	private InputProvider<Boolean> explosionProvider;
 	
 	public JuliaScene(PApplet parent, AudioSource audioSource) {
 		super(parent);
@@ -53,32 +65,40 @@ public class JuliaScene extends Scene {
 		camera = new Camera(parent);
 		this.zcrListener = new ZcrListener(audioSource);
 		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
-		this.beatListener = new BeatListener(audioSource);
-		set.setFunction(FUNCTIONS[2]);
-		set.setIterations(12);
+		this.beatListener = new TriggeredBeatListener(audioSource, 100);
+		set.setFunction(FUNCTIONS[1]);
+		set.setIterations(15);
 	}
 
 	@Override
 	public void update(float dtSeconds) {
 		audioAnalyser.getFft().forward(audioAnalyser.getAudioSource().mix);
-		float avgEnergy = audioAnalyser.getFft().calcAvg(0, 200);
-		angularVelocity = (float) Math.log(avgEnergy * 60);
+		float avgEnergy = audioAnalyser.getFft().calcAvg(120, 2000);
+		angularVelocity = avgEnergy*angularDirection / (float) Math.PI;
 		
 		float phase = set.getC().phase() + angularVelocity * dtSeconds;
-		if(phase > TWO_PI) phase -= TWO_PI;
 		
-		float zcr = zcrListener.getZCR();
+		/*magnitude += magnitudeChange * dtSeconds;
+		if(magnitude < minMagnitude) {
+			magnitudeChange = 0.01f;
+		}
+		if(magnitude > maxMagnitude) {
+			magnitudeChange = -0.01f;
+		}*/
 		
-		if(beatListener.isKick()) {
-			magnitude -= 0.5;
+		if(beatListener.kick()) {
+			if(rand.nextFloat() < 0.2f) { angularDirection *= -1; }
+			magnitude -= (maxMagnitude * audioAnalyser.getFft().calcAvg(0, 120) - magnitude) / 100;
 		}
 		
-		magnitude += (maxMagnitude - magnitude) * dtSeconds;
+		magnitude += (maxMagnitude - magnitude) / 50;
 		
-		magnitude = Math.max(magnitude, minMagnitude);
 		magnitude = Math.min(magnitude, maxMagnitude);
+		magnitude = Math.max(magnitude, minMagnitude);
 		
 		set.setC(Complex.fromPolar(magnitude, phase));
+ 
+		beatListener.reset();
 	}
 
 	@Override
@@ -90,6 +110,12 @@ public class JuliaScene extends Scene {
 	public void activated() {
 		updateCamera();
 	}
+
+	@Override
+	public void deactivated() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	private void updateCamera() {
 		float fovRadians = (float) Math.toRadians(75); // ?
@@ -99,12 +125,6 @@ public class JuliaScene extends Scene {
 		camera.setPosition(new Vector3D(0, 0, zDist));
 		camera.setCenter(new Vector3D(0,0,0));
 		camera.update();
-	}
-
-	@Override
-	public void deactivated() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
