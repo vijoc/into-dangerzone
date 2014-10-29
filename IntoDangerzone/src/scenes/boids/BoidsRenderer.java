@@ -122,6 +122,7 @@ public class BoidsRenderer {
 
 	private void renderSquares() {
 		applet.background(255);
+		applet.rectMode(applet.CENTER);
 		for (Boid b : flock.boids) {
 			applet.fill(0, 0, 0);
 			applet.stroke(0, 0, 0);
@@ -131,6 +132,7 @@ public class BoidsRenderer {
 			applet.rect(0, 0, b.rules.boidSize, b.rules.boidSize);
 			applet.popMatrix();
 		}
+		applet.rectMode(applet.CORNER);
 	}
 
 	void randomRenderingMode() {

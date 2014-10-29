@@ -18,8 +18,9 @@ public class BoidsScene extends core.Scene {
 	private float decayRate = 1 - 0.005f;
 	private float boidSize = initialSize;
 	private Random rand;
-	private float newBoidProbability = 1f;
-	private float newRulesProbability = 1f;
+	private float newBoidProbability = 0.1f;
+	private float newRulesProbability = 0.2f;
+	private float newRenderingProbability = 0.1f;
 
 	public BoidsScene(PApplet parent, AudioSource audioSource) {
 		super(parent);
@@ -52,8 +53,11 @@ public class BoidsScene extends core.Scene {
 		}
 		flock.run();
 		if (beatListener.isHat()) {
-			boidsRenderer.randomRenderingMode();
+			if (rand.nextFloat() < newRenderingProbability) {
+				boidsRenderer.randomRenderingMode();
+			}
 		}
+		int flockSize = flock.boids.size();
 	}
 
 	@Override
