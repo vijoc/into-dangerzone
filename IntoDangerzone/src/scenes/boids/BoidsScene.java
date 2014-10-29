@@ -15,7 +15,8 @@ public class BoidsScene extends core.Scene {
 
 	private int maxBoids = 500;
 	private float initialSize = 8;
-	private float decayRate = 1 - 0.1f;
+	private float decayRate = 1 - 0.005f;
+	private float boidSize = initialSize;
 	private Random rand;
 	private float newBoidProbability = 1f;
 	private float newRulesProbability = 1f;
@@ -40,14 +41,15 @@ public class BoidsScene extends core.Scene {
 		if (beatListener.isSnare()) {
 			if (rand.nextFloat() < newBoidProbability) {
 				if (flock.boids.size() < maxBoids)
+					boidSize *= decayRate;
 					flock.addBoid(new Boid(parent.width / 2, parent.height / 2,
 							parent.width, parent.height));
-				flock.scaleBoidSizes(decayRate);
+				flock.setBoidSizes(boidSize);
 			}
 		}
 		if (beatListener.isKick()) {
 			if (rand.nextFloat() < newRulesProbability) {
-				
+				flock.newRules();
 			}
 		}
 		flock.run();

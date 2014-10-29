@@ -23,9 +23,9 @@ public class BoidsRenderer {
 			applet.translate(b.location.getX(), b.location.getY());
 			applet.rotate(theta);
 			applet.beginShape(processing.core.PShape.TRIANGLES);
-			applet.vertex(0, -b.boidSize * 10);
-			applet.vertex(-b.boidSize * 6, b.boidSize * 6);
-			applet.vertex(b.boidSize * 6, b.boidSize * 6);
+			applet.vertex(0, -b.rules.boidSize * 10);
+			applet.vertex(-b.rules.boidSize * 6, b.rules.boidSize * 6);
+			applet.vertex(b.rules.boidSize * 6, b.rules.boidSize * 6);
 			applet.endShape();
 			applet.popMatrix();
 		}

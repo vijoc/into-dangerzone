@@ -38,27 +38,26 @@ class Flock {
 	void addBoid(Boid b) {
 		boids.add(b);
 		float f = 8;
-		b.weight = f;
-		b.boidSize = f;
+		b.rules.weight = f;
+		b.rules.boidSize = f;
 	}
 	
 	// TODO more elaborate randomization, parameterization etc
 	void newRules() {
-		float size = rand.nextFloat()*4;
-		setBoidSizes(size);
+		
 	}
 	
 	void setBoidSizes(float size){
 		for (Boid b : boids) {
-			b.boidSize = size;
-			b.weight = size;
+			b.rules.boidSize = size;
+			b.rules.weight = size;
 		}
 	}
 	
 	void scaleBoidSizes(float scalingFactor){
 		for (Boid b : boids) {
-			b.boidSize *= scalingFactor;
-			b.weight *= scalingFactor;
+			b.rules.boidSize *= scalingFactor;
+			b.rules.weight *= scalingFactor;
 		}
 	}
 
