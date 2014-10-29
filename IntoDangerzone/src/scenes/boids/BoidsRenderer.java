@@ -22,11 +22,11 @@ public class BoidsRenderer {
 		this.flock = flock;
 		this.renderMode = RenderMode.SQUARE;
 		this.rand = new Random();
-		boidSize = flock.rules.getWeight() * 8;
+		boidSize = flock.rules.getWeight() * 10;
 	}
 
 	public void render() {
-		boidSize = flock.rules.getWeight() * 8;
+		boidSize = flock.rules.getWeight() * 10;
 		switch (renderMode) {
 		case CIRCLE:
 			renderCircles();

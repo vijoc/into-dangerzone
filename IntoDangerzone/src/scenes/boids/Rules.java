@@ -6,7 +6,7 @@ public class Rules {
 	private final float minWeight = 0.5f;
 	private final float maxWeight = 8.f;
 
-	private float weight = 1.0f;
+	private float weight = 8.0f;
 
 	private float maxSteering = 0.03f;
 	private float minSpeed = 0;
@@ -37,7 +37,7 @@ public class Rules {
 	}
 
 	public void setWeight(float weight) {
-		if (weight > minWeight && weight < maxWeight)
+		if (weight >= minWeight && weight <= maxWeight)
 			this.weight = weight;
 	}
 

@@ -38,10 +38,11 @@ class Flock {
 	int getFlockSize() {
 		return boids.size();
 	}
-	
+
 	void newBoid() {
-		if(boids.size() < maxBoids) {
+		if (boids.size() < maxBoids) {
 			Boid b = new Boid(width, height);
+			rules.setWeight(rules.getWeight() * 0.999f);
 			b.setRules(rules);
 			boids.add(b);
 		}
