@@ -11,12 +11,23 @@ class Flock {
 	PApplet applet;
 	Random rand;
 	Rules rules;
+	int width;
+	int height;
+	private int maxBoids = 500;
 
 	Flock(PApplet applet) {
 		boids = new ArrayList<Boid>();
 		this.applet = applet;
+		width = applet.width;
+		height = applet.height;
 		this.rand = new Random();
 		this.rules = new Rules();
+	}
+
+	void initialize() {
+		for (int i = 0; i < 1; i++) {
+			boids.add(new Boid(width, height));
+		}
 	}
 
 	void run() {
@@ -28,15 +39,23 @@ class Flock {
 	int getFlockSize() {
 		return boids.size();
 	}
-
-	void addBoid(Boid b) {
-		boids.add(b);
-		b.setRules(rules);
+	
+	void newBoid() {
+		if(boids.size() < maxBoids) {
+			Boid b = new Boid(width, height);
+			b.setRules(rules);
+			boids.add(b);
+		}
 	}
 
-	// TODO ugly hack with trying to get size to stay constant
+	void addBoid(Boid b) {
+		if (boids.size() < maxBoids) {
+			b.setRules(rules);
+			boids.add(b);
+		}
+	}
+
 	void newRules() {
-		Rules rules = new Rules(this.rules.weight);
 		rules.randomizeSomething();
 
 		for (Boid b : boids) {
