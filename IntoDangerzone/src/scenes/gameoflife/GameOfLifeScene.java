@@ -27,11 +27,13 @@ public class GameOfLifeScene extends Scene {
 	private BeatListener beatListener;
 
 	public static final RuleSet[] RULE_SETS = { RuleSet.AMOEBA,
-			RuleSet.ASSIMILATION, RuleSet.CORAL, RuleSet.DAY_AND_NIGHT,
-			RuleSet.GNARL, RuleSet.GOL, RuleSet.LIFE_WITHOUT_DEATH,
-			RuleSet.MAZE, RuleSet.MAZECTRIC, RuleSet.PSEUDO_LIFE,
-			RuleSet.REPLICATOR, RuleSet.STAINS, RuleSet.TWO_X_TWO,
-			RuleSet.WALLED_CITIES };
+			RuleSet.ASSIMILATION, RuleSet.COAGULATIONS, RuleSet.CORAL,
+			RuleSet.DAY_AND_NIGHT, RuleSet.DIAMOEBA, RuleSet.GNARL,
+			RuleSet.GOL, RuleSet.HIGH_LIFE, RuleSet.LIFE_WITHOUT_DEATH,
+			RuleSet.LONG_LIFE, RuleSet.MAZE, RuleSet.MAZECTRIC, RuleSet.MOVE,
+			RuleSet.PSEUDO_LIFE, RuleSet.REPLICATOR, RuleSet.SEEDS_TWO,
+			RuleSet.SERVIETTES, RuleSet.STAINS, RuleSet.THREE_FOUR_LIFE,
+			RuleSet.TWO_X_TWO, RuleSet.WALLED_CITIES };
 
 	public GameOfLifeScene(PApplet parent, AudioSource audioSource,
 			float stepDuration, int columns, int rows) {
