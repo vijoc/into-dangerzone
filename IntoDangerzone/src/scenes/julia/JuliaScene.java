@@ -1,5 +1,8 @@
 package scenes.julia;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import audio.AudioAnalyser;
@@ -17,7 +20,7 @@ import core.PositiveEdgeTrigger;
 import core.Scene;
 import ddf.minim.AudioSource;
 
-public class JuliaScene extends Scene {
+public class JuliaScene extends Scene implements KeyEventDispatcher {
 	
 	private static final float TWO_PI = (float) (2 * Math.PI);
 	
@@ -57,6 +60,8 @@ public class JuliaScene extends Scene {
 	private Random rand = new Random();
 	
 	private InputProvider<Boolean> explosionProvider;
+
+	private int fnIndex;
 	
 	public JuliaScene(PApplet parent, AudioSource audioSource) {
 		super(parent);
@@ -66,7 +71,7 @@ public class JuliaScene extends Scene {
 		this.zcrListener = new ZcrListener(audioSource);
 		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
 		this.beatListener = new TriggeredBeatListener(audioSource, 100);
-		set.setFunction(FUNCTIONS[1]);
+		set.setFunction(FUNCTIONS[fnIndex]);
 		set.setIterations(15);
 	}
 
@@ -88,10 +93,10 @@ public class JuliaScene extends Scene {
 		
 		if(beatListener.kick()) {
 			if(rand.nextFloat() < 0.2f) { angularDirection *= -1; }
-			magnitude -= (maxMagnitude * audioAnalyser.getFft().calcAvg(0, 120) - magnitude) / 100;
+			magnitude -= (maxMagnitude * audioAnalyser.getFft().calcAvg(0, 120) - magnitude) / 20;
 		}
 		
-		magnitude += (maxMagnitude - magnitude) / 50;
+		magnitude += (maxMagnitude - magnitude) / 20;
 		
 		magnitude = Math.min(magnitude, maxMagnitude);
 		magnitude = Math.max(magnitude, minMagnitude);
@@ -109,11 +114,13 @@ public class JuliaScene extends Scene {
 	@Override
 	public void activated() {
 		updateCamera();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(this);
 	}
 
 	@Override
 	public void deactivated() {
 		// TODO Auto-generated method stub
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(this);
 		
 	}
 	
@@ -125,6 +132,40 @@ public class JuliaScene extends Scene {
 		camera.setPosition(new Vector3D(0, 0, zDist));
 		camera.setCenter(new Vector3D(0,0,0));
 		camera.update();
+	}
+
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent e) {
+		switch(e.getID()) {
+		case KeyEvent.KEY_PRESSED:
+			keyPress(e.getKeyCode());
+			break;
+		}
+		return false;
+	}
+	
+	private void keyPress(int code) {
+		switch(code) {
+		case KeyEvent.VK_SPACE:
+			set.setFunction(FUNCTIONS[nextFunctionIndex()]);
+			break;
+		case KeyEvent.VK_D:
+			renderer.toggleDebug();
+			break;
+		case KeyEvent.VK_UP:
+			set.setIterations(set.getIterations()+1);
+			break;
+		case KeyEvent.VK_DOWN:
+			set.setIterations(set.getIterations()-1);
+			break;
+		}
+	}
+
+	private int nextFunctionIndex() {
+		int next = fnIndex + 1;
+		if(next >= FUNCTIONS.length) next -= FUNCTIONS.length;
+		fnIndex = next;
+		return next;
 	}
 
 }

@@ -27,6 +27,8 @@ public class JuliaSceneRenderer extends Renderer {
 	
 	private JuliaSet set;
 	
+	private boolean renderDebug;
+	
 	PGraphics context;
 	
 	public JuliaSceneRenderer(PApplet parent, JuliaSet set) {
@@ -74,14 +76,25 @@ public class JuliaSceneRenderer extends Renderer {
 		context.endDraw();
 		
 		parent.image(context, -parent.width/2, -parent.height/2, parent.width, parent.height);
-		parent.textSize(16);
-		parent.color(255, 0, 0);
-		parent.text("FPS: "+parent.frameRate, parent.width/3, parent.height/3);
-		parent.text("c: " + set.getC().toString(), parent.width/3, parent.height/3 + 20);
+		if(renderDebug) {
+			parent.textSize(16);
+			parent.color(255, 0, 0);
+			parent.text("FPS: "+parent.frameRate, parent.width/3, parent.height/3);
+			parent.text("c: " + set.getC().toString(), parent.width/3, parent.height/3 + 20);
+			parent.text("Iterations: " + set.getIterations(), parent.width/3, parent.height/3 + 40);
+		}
 	}
 	
 	public void setMode(RenderMode mode) {
 		this.mode = mode;
+	}
+	
+	public void setDebug(boolean d) {
+		this.renderDebug = d;
+	}
+	
+	public void toggleDebug() {
+		setDebug(!renderDebug);
 	}
 	
 	private int pixelIndex(float x, float y) {
