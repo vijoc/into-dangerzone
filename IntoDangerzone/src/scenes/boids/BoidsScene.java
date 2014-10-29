@@ -35,7 +35,6 @@ public class BoidsScene extends core.Scene {
 		if (beatListener.isSnare()) {
 			if (rand.nextFloat() < newBoidProbability) {
 				flock.newBoid();
-				flock.addBoid(new Boid(parent.width, parent.height));
 			}
 		}
 		if (beatListener.isKick()) {

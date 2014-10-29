@@ -3,6 +3,7 @@ package scenes.boids;
 import java.util.Random;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 
 public class BoidsRenderer {
 
@@ -21,11 +22,11 @@ public class BoidsRenderer {
 		this.flock = flock;
 		this.renderMode = RenderMode.SQUARE;
 		this.rand = new Random();
-		boidSize = flock.rules.weight * 8;
+		boidSize = flock.rules.getWeight() * 8;
 	}
 
 	public void render() {
-		boidSize = flock.rules.weight * 8;
+		boidSize = flock.rules.getWeight() * 8;
 		switch (renderMode) {
 		case CIRCLE:
 			renderCircles();
@@ -125,7 +126,7 @@ public class BoidsRenderer {
 
 	private void renderSquares() {
 		applet.background(255);
-		applet.rectMode(applet.CENTER);
+		applet.rectMode(PConstants.CENTER);
 		for (Boid b : flock.boids) {
 			applet.fill(0, 0, 0);
 			applet.stroke(0, 0, 0);
@@ -135,7 +136,7 @@ public class BoidsRenderer {
 			applet.rect(0, 0, boidSize, boidSize);
 			applet.popMatrix();
 		}
-		applet.rectMode(applet.CORNER);
+		applet.rectMode(PConstants.CORNER);
 	}
 
 	void randomRenderingMode() {

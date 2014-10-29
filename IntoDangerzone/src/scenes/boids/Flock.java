@@ -3,7 +3,6 @@ package scenes.boids;
 import java.util.ArrayList;
 import java.util.Random;
 
-import math.Vector2D;
 import processing.core.PApplet;
 
 class Flock {
@@ -43,13 +42,6 @@ class Flock {
 	void newBoid() {
 		if(boids.size() < maxBoids) {
 			Boid b = new Boid(width, height);
-			b.setRules(rules);
-			boids.add(b);
-		}
-	}
-
-	void addBoid(Boid b) {
-		if (boids.size() < maxBoids) {
 			b.setRules(rules);
 			boids.add(b);
 		}
