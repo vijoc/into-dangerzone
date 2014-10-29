@@ -41,11 +41,11 @@ public class Rules {
 			this.maxSpeed = rand.nextFloat() * 10;
 			break;
 		case 1:
-			this.desiredSeparation = rand.nextFloat() * 75;
+			this.desiredSeparation = (float) (Math.sqrt(rand.nextFloat()) * 75);
 			break;
 		case 2:
-			this.alignNeighborDist = rand.nextFloat() * 75;
-			this.cohesionNeighborDist = rand.nextFloat() * 75;
+			this.alignNeighborDist = (float) (Math.sqrt(rand.nextFloat()) * 75);
+			this.cohesionNeighborDist = (float) (Math.sqrt(rand.nextFloat()) * 75);
 			break;
 		case 3:
 			this.separationWeight = rand.nextFloat() * 2.5f;
@@ -56,5 +56,4 @@ public class Rules {
 			break;
 		}
 	}
-
 }
