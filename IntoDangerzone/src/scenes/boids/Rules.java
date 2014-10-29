@@ -3,21 +3,23 @@ package scenes.boids;
 import java.util.Random;
 
 public class Rules {
-	float boidSize = 64.0f;
-	float weight = 8.0f;
+	private final float minWeight = 0.5f;
+	private final float maxWeight = 8.f;
 
-	float maxSteering = 0.03f;
-	float minSpeed = 0;
-	float maxSpeed = 2;
+	private float weight = 1.0f;
 
-	float desiredSeparation = 25;
-	float alignNeighborDist = 50;
-	float cohesionNeighborDist = 50;
+	private float maxSteering = 0.03f;
+	private float minSpeed = 0;
+	private float maxSpeed = 2;
 
-	float separationWeight = 1.5f;
-	float alignmentWeight = 1.0f;
-	float cohesionWeight = 1.0f;
-	float deceleration = 0.3f; // must be between [0, 1)
+	private float desiredSeparation = 25;
+	private float alignNeighborDist = 50;
+	private float cohesionNeighborDist = 50;
+
+	private float separationWeight = 1.5f;
+	private float alignmentWeight = 1.0f;
+	private float cohesionWeight = 1.0f;
+	private final float deceleration = 0.3f; // must be between [0, 1)
 
 	static Random rand = new Random();
 
@@ -26,36 +28,112 @@ public class Rules {
 	Rules() {
 	}
 
-	Rules(float size) {
-		this.boidSize = size;
-		this.weight = size / 8;
+	Rules(float weight) {
+		this.setWeight(weight);
 	}
 
-	// TODO fill this
-	public void randomizeAll() {
+	public float getWeight() {
+		return weight;
+	}
+
+	public void setWeight(float weight) {
+		if (weight > minWeight && weight < maxWeight)
+			this.weight = weight;
+	}
+
+	public float getMaxSteering() {
+		return maxSteering;
+	}
+
+	public void setMaxSteering(float maxSteering) {
+		this.maxSteering = maxSteering;
+	}
+
+	public float getDeceleration() {
+		return deceleration;
+	}
+
+	public float getMinSpeed() {
+		return minSpeed;
+	}
+
+	public void setMinSpeed(float minSpeed) {
+		this.minSpeed = minSpeed;
 	}
 
 	public void randomizeSomething() {
-		int parameter = rand.nextInt(10);
+		int parameter = rand.nextInt(3);
 		switch (parameter) {
 		case 0:
-			this.maxSpeed = rand.nextFloat() * 10;
-			this.minSpeed = rand.nextFloat() * maxSpeed;
+			this.setMaxSpeed(rand.nextFloat() * 10);
+			this.setMinSpeed(rand.nextFloat() * getMaxSpeed());
 			break;
 		case 1:
-			this.desiredSeparation = (float) ((Math.sqrt(rand.nextFloat()) * 50) + boidSize);
+			this.setDesiredSeparation((float) (rand.nextFloat() * 50));
 			break;
 		case 2:
-			this.alignNeighborDist = (float) (Math.sqrt(rand.nextFloat()) * 75);
-			this.cohesionNeighborDist = (float) (Math.sqrt(rand.nextFloat()) * 75);
-			break;
-		case 3:
-			this.separationWeight = rand.nextFloat() * 2.5f;
-			this.alignmentWeight = rand.nextFloat() * 2.5f;
-			this.cohesionWeight = rand.nextFloat() * 2.5f;
+			this.setSeparationWeight(0.5f + rand.nextFloat() * 2.f);
+			this.setAlignmentWeight(0.5f + rand.nextFloat() * 1.f);
+			this.setCohesionWeight(0.5f + rand.nextFloat() * 1.f);
 			break;
 		default:
 			break;
 		}
+	}
+
+	public float getDesiredSeparation() {
+		return desiredSeparation;
+	}
+
+	public void setDesiredSeparation(float desiredSeparation) {
+		this.desiredSeparation = desiredSeparation;
+	}
+
+	public float getAlignNeighborDist() {
+		return alignNeighborDist;
+	}
+
+	public void setAlignNeighborDist(float alignNeighborDist) {
+		this.alignNeighborDist = alignNeighborDist;
+	}
+
+	public float getCohesionNeighborDist() {
+		return cohesionNeighborDist;
+	}
+
+	public void setCohesionNeighborDist(float cohesionNeighborDist) {
+		this.cohesionNeighborDist = cohesionNeighborDist;
+	}
+
+	public float getSeparationWeight() {
+		return separationWeight;
+	}
+
+	public void setSeparationWeight(float separationWeight) {
+		this.separationWeight = separationWeight;
+	}
+
+	public float getAlignmentWeight() {
+		return alignmentWeight;
+	}
+
+	public void setAlignmentWeight(float alignmentWeight) {
+		this.alignmentWeight = alignmentWeight;
+	}
+
+	public float getCohesionWeight() {
+		return cohesionWeight;
+	}
+
+	public void setCohesionWeight(float cohesionWeight) {
+		this.cohesionWeight = cohesionWeight;
+	}
+
+	public float getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public void setMaxSpeed(float maxSpeed) {
+		this.maxSpeed = maxSpeed;
 	}
 }

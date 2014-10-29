@@ -3,18 +3,30 @@ package scenes.boids;
 import java.util.ArrayList;
 import java.util.Random;
 
-import math.Vector2D;
 import processing.core.PApplet;
 
 class Flock {
 	ArrayList<Boid> boids;
 	PApplet applet;
 	Random rand;
+	Rules rules;
+	int width;
+	int height;
+	private int maxBoids = 500;
 
 	Flock(PApplet applet) {
 		boids = new ArrayList<Boid>();
 		this.applet = applet;
+		width = applet.width;
+		height = applet.height;
 		this.rand = new Random();
+		this.rules = new Rules();
+	}
+
+	void initialize() {
+		for (int i = 0; i < 1; i++) {
+			boids.add(new Boid(width, height));
+		}
 	}
 
 	void run() {
@@ -23,43 +35,23 @@ class Flock {
 		}
 	}
 
-	void disturb() {
-		for (Boid b : boids) {
-			Vector2D random = new Vector2D(rand.nextFloat() * 100,
-					rand.nextFloat() * 100);
-			b.applyForce(random);
-		}
-	}
-	
-	int getFlockSize(){
+	int getFlockSize() {
 		return boids.size();
 	}
+	
+	void newBoid() {
+		if(boids.size() < maxBoids) {
+			Boid b = new Boid(width, height);
+			b.setRules(rules);
+			boids.add(b);
+		}
+	}
 
-	void addBoid(Boid b) {
-		boids.add(b);
-	}
-	
-	// TODO ugly hack with trying to get size to stay constant
 	void newRules() {
-		Rules rules = new Rules(boids.get(0).rules.boidSize);
 		rules.randomizeSomething();
-		
+
 		for (Boid b : boids) {
-			b.rules = rules;
-		}
-	}
-	
-	void setBoidSizes(float size){
-		for (Boid b : boids) {
-			b.rules.boidSize = size;
-			b.rules.weight = size;
-		}
-	}
-	
-	void scaleBoidSizes(float scalingFactor){
-		for (Boid b : boids) {
-			b.rules.boidSize *= scalingFactor;
-			b.rules.weight *= scalingFactor;
+			b.setRules(rules);
 		}
 	}
 
