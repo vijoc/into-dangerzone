@@ -24,6 +24,10 @@ public class Complex {
 		return new Complex(scalar * c.x, scalar * c.y);
 	}
 	
+	public static Complex fromPolar(float r, float phase) {
+		return new Complex( r * (float) Math.cos(phase), r * (float) Math.sin(phase));
+	}
+	
 	public Complex(float x, float y) {
 		this.x = x;
 		this.y = y;
@@ -34,6 +38,11 @@ public class Complex {
 	
 	public float x() { return getReal(); }
 	public float y() { return getImaginary(); }
+	
+	public float getArgument() { return (float) Math.atan2(y, x); }
+	public float getPhase() { return getArgument(); }
+	
+	public float magnitude() { return (float) Math.sqrt(squaredModule()); }
 	
 	public float squaredModule() {
 		return x*x + y*y;

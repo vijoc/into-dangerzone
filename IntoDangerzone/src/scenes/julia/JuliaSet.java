@@ -8,16 +8,7 @@ public class JuliaSet {
 	private Complex parameterC = new Complex(0.5f, 0.5f);
 	private ComplexFunction fn;
 	
-	private int iterations = 8;
-	
-	private float translateX;
-	private float translateY;
-	
-	private float shrink;
-	private float shrinkv;
-	
-	private float realRange;
-	private float imaginaryRange;
+	private int iterations = 12;
 	
 	public JuliaSet() {
 		
@@ -26,12 +17,6 @@ public class JuliaSet {
 				return Complex.add(z.squared(), parameterC);
 			}
 		};
-		
-		this.translateX = realRange * 0.5f;
-		this.translateY = imaginaryRange * 0.5f;
-		
-		this.shrink = realRange / 2;
-		this.shrinkv = 2*shrink;
 	}
 	
 	public Complex getC() { return this.parameterC; }
