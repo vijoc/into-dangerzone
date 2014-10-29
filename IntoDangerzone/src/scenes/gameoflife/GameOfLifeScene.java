@@ -84,7 +84,6 @@ public class GameOfLifeScene extends Scene {
 
 	@Override
 	public void render() {
-		updateCamera();
 		golRenderer.render();
 	}
 
@@ -107,8 +106,7 @@ public class GameOfLifeScene extends Scene {
 
 	@Override
 	public void activated() {
-		// TODO Auto-generated method stub
-		
+		updateCamera();
 	}
 
 	@Override
