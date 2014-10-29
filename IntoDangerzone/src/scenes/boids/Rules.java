@@ -62,7 +62,7 @@ public class Rules {
 	}
 
 	public void randomizeSomething() {
-		int parameter = rand.nextInt(2);
+		int parameter = rand.nextInt(3);
 		switch (parameter) {
 		case 0:
 			this.setMaxSpeed(rand.nextFloat() * 10);
