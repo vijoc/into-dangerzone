@@ -8,19 +8,21 @@ import processing.core.PApplet;
 
 public class BoidsScene extends core.Scene {
 
-	Flock flock;
+	private Flock flock;
+	private BoidsRenderer boidsRenderer;
 
 	private BeatListener beatListener;
 
 	private int maxBoids = 500;
 	private Random rand;
-	private float newBoidProbability = 1f;
+	private float newBoidProbability = 0.1f;
 
 	public BoidsScene(PApplet parent, AudioSource audioSource) {
 		super(parent);
 		this.parent = parent;
 		this.beatListener = new BeatListener(audioSource);
 		flock = new Flock(parent);
+		boidsRenderer = new BoidsRenderer(parent, flock);
 
 		rand = new Random();
 
@@ -44,8 +46,7 @@ public class BoidsScene extends core.Scene {
 
 	@Override
 	public void render() {
-		parent.background(255);
-		flock.render();
+		boidsRenderer.render();
 	}
 
 }
