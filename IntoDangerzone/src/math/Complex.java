@@ -31,8 +31,22 @@ public class Complex {
 		return new Complex(scalar * c.x, scalar * c.y);
 	}
 	
+	public static Complex divide(Complex c1, Complex c2) {
+		return new Complex(
+				(c1.x*c2.x + c1.y*c2.y)/(c2.squaredModule()),
+				(c1.y*c2.x - c1.x*c2.y)/(c2.squaredModule())
+		);
+	}
+	
 	public static Complex exp(Complex c) {
 		return Complex.fromPolar((float) Math.exp(c.x), c.y);
+	}
+	
+	public static Complex log(Complex c) {
+		return new Complex(
+				(float) Math.log(c.magnitude()),
+				(float) Math.atan2(c.y, c.x)
+		);
 	}
 	
 	public Complex(float x, float y) {
@@ -45,6 +59,9 @@ public class Complex {
 	
 	public float x() { return getReal(); }
 	public float y() { return getImaginary(); }
+	
+	public float getArgument() { return (float) Math.atan2(y, x); }
+	public float getPhase() { return getArgument(); }
 	
 	public float squaredModule() {
 		return x*x + y*y;
@@ -65,6 +82,11 @@ public class Complex {
 	
 	public boolean equals(Complex other) {
 		return (this.x == other.x) && (this.y == other.y); 
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%0$+.2f %1$+.2fi", x, y);
 	}
 
 }

@@ -6,7 +6,7 @@ public class JuliaSet {
 	
 	private Complex parameterC = new Complex(0.5f, 0.5f);
 	private ComplexFunction fn;
-	
+
 	private int iterations = 10;
 	
 	public JuliaSet() {
@@ -52,7 +52,7 @@ public class JuliaSet {
 		for(int i = 0; i < iterations; i++) {
 			z = fn.f(z, parameterC);
 			
-			if(Math.sqrt(z.squaredModule()) < 2) {
+			if(z.magnitude() < 2) {
 				result = i;
 			}
 		}
