@@ -1,6 +1,7 @@
 package scenes.julia;
 
 import audio.AudioAnalyser;
+import audio.BeatListener;
 import audio.ZcrListener;
 import math.Complex;
 import math.Vector3D;
@@ -27,7 +28,7 @@ public class JuliaScene extends Scene {
 		},
 		new ComplexFunction() {
 			public Complex f(Complex z, Complex c) {
-				return Complex.add(Complex.exp(z), c);
+				return Complex.add(Complex.multiply(z.squared(), z.squared()), c.squared());
 			}
 		}
 	};
@@ -37,12 +38,13 @@ public class JuliaScene extends Scene {
 	private JuliaSet set;
 	private ZcrListener zcrListener;
 	private AudioAnalyser audioAnalyser;
+	private BeatListener beatListener;
+	
+	private float minMagnitude = 0.3f;
+	private float maxMagnitude = 1.75f;
 	
 	private float angularVelocity = 0.1f;
-	private float magnitude = 2;
-	
-	private float minMagnitude = 0;
-	private float maxMagnitude = 1.5f;
+	private float magnitude = maxMagnitude;
 	
 	public JuliaScene(PApplet parent, AudioSource audioSource) {
 		super(parent);
@@ -51,24 +53,27 @@ public class JuliaScene extends Scene {
 		camera = new Camera(parent);
 		this.zcrListener = new ZcrListener(audioSource);
 		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
-		set.setFunction(FUNCTIONS[1]);
+		this.beatListener = new BeatListener(audioSource);
+		set.setFunction(FUNCTIONS[2]);
+		set.setIterations(12);
 	}
 
 	@Override
 	public void update(float dtSeconds) {
 		audioAnalyser.getFft().forward(audioAnalyser.getAudioSource().mix);
 		float avgEnergy = audioAnalyser.getFft().calcAvg(0, 200);
-		angularVelocity = avgEnergy * 100;
+		angularVelocity = (float) Math.log(avgEnergy * 60);
 		
 		float phase = set.getC().phase() + angularVelocity * dtSeconds;
 		if(phase > TWO_PI) phase -= TWO_PI;
 		
 		float zcr = zcrListener.getZCR();
-		if(zcr > 0) {
-			magnitude += 15 * zcr * dtSeconds;
+		
+		if(beatListener.isKick()) {
+			magnitude -= 0.5;
 		}
 		
-		magnitude -= 0.7 * magnitude * dtSeconds;
+		magnitude += (maxMagnitude - magnitude) * dtSeconds;
 		
 		magnitude = Math.max(magnitude, minMagnitude);
 		magnitude = Math.min(magnitude, maxMagnitude);

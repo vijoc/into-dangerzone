@@ -30,7 +30,7 @@ public class JuliaSceneRenderer extends Renderer {
 		super(parent);
 		this.set = set;
 		
-		context = parent.createGraphics(parent.width/2, parent.height/2);
+		context = parent.createGraphics(2*parent.width/5, 2*parent.height/5);
 		context.loadPixels();
 		translateX = context.width / 2;
 		translateY = context.height / 2;

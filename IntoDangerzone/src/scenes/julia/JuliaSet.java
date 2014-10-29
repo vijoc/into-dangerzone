@@ -52,7 +52,7 @@ public class JuliaSet {
 		for(int i = 0; i < iterations; i++) {
 			z = fn.f(z, parameterC);
 			
-			if(Math.sqrt(z.squaredModule()) < 2) {
+			if(z.magnitude() < 2) {
 				result = i;
 			}
 		}
