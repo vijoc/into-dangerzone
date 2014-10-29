@@ -23,7 +23,6 @@ public class GameOfLifeScene extends Scene {
 	private Random rand;
 	private boolean[][] bomb;
 
-	private AudioAnalyser audioAnalyser;
 	private BeatListener beatListener;
 
 	public static final RuleSet[] RULE_SETS = { RuleSet.AMOEBA,
@@ -39,7 +38,6 @@ public class GameOfLifeScene extends Scene {
 			float stepDuration, int columns, int rows) {
 		super(parent);
 
-		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
 		this.beatListener = new BeatListener(audioSource);
 
 
