@@ -45,7 +45,7 @@ class Flock {
 	// TODO ugly hack with trying to get size to stay constant
 	void newRules() {
 		Rules rules = new Rules(boids.get(0).rules.boidSize);
-		rules.randomizeMaxSpeed();
+		rules.randomizeSomething();
 		
 		for (Boid b : boids) {
 			b.rules = rules;
