@@ -14,6 +14,24 @@ public class JuliaScene extends Scene {
 	
 	private static final float TWO_PI = (float) (2 * Math.PI);
 	
+	private static final ComplexFunction[] FUNCTIONS = { 
+		new ComplexFunction() {
+			public Complex f(Complex z, Complex c) {
+				return Complex.add(z.squared(), c);
+			}
+		},
+		new ComplexFunction() {
+			public Complex f(Complex z, Complex c) {
+				return Complex.add(Complex.multiply(z.squared(), z), c);
+			}
+		},
+		new ComplexFunction() {
+			public Complex f(Complex z, Complex c) {
+				return Complex.add(Complex.exp(z), c);
+			}
+		}
+	};
+	
 	private JuliaSceneRenderer renderer;
 	private Camera camera;
 	private JuliaSet set;
@@ -33,11 +51,7 @@ public class JuliaScene extends Scene {
 		camera = new Camera(parent);
 		this.zcrListener = new ZcrListener(audioSource);
 		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
-		set.setFunction(new ComplexFunction() {
-			public Complex f(Complex z, Complex c) {
-				return Complex.add(Complex.multiply(z.squared(), z), c);
-			}
-		});
+		set.setFunction(FUNCTIONS[1]);
 	}
 
 	@Override
@@ -64,6 +78,15 @@ public class JuliaScene extends Scene {
 
 	@Override
 	public void render() {
+		renderer.render();
+	}
+
+	@Override
+	public void activated() {
+		updateCamera();
+	}
+	
+	private void updateCamera() {
 		float fovRadians = (float) Math.toRadians(75); // ?
 		float zDistW = (float) ((parent.width/2.0f) / Math.tan(fovRadians/2.0f));
 		float zDistH = (float) ((parent.height/2.0f) / Math.tan(fovRadians/2.0f));
@@ -71,7 +94,12 @@ public class JuliaScene extends Scene {
 		camera.setPosition(new Vector3D(0, 0, zDist));
 		camera.setCenter(new Vector3D(0,0,0));
 		camera.update();
-		renderer.render();
+	}
+
+	@Override
+	public void deactivated() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -150,7 +150,7 @@ public class IntoDangerzone extends PApplet {
 	 * Render the scene.
 	 */
 	public void render() {
-		camera.update();
+		//camera.update();
 		background(0);
 		sceneManager.renderActiveScene();
 

@@ -31,6 +31,10 @@ public class Complex {
 		return new Complex(scalar * c.x, scalar * c.y);
 	}
 	
+	public static Complex exp(Complex c) {
+		return Complex.fromPolar((float) Math.exp(c.x), c.y);
+	}
+	
 	public Complex(float x, float y) {
 		this.x = x;
 		this.y = y;
