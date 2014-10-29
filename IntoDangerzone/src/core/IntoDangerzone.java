@@ -35,10 +35,6 @@ public class IntoDangerzone extends PApplet {
 	private BoidsScene boidsScene;
 	private JuliaScene juliaScene;
 	
-	private Camera camera;
-	
-	private AudioAnalyser audioAnalyser;
-	
 	private long currentTime;
 	
 	@Override
@@ -46,8 +42,6 @@ public class IntoDangerzone extends PApplet {
 		size(1024, 768, P3D);
 		background(0);
 		initializeAudioSource();
-		audioAnalyser = new AudioAnalyser(this, audioSource);
-		initializeCamera();
 		initializeScenes();
 		initializeTimer();
 	}
@@ -82,22 +76,6 @@ public class IntoDangerzone extends PApplet {
 			player.play();
 			audioSource = player;
 		}
-	}
-
-	/**
-	 * Initialize camera position.
-	 */
-	private void initializeCamera() {
-		Vector3D cameraPos = new Vector3D(0,0,1200);
-		Vector3D cameraCenter = new Vector3D(0,0,0);
-		
-		camera = new Camera(this, cameraPos, cameraCenter, 0, 1, 0);
-		camera.setPositionXIncrementEventProvider(new KeyboardInputProvider(KeyEvent.VK_RIGHT));
-		camera.setPositionXDecrementEventProvider(new KeyboardInputProvider(KeyEvent.VK_LEFT));
-		camera.setPositionYDecrementEventProvider(new KeyboardInputProvider(KeyEvent.VK_UP, KeyEvent.VK_SHIFT));
-		camera.setPositionYIncrementEventProvider(new KeyboardInputProvider(KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT));
-		camera.setPositionZDecrementEventProvider(new KeyboardInputProvider(new int[] {KeyEvent.VK_UP, KeyEvent.VK_SHIFT}));
-		camera.setPositionZIncrementEventProvider(new KeyboardInputProvider(new int[] {KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT}));
 	}
 	
 	private void initializeTimer() {
@@ -143,15 +121,12 @@ public class IntoDangerzone extends PApplet {
 		float dtSeconds = (float) ((newTime - currentTime) / 1000.0);
 		sceneManager.updateActiveScene(dtSeconds);
 		currentTime = newTime;
-		audioAnalyser.getFft().forward(audioAnalyser.getAudioSource().mix);
 	}
 
 	/**
 	 * Render the scene.
 	 */
 	public void render() {
-		//camera.update();
-		background(0);
 		sceneManager.renderActiveScene();
 
 		if (DRAW_AXES)
@@ -174,16 +149,11 @@ public class IntoDangerzone extends PApplet {
 		}
 	}
 
-	public void mouseWheel(MouseEvent event) {
-		camera.setPositionZ(camera.getPosition().getZ() + event.getCount() * 100);
-	}
-
 	public static void main(String args[]) {
 		if(args.length > 0) {
 			IntoDangerzone.audioMode = AudioMode.FILE;
 			IntoDangerzone.audioFilePath = args[0];
 		}
-		
 		
 		PApplet.main(new String[] { "core.IntoDangerzone" });
 	}
