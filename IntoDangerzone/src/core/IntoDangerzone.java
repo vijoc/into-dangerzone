@@ -11,7 +11,7 @@ import math.Vector3D;
 import processing.core.*;
 import processing.event.MouseEvent;
 import scenes.lTree.*;
-import scenes.boids.Boids;
+import scenes.boids.BoidsScene;
 import scenes.gameoflife.GameOfLifeScene;
 
 @SuppressWarnings("serial")
@@ -31,7 +31,7 @@ public class IntoDangerzone extends PApplet {
 	private SceneManager sceneManager = new SceneManager();
 	private GameOfLifeScene golScene;
 	private LTree lTreeScene;
-	private Boids boidsScene;
+	private BoidsScene boidsScene;
 	
 	private Camera camera;
 	
@@ -109,7 +109,7 @@ public class IntoDangerzone extends PApplet {
 		lTreeScene = new LTree(this, getAudioSource());
 		sceneManager.addScene(lTreeScene);
 		
-		boidsScene = new Boids(this, getAudioSource());
+		boidsScene = new BoidsScene(this, getAudioSource());
 		sceneManager.addScene(boidsScene);
 		
 		sceneManager.setActiveScene(0);

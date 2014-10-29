@@ -58,7 +58,6 @@ public class GameOfLifeScene extends Scene {
 	@Override
 	public void update(float dtSeconds) {
 		generationTimer -= dtSeconds;
-		System.out.println(audioAnalyser.getZCR());
 		if (generationTimer < 0) {
 			generationTimer = stepDuration;
 			gol.stepGeneration();

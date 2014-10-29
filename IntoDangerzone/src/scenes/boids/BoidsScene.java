@@ -6,7 +6,7 @@ import ddf.minim.AudioSource;
 import audio.BeatListener;
 import processing.core.PApplet;
 
-public class Boids extends core.Scene {
+public class BoidsScene extends core.Scene {
 
 	Flock flock;
 
@@ -16,7 +16,7 @@ public class Boids extends core.Scene {
 	private Random rand;
 	private float newBoidProbability = 1f;
 
-	public Boids(PApplet parent, AudioSource audioSource) {
+	public BoidsScene(PApplet parent, AudioSource audioSource) {
 		super(parent);
 		this.parent = parent;
 		this.beatListener = new BeatListener(audioSource);
