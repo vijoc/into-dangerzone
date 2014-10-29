@@ -22,14 +22,23 @@ public class GameOfLifeScene extends Scene {
 
 	private Random rand;
 	private boolean[][] bomb;
-	
+
 	private AudioAnalyser audioAnalyser;
 	private BeatListener beatListener;
+
+	public static final RuleSet[] RULE_SETS = { RuleSet.AMOEBA,
+			RuleSet.ASSIMILATION, RuleSet.COAGULATIONS, RuleSet.CORAL,
+			RuleSet.DAY_AND_NIGHT, RuleSet.DIAMOEBA, RuleSet.GNARL,
+			RuleSet.GOL, RuleSet.HIGH_LIFE, RuleSet.LIFE_WITHOUT_DEATH,
+			RuleSet.LONG_LIFE, RuleSet.MAZE, RuleSet.MAZECTRIC, RuleSet.MOVE,
+			RuleSet.PSEUDO_LIFE, RuleSet.REPLICATOR, RuleSet.SEEDS_TWO,
+			RuleSet.SERVIETTES, RuleSet.STAINS, RuleSet.THREE_FOUR_LIFE,
+			RuleSet.TWO_X_TWO, RuleSet.WALLED_CITIES };
 
 	public GameOfLifeScene(PApplet parent, AudioSource audioSource,
 			float stepDuration, int columns, int rows) {
 		super(parent);
-		
+
 		this.audioAnalyser = new AudioAnalyser(parent, audioSource);
 		this.beatListener = new BeatListener(audioSource);
 
@@ -61,9 +70,13 @@ public class GameOfLifeScene extends Scene {
 		if (generationTimer < 0) {
 			generationTimer = stepDuration;
 			gol.stepGeneration();
-			if (gol.getGeneration() % 50 == 0) {
+			if (beatListener.isKick()) {
 				gol.insertShape(bomb, rand.nextInt(gol.getColumnCount()),
 						rand.nextInt(gol.getRowCount()));
+			}
+			if (beatListener.isHat()) {
+				RuleSet ruleSet = RULE_SETS[rand.nextInt(RULE_SETS.length)];
+				gol.setRuleSet(ruleSet);
 			}
 		}
 	}
