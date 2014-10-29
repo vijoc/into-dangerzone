@@ -14,8 +14,10 @@ public class BoidsScene extends core.Scene {
 	private BeatListener beatListener;
 
 	private int maxBoids = 500;
+	private float initialSize = 8;
+	private float decayRate = 1 - 0.1f;
 	private Random rand;
-	private float newBoidProbability = 0.1f;
+	private float newBoidProbability = 1f;
 	private float newRulesProbability = 1f;
 
 	public BoidsScene(PApplet parent, AudioSource audioSource) {
@@ -40,11 +42,12 @@ public class BoidsScene extends core.Scene {
 				if (flock.boids.size() < maxBoids)
 					flock.addBoid(new Boid(parent.width / 2, parent.height / 2,
 							parent.width, parent.height));
+				flock.scaleBoidSizes(decayRate);
 			}
 		}
-		if (beatListener.isKick()){
+		if (beatListener.isKick()) {
 			if (rand.nextFloat() < newRulesProbability) {
-				flock.newRules();
+				
 			}
 		}
 		flock.run();
@@ -58,13 +61,13 @@ public class BoidsScene extends core.Scene {
 	@Override
 	public void activated() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deactivated() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
