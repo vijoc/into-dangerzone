@@ -41,5 +41,14 @@ class Flock {
 		b.weight = f;
 		b.boidSize = f;
 	}
+	
+	// TODO more elaborate randomization, parameterization etc
+	void newRules() {
+		float size = rand.nextFloat()*4;
+		for (Boid b : boids) {
+			b.boidSize = size;
+			b.weight = size;
+		}
+	}
 
 }

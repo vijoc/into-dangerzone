@@ -16,6 +16,7 @@ public class BoidsScene extends core.Scene {
 	private int maxBoids = 500;
 	private Random rand;
 	private float newBoidProbability = 0.1f;
+	private float newRulesProbability = 1f;
 
 	public BoidsScene(PApplet parent, AudioSource audioSource) {
 		super(parent);
@@ -39,6 +40,11 @@ public class BoidsScene extends core.Scene {
 				if (flock.boids.size() < maxBoids)
 					flock.addBoid(new Boid(parent.width / 2, parent.height / 2,
 							parent.width, parent.height));
+			}
+		}
+		if (beatListener.isKick()){
+			if (rand.nextFloat() < newRulesProbability) {
+				flock.newRules();
 			}
 		}
 		flock.run();
