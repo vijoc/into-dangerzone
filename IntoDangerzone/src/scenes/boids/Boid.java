@@ -9,28 +9,17 @@ import math.Constants;
 import java.lang.Math;
 
 class Boid {
+	
+	Rules rules;
+	private float width;
+	private float height;
 
 	Vector2D location;
 	Vector2D velocity;
 	Vector2D acceleration;
-	float boidSize = 1.0f;
-	float weight = 1.0f;
-	float maxSteering = 0.03f;
-	float maxSpeed = 2;
-	private float width;
-	private float height;
 
-	private float desiredSeparation = 25;
-	private float alignNeighborDist = 50;
-	private float cohesionNeighborDist = 50;
-
-	private float separationWeight = 1.5f;
-	private float alignmentWeight = 1.0f;
-	private float cohesionWeight = 1.0f;
-
-	private float deceleration = 0.3f; // must be between [0, 1)
-
-	Boid(float x, float y, float width, float height) {
+	Boid(float width, float height) {
+		this.rules = new Rules();
 		acceleration = new Vector2D(0, 0);
 		this.width = width;
 		this.height = height;
@@ -39,8 +28,10 @@ class Boid {
 		float angle = rand.nextFloat() * Constants.TWO_PI;
 		velocity = new Vector2D((float) Math.cos(angle),
 				(float) Math.sin(angle));
-
-		location = new Vector2D(x, y);
+		
+		float x = rand.nextFloat()*width;
+		float y = rand.nextFloat()*height;
+		this.location = new Vector2D(x, y);
 	}
 
 	void run(ArrayList<Boid> boids) {
@@ -50,7 +41,7 @@ class Boid {
 	}
 
 	void applyForce(Vector2D force) {
-		acceleration = acceleration.add(force.scalarDivision(weight));
+		acceleration = acceleration.add(force.scalarDivision(rules.weight));
 	}
 
 	void flock(ArrayList<Boid> boids) {
@@ -59,9 +50,9 @@ class Boid {
 		Vector2D cohesion = cohesion(boids);
 
 		// Weighing
-		separation = separation.scalarMultiplication(separationWeight);
-		alignment = alignment.scalarMultiplication(alignmentWeight);
-		cohesion = cohesion.scalarMultiplication(cohesionWeight);
+		separation = separation.scalarMultiplication(rules.separationWeight);
+		alignment = alignment.scalarMultiplication(rules.alignmentWeight);
+		cohesion = cohesion.scalarMultiplication(rules.cohesionWeight);
 
 		applyForce(separation);
 		applyForce(alignment);
@@ -70,36 +61,39 @@ class Boid {
 
 	void update() {
 		velocity = velocity.add(acceleration);
-		if (velocity.getLength() > maxSpeed) {
-			velocity = velocity.toLength(maxSpeed);
+		if (velocity.getLength() > rules.maxSpeed) {
+			velocity = velocity.toLength(rules.maxSpeed);
+		}
+		if (velocity.getLength() < rules.minSpeed) {
+			velocity = velocity.toLength(rules.minSpeed);
 		}
 		location = location.add(velocity);
 		// Decrease acceleration
-		acceleration = acceleration.scalarMultiplication(deceleration);
+		acceleration = acceleration.scalarMultiplication(rules.deceleration);
 	}
 
 	Vector2D seek(Vector2D target) {
 		Vector2D desired = target.subtract(location);
 		desired = desired.normalize();
-		desired = desired.scalarMultiplication(maxSpeed);
+		desired = desired.scalarMultiplication(rules.maxSpeed);
 
 		Vector2D steer = desired.subtract(velocity);
-		if (steer.getLength() > maxSteering) {
-			steer = steer.toLength(maxSteering);
+		if (steer.getLength() > rules.maxSteering) {
+			steer = steer.toLength(rules.maxSteering);
 		}
 		return steer;
 	}
 
 	// TODO this not really belongs here
 	void checkBoundaries() {
-		if (location.getX() < -boidSize)
-			this.location = new Vector2D(width + boidSize, this.location.getY());
-		if (location.getY() < -boidSize)
-			this.location = new Vector2D(this.location.getX(), height + boidSize);
-		if (location.getX() > width + boidSize)
-			this.location = new Vector2D(-boidSize, this.location.getY());
-		if (location.getY() > height + boidSize)
-			this.location = new Vector2D(this.location.getX(), -boidSize);
+		if (location.getX() < -rules.boidSize)
+			this.location = new Vector2D(width + rules.boidSize, this.location.getY());
+		if (location.getY() < -rules.boidSize)
+			this.location = new Vector2D(this.location.getX(), height + rules.boidSize);
+		if (location.getX() > width + rules.boidSize)
+			this.location = new Vector2D(-rules.boidSize, this.location.getY());
+		if (location.getY() > height + rules.boidSize)
+			this.location = new Vector2D(this.location.getX(), -rules.boidSize);
 	}
 
 	Vector2D separate(ArrayList<Boid> boids) {
@@ -107,7 +101,7 @@ class Boid {
 		int count = 0;
 		for (Boid other : boids) {
 			float d = location.distanceTo(other.location);
-			if ((d > 0) && (d < desiredSeparation)) {
+			if ((d > 0) && (d < rules.desiredSeparation)) {
 				Vector2D diff = location.subtract(other.location);
 				diff = diff.normalize();
 				diff = diff.scalarDivision(d); // weigh by distance
@@ -121,11 +115,11 @@ class Boid {
 
 		if (steer.getLength() > 0) {
 			steer = steer.normalize();
-			steer = steer.scalarMultiplication(maxSpeed);
+			steer = steer.scalarMultiplication(rules.maxSpeed);
 			steer = steer.subtract(velocity);
 
-			if (steer.getLength() > maxSteering) {
-				steer = steer.toLength(maxSteering);
+			if (steer.getLength() > rules.maxSteering) {
+				steer = steer.toLength(rules.maxSteering);
 			}
 		}
 		return steer;
@@ -136,7 +130,7 @@ class Boid {
 		int count = 0;
 		for (Boid other : boids) {
 			float d = location.distanceTo(other.location);
-			if ((d > 0) && (d < alignNeighborDist)) {
+			if ((d > 0) && (d < rules.alignNeighborDist)) {
 				sum = sum.add(other.velocity);
 				count++;
 			}
@@ -144,10 +138,10 @@ class Boid {
 		if (count > 0) {
 			sum = sum.scalarDivision((float) count);
 			sum = sum.normalize();
-			sum = sum.scalarMultiplication(maxSpeed);
+			sum = sum.scalarMultiplication(rules.maxSpeed);
 			Vector2D steer = sum.subtract(velocity);
-			if (steer.getLength() > maxSteering) {
-				steer = steer.toLength(maxSteering);
+			if (steer.getLength() > rules.maxSteering) {
+				steer = steer.toLength(rules.maxSteering);
 			}
 			return steer;
 		} else {
@@ -161,7 +155,7 @@ class Boid {
 		int count = 0;
 		for (Boid other : boids) {
 			float d = location.distanceTo(other.location);
-			if ((d > 0) && (d < cohesionNeighborDist)) {
+			if ((d > 0) && (d < rules.cohesionNeighborDist)) {
 				sum = sum.add(other.location);
 				count++;
 			}
