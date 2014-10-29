@@ -37,9 +37,6 @@ class Flock {
 
 	void addBoid(Boid b) {
 		boids.add(b);
-		float f = 8;
-		b.rules.weight = f;
-		b.rules.boidSize = f;
 	}
 	
 	// TODO ugly hack with trying to get size to stay constant

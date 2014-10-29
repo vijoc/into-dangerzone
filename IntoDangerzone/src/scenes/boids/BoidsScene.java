@@ -14,7 +14,7 @@ public class BoidsScene extends core.Scene {
 	private BeatListener beatListener;
 
 	private int maxBoids = 500;
-	private float initialSize = 8;
+	private float initialSize = 64;
 	private float decayRate = 1 - 0.005f;
 	private float boidSize = initialSize;
 	private Random rand;
@@ -51,6 +51,9 @@ public class BoidsScene extends core.Scene {
 			}
 		}
 		flock.run();
+		if (beatListener.isHat()) {
+			boidsRenderer.randomRenderingMode();
+		}
 	}
 
 	@Override

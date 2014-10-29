@@ -3,10 +3,11 @@ package scenes.boids;
 import java.util.Random;
 
 public class Rules {
-	float boidSize = 1.0f;
-	float weight = 1.0f;
+	float boidSize = 64.0f;
+	float weight = 8.0f;
 
 	float maxSteering = 0.03f;
+	float minSpeed = 0;
 	float maxSpeed = 2;
 
 	float desiredSeparation = 25;
@@ -27,7 +28,7 @@ public class Rules {
 
 	Rules(float size) {
 		this.boidSize = size;
-		this.weight = size;
+		this.weight = size / 8;
 	}
 
 	// TODO fill this
@@ -39,9 +40,10 @@ public class Rules {
 		switch (parameter) {
 		case 0:
 			this.maxSpeed = rand.nextFloat() * 10;
+			this.minSpeed = rand.nextFloat() * maxSpeed;
 			break;
 		case 1:
-			this.desiredSeparation = (float) (Math.sqrt(rand.nextFloat()) * 50);
+			this.desiredSeparation = (float) ((Math.sqrt(rand.nextFloat()) * 50) + boidSize);
 			break;
 		case 2:
 			this.alignNeighborDist = (float) (Math.sqrt(rand.nextFloat()) * 75);

@@ -64,6 +64,9 @@ class Boid {
 		if (velocity.getLength() > rules.maxSpeed) {
 			velocity = velocity.toLength(rules.maxSpeed);
 		}
+		if (velocity.getLength() < rules.minSpeed) {
+			velocity = velocity.toLength(rules.minSpeed);
+		}
 		location = location.add(velocity);
 		// Decrease acceleration
 		acceleration = acceleration.scalarMultiplication(rules.deceleration);
