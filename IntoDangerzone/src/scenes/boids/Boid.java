@@ -39,6 +39,10 @@ class Boid {
 		update();
 		checkBoundaries();
 	}
+	
+	void setRules(Rules rules){
+		this.rules = rules;
+	}
 
 	void applyForce(Vector2D force) {
 		acceleration = acceleration.add(force.scalarDivision(rules.weight));
@@ -86,14 +90,14 @@ class Boid {
 
 	// TODO this not really belongs here
 	void checkBoundaries() {
-		if (location.getX() < -rules.boidSize)
-			this.location = new Vector2D(width + rules.boidSize, this.location.getY());
-		if (location.getY() < -rules.boidSize)
-			this.location = new Vector2D(this.location.getX(), height + rules.boidSize);
-		if (location.getX() > width + rules.boidSize)
-			this.location = new Vector2D(-rules.boidSize, this.location.getY());
-		if (location.getY() > height + rules.boidSize)
-			this.location = new Vector2D(this.location.getX(), -rules.boidSize);
+		if (location.getX() < 0)
+			this.location = new Vector2D(width, this.location.getY());
+		if (location.getY() < 0)
+			this.location = new Vector2D(this.location.getX(), height);
+		if (location.getX() > width)
+			this.location = new Vector2D(0, this.location.getY());
+		if (location.getY() > height)
+			this.location = new Vector2D(this.location.getX(), 0);
 	}
 
 	Vector2D separate(ArrayList<Boid> boids) {

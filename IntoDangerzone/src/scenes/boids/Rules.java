@@ -3,8 +3,7 @@ package scenes.boids;
 import java.util.Random;
 
 public class Rules {
-	float boidSize = 64.0f;
-	float weight = 8.0f;
+	float weight = 1.0f;
 
 	float maxSteering = 0.03f;
 	float minSpeed = 0;
@@ -26,9 +25,8 @@ public class Rules {
 	Rules() {
 	}
 
-	Rules(float size) {
-		this.boidSize = size;
-		this.weight = size / 8;
+	Rules(float weight) {
+		this.weight = weight;
 	}
 
 	// TODO fill this
@@ -36,23 +34,19 @@ public class Rules {
 	}
 
 	public void randomizeSomething() {
-		int parameter = rand.nextInt(10);
+		int parameter = rand.nextInt(2);
 		switch (parameter) {
 		case 0:
 			this.maxSpeed = rand.nextFloat() * 10;
 			this.minSpeed = rand.nextFloat() * maxSpeed;
 			break;
 		case 1:
-			this.desiredSeparation = (float) ((Math.sqrt(rand.nextFloat()) * 50) + boidSize);
+			this.desiredSeparation = (float) (rand.nextFloat() * 50);
 			break;
 		case 2:
-			this.alignNeighborDist = (float) (Math.sqrt(rand.nextFloat()) * 75);
-			this.cohesionNeighborDist = (float) (Math.sqrt(rand.nextFloat()) * 75);
-			break;
-		case 3:
-			this.separationWeight = rand.nextFloat() * 2.5f;
-			this.alignmentWeight = rand.nextFloat() * 2.5f;
-			this.cohesionWeight = rand.nextFloat() * 2.5f;
+			this.separationWeight = 0.5f + rand.nextFloat() * 2.f;
+			this.alignmentWeight = 0.5f + rand.nextFloat() * 1.f;
+			this.cohesionWeight = 0.5f + rand.nextFloat() * 1.f;
 			break;
 		default:
 			break;

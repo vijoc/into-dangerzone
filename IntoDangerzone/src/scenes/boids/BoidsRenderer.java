@@ -14,15 +14,18 @@ public class BoidsRenderer {
 	private Flock flock;
 	private Random rand;
 	public RenderMode renderMode;
+	private float boidSize;
 
 	public BoidsRenderer(PApplet applet, Flock flock) {
 		this.applet = applet;
 		this.flock = flock;
 		this.renderMode = RenderMode.SQUARE;
 		this.rand = new Random();
+		boidSize = flock.rules.weight * 8;
 	}
 
 	public void render() {
+		boidSize = flock.rules.weight * 8;
 		switch (renderMode) {
 		case CIRCLE:
 			renderCircles();
@@ -56,7 +59,7 @@ public class BoidsRenderer {
 			applet.pushMatrix();
 			applet.translate(-applet.width / 2, -applet.height / 2);
 			applet.translate(b.location.getX(), b.location.getY());
-			applet.ellipse(0, 0, b.rules.boidSize, b.rules.boidSize);
+			applet.ellipse(0, 0, boidSize, boidSize);
 			applet.popMatrix();
 		}
 	}
@@ -72,9 +75,9 @@ public class BoidsRenderer {
 			applet.translate(b.location.getX(), b.location.getY());
 			applet.rotate(theta);
 			applet.beginShape(processing.core.PShape.TRIANGLES);
-			applet.vertex(0, -b.rules.boidSize);
-			applet.vertex(-b.rules.boidSize / 2, b.rules.boidSize / 2);
-			applet.vertex(b.rules.boidSize / 2, b.rules.boidSize / 2);
+			applet.vertex(0, -boidSize);
+			applet.vertex(-boidSize / 2, boidSize / 2);
+			applet.vertex(boidSize / 2, boidSize / 2);
 			applet.endShape();
 			applet.popMatrix();
 		}
@@ -91,10 +94,10 @@ public class BoidsRenderer {
 			applet.translate(b.location.getX(), b.location.getY());
 			applet.rotate(theta);
 			applet.beginShape();
-			applet.vertex(-b.rules.boidSize / 4, -b.rules.boidSize);
-			applet.vertex(-b.rules.boidSize / 4, b.rules.boidSize);
-			applet.vertex(b.rules.boidSize / 4, b.rules.boidSize);
-			applet.vertex(b.rules.boidSize / 4, -b.rules.boidSize);
+			applet.vertex(-boidSize / 4, -boidSize);
+			applet.vertex(-boidSize / 4, boidSize);
+			applet.vertex(boidSize / 4, boidSize);
+			applet.vertex(boidSize / 4, -boidSize);
 			applet.endShape();
 			applet.popMatrix();
 		}
@@ -111,10 +114,10 @@ public class BoidsRenderer {
 			applet.translate(b.location.getX(), b.location.getY());
 			applet.rotate(theta);
 			applet.beginShape();
-			applet.vertex(-b.rules.boidSize, -b.rules.boidSize / 4);
-			applet.vertex(-b.rules.boidSize, b.rules.boidSize / 4);
-			applet.vertex(b.rules.boidSize, b.rules.boidSize / 4);
-			applet.vertex(b.rules.boidSize, -b.rules.boidSize / 4);
+			applet.vertex(-boidSize, -boidSize / 4);
+			applet.vertex(-boidSize, boidSize / 4);
+			applet.vertex(boidSize, boidSize / 4);
+			applet.vertex(boidSize, -boidSize / 4);
 			applet.endShape();
 			applet.popMatrix();
 		}
@@ -129,7 +132,7 @@ public class BoidsRenderer {
 			applet.pushMatrix();
 			applet.translate(-applet.width / 2, -applet.height / 2);
 			applet.translate(b.location.getX(), b.location.getY());
-			applet.rect(0, 0, b.rules.boidSize, b.rules.boidSize);
+			applet.rect(0, 0, boidSize, boidSize);
 			applet.popMatrix();
 		}
 		applet.rectMode(applet.CORNER);
