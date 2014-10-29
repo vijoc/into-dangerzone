@@ -31,7 +31,7 @@ public class BoidsScene extends core.Scene {
 		rand = new Random();
 
 		for (int i = 0; i < 1; i++) {
-			flock.addBoid(new Boid(parent.width / 2, parent.height / 2,
+			flock.addBoid(new Boid(rand.nextInt(parent.width), rand.nextInt(parent.height),
 					parent.width, parent.height));
 		}
 	}

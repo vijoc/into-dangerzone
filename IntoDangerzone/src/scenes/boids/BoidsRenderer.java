@@ -21,12 +21,13 @@ public class BoidsRenderer {
 			applet.pushMatrix();
 			applet.translate(-applet.width / 2, -applet.height / 2);
 			applet.translate(b.location.getX(), b.location.getY());
-			applet.rotate(theta);
-			applet.beginShape(processing.core.PShape.TRIANGLES);
-			applet.vertex(0, -b.rules.boidSize * 10);
-			applet.vertex(-b.rules.boidSize * 6, b.rules.boidSize * 6);
-			applet.vertex(b.rules.boidSize * 6, b.rules.boidSize * 6);
-			applet.endShape();
+			// applet.rotate(theta);
+			// applet.beginShape(processing.core.PShape.TRIANGLES);
+			// applet.vertex(0, -b.rules.boidSize * 10);
+			// applet.vertex(-b.rules.boidSize * 6, b.rules.boidSize * 6);
+			// applet.vertex(b.rules.boidSize * 6, b.rules.boidSize * 6);
+			// applet.endShape();
+			applet.ellipse(0, 0, b.rules.boidSize*8, b.rules.boidSize*8);
 			applet.popMatrix();
 		}
 	}
