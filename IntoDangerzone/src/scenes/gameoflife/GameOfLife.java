@@ -64,18 +64,6 @@ class GameOfLife {
 	public void stepGeneration() {
 		states = calculateNextStates();
 		generation++;
-		calculateDensity();
-	}
-
-	private void calculateDensity() {
-		int liveCells = 0;
-		for (boolean[] row : states) {
-			for (boolean cell : row) {
-				if (cell)
-					liveCells++;
-			}
-		}
-		density = liveCells / ((float) rowCount * colCount);
 	}
 
 	/**
@@ -138,13 +126,23 @@ class GameOfLife {
 		this.ruleSet = ruleSet;
 	}
 
+	/**
+	 * Calculates next states according to current rule set.
+	 * Also updates statistics: density
+	 * @return next states
+	 */
 	private boolean[][] calculateNextStates() {
+		int liveCells = 0;
 		boolean buffer[][] = new boolean[colCount][rowCount];
 		for (int x = 0; x < colCount; x++) {
 			for (int y = 0; y < rowCount; y++) {
-				buffer[x][y] = calculateNextState(x, y);
+				boolean nextState = calculateNextState(x, y);
+				buffer[x][y] = nextState;
+				if (nextState)
+					liveCells++;
 			}
 		}
+		density = liveCells / ((float) rowCount * colCount);
 		return buffer;
 	}
 
