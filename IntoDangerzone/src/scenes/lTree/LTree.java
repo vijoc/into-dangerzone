@@ -1,5 +1,7 @@
 package scenes.lTree;
 
+import java.util.Random;
+
 import math.Vector3D;
 import graphics.Camera;
 import ddf.minim.AudioSource;
@@ -9,53 +11,54 @@ import processing.core.PApplet;
 public class LTree extends core.Scene {
 	AudioSource audioSource;
 	BeatListener beatListener;
-	
+
 	private Camera camera;
-	
+
 	float curlX = 0;
 	float curlY = 0;
+	int branchNumber = 14;
 	float f = 0;
+	float fTarget = 0.8f;
 	float delay = 50;
-	float growth = 0;
-	float growthTarget = -8;
+	float growth = 0.1f;
+	float growthTarget = 1.1f;
 	float curlXTarget = 0;
 	float curlYTarget = 0;
+	Random rand;
 
 	public LTree(PApplet parent, AudioSource audioSource) {
 		super(parent);
 		this.audioSource = audioSource;
 		this.beatListener = new BeatListener(audioSource);
 		this.camera = new Camera(parent);
+		this.rand = new Random();
 	}
 
 	@Override
 	public void update(float dtSeconds) {
 		if (beatListener.isKick()) {
-			curlYTarget += parent.random(200) - 100;
-			curlXTarget += parent.random(200) - 100;
+			curlXTarget += rand.nextFloat() * 5 - 10;
 		}
 		if (beatListener.isSnare()) {
-			// curlYTarget += parent.random(200)-100;
+			curlYTarget += rand.nextFloat() * 5 - 10;
 		}
 		if (beatListener.isHat()) {
-			if (growthTarget < -3)
-				growthTarget += 0.1;
-			if (f < 0.9)
+			if (f < fTarget)
 				f += 0.01;
+			if (growth < growthTarget)
+				growth += 0.01;
 		}
 	}
 
 	@Override
 	public void render() {
+		parent.translate(0, 0);
+
 		parent.background(250, 250, 250);
-		parent.stroke(0, 0, 0);
+		parent.stroke(0, 0, 0, 50);
 		curlX += (PApplet.radians((float) (curlXTarget)) - curlX) / delay;
 		curlY += (PApplet.radians((float) (curlYTarget)) - curlY) / delay;
-		parent.translate(0, parent.height / 2);
-		parent.point(0,0);
-		parent.line(0, 0, 0, parent.height);
-		branch(parent.height * 0.5, 17);
-		growth += (growthTarget / 10 - growth + 1.) / delay;
+		branch(parent.height / 3, branchNumber);
 		renderDebugTexts();
 	}
 
@@ -68,7 +71,7 @@ public class LTree extends core.Scene {
 		parent.text("growth target: " + growthTarget, parent.width / 2, 128);
 		parent.text("f: " + f, parent.width / 2, 192);
 		parent.text("growth: " + growth, parent.width / 2, 256);
-		parent.text("fps: " + parent.frameRate, parent.width/2, 320);
+		parent.text("fps: " + parent.frameRate, parent.width / 2, 320);
 	}
 
 	private void branch(double d, int num) {
@@ -77,8 +80,7 @@ public class LTree extends core.Scene {
 		if ((d > 1) && (num > 0)) {
 			parent.pushMatrix();
 			parent.rotate(curlX);
-			parent.point(0, 0);
-			//parent.line(0, 0, 0, (float) -d);
+			parent.line(0, 0, 0, (float) -d);
 			parent.translate(0, (float) -d);
 			branch(d, num);
 			parent.popMatrix();
@@ -86,8 +88,7 @@ public class LTree extends core.Scene {
 			d *= growth;
 			parent.pushMatrix();
 			parent.rotate(curlX - curlY);
-			parent.point(0, 0);
-			//parent.line(0, 0, 0, (float) -d);
+			parent.line(0, 0, 0, (float) -d);
 			parent.translate(0, (float) -d);
 			branch(d, num);
 			parent.popMatrix();
@@ -101,7 +102,7 @@ public class LTree extends core.Scene {
 	}
 
 	private void updateCamera() {
-		float fovRadians = (float) Math.toRadians(75); // ?
+		float fovRadians = (float) Math.toRadians(45); // ?
 		float zDistW = (float) ((parent.width / 2.0f) / Math
 				.tan(fovRadians / 2.0f));
 		float zDistH = (float) ((parent.height / 2.0f) / Math
@@ -115,6 +116,6 @@ public class LTree extends core.Scene {
 	@Override
 	public void deactivated() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
