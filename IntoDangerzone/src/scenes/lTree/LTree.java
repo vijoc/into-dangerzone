@@ -16,11 +16,11 @@ public class LTree extends core.Scene {
 
 	float curlX = 0;
 	float curlY = 0;
-	int branchNumber = 14;
+	int branchNumber = 15;
 	float f = 0;
-	float fTarget = 0.8f;
+	float fTarget = 0.75f;
 	float delay = 50;
-	float growth = 0.1f;
+	float growth = 0.15f;
 	float growthTarget = 1.1f;
 	float curlXTarget = 0;
 	float curlYTarget = 0;
@@ -44,9 +44,9 @@ public class LTree extends core.Scene {
 		}
 		if (beatListener.isHat()) {
 			if (f < fTarget)
-				f += 0.01;
+				f += 0.00025;
 			if (growth < growthTarget)
-				growth += 0.01;
+				growth += 0.0005;
 		}
 	}
 
@@ -59,19 +59,6 @@ public class LTree extends core.Scene {
 		curlX += (PApplet.radians((float) (curlXTarget)) - curlX) / delay;
 		curlY += (PApplet.radians((float) (curlYTarget)) - curlY) / delay;
 		branch(parent.height / 3, branchNumber);
-		renderDebugTexts();
-	}
-
-	private void renderDebugTexts() {
-		parent.stroke(0);
-		parent.fill(0);
-		parent.textSize(32);
-		parent.text("curl X: " + curlX, parent.width / 2, 0);
-		parent.text("curl Y: " + curlY, parent.width / 2, 64);
-		parent.text("growth target: " + growthTarget, parent.width / 2, 128);
-		parent.text("f: " + f, parent.width / 2, 192);
-		parent.text("growth: " + growth, parent.width / 2, 256);
-		parent.text("fps: " + parent.frameRate, parent.width / 2, 320);
 	}
 
 	private void branch(double d, int num) {
