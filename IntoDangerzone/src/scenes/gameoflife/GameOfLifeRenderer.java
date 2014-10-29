@@ -14,6 +14,14 @@ public class GameOfLifeRenderer extends Renderer {
 
 	@Override
 	public void render() {
+		render(0);
+	}
+	
+	/**
+	 * 
+	 * @param opacity must be between 0-255 inclusive
+	 */
+	public void render(int shade){
 		int cols = gol.getColumnCount();
 		int rows = gol.getRowCount();
 
@@ -25,8 +33,8 @@ public class GameOfLifeRenderer extends Renderer {
 		parent.translate(-parent.width/2, -parent.height / 2);
 
 		parent.background(255, 255, 255);
-		parent.color(0, 0, 0);
-		parent.fill(0, 0, 0);
+		parent.color(shade);
+		parent.fill(shade);
 		
 		for (int i = 0; i < cols; i++) {
 			for (int j = 0; j < rows; j++) {
@@ -37,7 +45,6 @@ public class GameOfLifeRenderer extends Renderer {
 			}
 		}
 		parent.popMatrix();
-
 	}
 
 }
