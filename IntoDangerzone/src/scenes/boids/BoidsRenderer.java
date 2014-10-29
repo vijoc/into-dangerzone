@@ -7,7 +7,7 @@ import processing.core.PApplet;
 public class BoidsRenderer {
 
 	public enum RenderMode {
-		CIRCLE, TRIANGLE, LINE, PERPENDICULAR
+		CIRCLE, TRIANGLE, LINE, PERPENDICULAR, SQUARE
 	};
 
 	private PApplet applet;
@@ -18,7 +18,7 @@ public class BoidsRenderer {
 	public BoidsRenderer(PApplet applet, Flock flock) {
 		this.applet = applet;
 		this.flock = flock;
-		this.renderMode = RenderMode.PERPENDICULAR;
+		this.renderMode = RenderMode.SQUARE;
 		this.rand = new Random();
 	}
 
@@ -35,6 +35,9 @@ public class BoidsRenderer {
 			break;
 		case PERPENDICULAR:
 			renderPerpendiculars();
+			break;
+		case SQUARE:
+			renderSquares();
 			break;
 		default:
 			break;
@@ -117,9 +120,22 @@ public class BoidsRenderer {
 		}
 	}
 
-	
-	void randomRenderingMode(){
-		this.renderMode = RenderMode.values()[rand.nextInt(RenderMode.values().length)];
+	private void renderSquares() {
+		applet.background(255);
+		for (Boid b : flock.boids) {
+			applet.fill(0, 0, 0);
+			applet.stroke(0, 0, 0);
+			applet.pushMatrix();
+			applet.translate(-applet.width / 2, -applet.height / 2);
+			applet.translate(b.location.getX(), b.location.getY());
+			applet.rect(0, 0, b.rules.boidSize, b.rules.boidSize);
+			applet.popMatrix();
+		}
+	}
+
+	void randomRenderingMode() {
+		this.renderMode = RenderMode.values()[rand
+				.nextInt(RenderMode.values().length)];
 	}
 
 }
