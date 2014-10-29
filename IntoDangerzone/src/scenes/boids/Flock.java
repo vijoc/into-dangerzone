@@ -13,6 +13,7 @@ class Flock {
 	int width;
 	int height;
 	private int maxBoids = 500;
+	private float weightDecreaseSpeed;
 
 	Flock(PApplet applet) {
 		boids = new ArrayList<Boid>();
@@ -21,6 +22,8 @@ class Flock {
 		height = applet.height;
 		this.rand = new Random();
 		this.rules = new Rules();
+		this.weightDecreaseSpeed = (rules.getMaxWeight() - rules.getMinWeight())
+				/ maxBoids;
 	}
 
 	void initialize() {
@@ -42,9 +45,11 @@ class Flock {
 	void newBoid() {
 		if (boids.size() < maxBoids) {
 			Boid b = new Boid(width, height);
-			rules.setWeight(rules.getWeight() * 0.999f);
+			rules.setWeight((float) (rules.getWeight() - weightDecreaseSpeed));
 			b.setRules(rules);
 			boids.add(b);
+			System.out.println("number of boids: " + boids.size() + " weight: "
+					+ boids.get(0).rules.getWeight());
 		}
 	}
 

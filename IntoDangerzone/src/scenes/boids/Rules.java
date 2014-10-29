@@ -12,9 +12,9 @@ public class Rules {
 	private float minSpeed = 0;
 	private float maxSpeed = 2;
 
-	private float desiredSeparation = 25;
-	private float alignNeighborDist = 50;
-	private float cohesionNeighborDist = 50;
+	private float desiredSeparation = 50;
+	private float alignNeighborDist = 100;
+	private float cohesionNeighborDist = 100;
 
 	private float separationWeight = 1.5f;
 	private float alignmentWeight = 1.0f;
@@ -69,7 +69,7 @@ public class Rules {
 			this.setMinSpeed(rand.nextFloat() * getMaxSpeed());
 			break;
 		case 1:
-			this.setDesiredSeparation((float) (rand.nextFloat() * 50));
+			this.setDesiredSeparation((float) (rand.nextFloat() * 100));
 			break;
 		case 2:
 			this.setSeparationWeight(0.5f + rand.nextFloat() * 2.f);
@@ -135,5 +135,13 @@ public class Rules {
 
 	public void setMaxSpeed(float maxSpeed) {
 		this.maxSpeed = maxSpeed;
+	}
+	
+	public float getMinWeight() {
+		return minWeight;
+	}
+	
+	public float getMaxWeight() {
+		return maxWeight;
 	}
 }
