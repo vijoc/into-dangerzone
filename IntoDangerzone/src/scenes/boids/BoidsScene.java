@@ -6,21 +6,24 @@ import ddf.minim.AudioSource;
 import audio.BeatListener;
 import processing.core.PApplet;
 
-public class Boids extends core.Scene {
+public class BoidsScene extends core.Scene {
 
-	Flock flock;
+	private Flock flock;
+	private BoidsRenderer boidsRenderer;
 
 	private BeatListener beatListener;
 
 	private int maxBoids = 500;
 	private Random rand;
-	private float newBoidProbability = 1f;
+	private float newBoidProbability = 0.1f;
+	private float newRulesProbability = 1f;
 
-	public Boids(PApplet parent, AudioSource audioSource) {
+	public BoidsScene(PApplet parent, AudioSource audioSource) {
 		super(parent);
 		this.parent = parent;
 		this.beatListener = new BeatListener(audioSource);
 		flock = new Flock(parent);
+		boidsRenderer = new BoidsRenderer(parent, flock);
 
 		rand = new Random();
 
@@ -39,13 +42,29 @@ public class Boids extends core.Scene {
 							parent.width, parent.height));
 			}
 		}
+		if (beatListener.isKick()){
+			if (rand.nextFloat() < newRulesProbability) {
+				flock.newRules();
+			}
+		}
 		flock.run();
 	}
 
 	@Override
 	public void render() {
-		parent.background(255);
-		flock.render();
+		boidsRenderer.render();
+	}
+
+	@Override
+	public void activated() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deactivated() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -23,24 +23,6 @@ class Flock {
 		}
 	}
 
-	void render() {
-		for (Boid b : boids) {
-			float theta = (float) (b.velocity.getHeading() + Math.toRadians(90));
-			applet.fill(0, 0, 0);
-			applet.stroke(0, 0, 0);
-			applet.pushMatrix();
-			applet.translate(-applet.width / 2, -applet.height / 2);
-			applet.translate(b.location.getX(), b.location.getY());
-			applet.rotate(theta);
-			applet.beginShape(processing.core.PShape.TRIANGLES);
-			applet.vertex(0, -b.boidSize * 10);
-			applet.vertex(-b.boidSize * 6, b.boidSize * 6);
-			applet.vertex(b.boidSize * 6, b.boidSize * 6);
-			applet.endShape();
-			applet.popMatrix();
-		}
-	}
-
 	void disturb() {
 		for (Boid b : boids) {
 			Vector2D random = new Vector2D(rand.nextFloat() * 100,
@@ -48,12 +30,25 @@ class Flock {
 			b.applyForce(random);
 		}
 	}
+	
+	int getFlockSize(){
+		return boids.size();
+	}
 
 	void addBoid(Boid b) {
 		boids.add(b);
 		float f = 1;//2*rand.nextFloat();
 		b.weight = f;
 		b.boidSize = f;
+	}
+	
+	// TODO more elaborate randomization, parameterization etc
+	void newRules() {
+		float size = rand.nextFloat()*4;
+		for (Boid b : boids) {
+			b.boidSize = size;
+			b.weight = size;
+		}
 	}
 
 }

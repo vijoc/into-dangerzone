@@ -1,20 +1,19 @@
 package scenes.julia;
 
 import math.Complex;
-import math.ComplexFunction;
 
 public class JuliaSet {
 	
 	private Complex parameterC = new Complex(0.5f, 0.5f);
 	private ComplexFunction fn;
-	
-	private int iterations = 12;
+
+	private int iterations = 10;
 	
 	public JuliaSet() {
 		
 		this.fn = new ComplexFunction() {
-			public Complex function(Complex z) {
-				return Complex.add(z.squared(), parameterC);
+			public Complex f(Complex z, Complex c) {
+				return Complex.add(z.squared(), c);
 			}
 		};
 	}
@@ -24,11 +23,6 @@ public class JuliaSet {
 	public void setC(Complex c) {
 		if(!parameterC.equals(c)) {
 			parameterC = c;
-			fn = new ComplexFunction() {
-				public Complex function(Complex z) {
-					return Complex.add(z.squared(), parameterC);
-				}
-			};
 		}
 	}
 	
@@ -44,17 +38,32 @@ public class JuliaSet {
 		this.fn = fn;
 	}
 	
-	public int calc(Complex z) {
+	public void setIterations(int i) {
+		this.iterations = i;
+	}
+	
+	public int getIterations() {
+		return this.iterations;
+	}
+	
+	public int lastIterationContaining(Complex z) {
 		int result = -1;
 		
 		for(int i = 0; i < iterations; i++) {
-			z = fn.function(z);
+			z = fn.f(z, parameterC);
 			
-			if(Math.sqrt(z.squaredModule()) < 2) {
+			if(z.magnitude() < 2) {
 				result = i;
 			}
 		}
 		
 		return result;
+	}
+	
+	public boolean lastIterationContains(Complex z) {
+		for(int i = 0; i < iterations; i++) {
+			z = fn.f(z, parameterC);
+		}
+		return z.magnitude() < 2;
 	}
 }

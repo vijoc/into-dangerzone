@@ -24,4 +24,8 @@ public abstract class Scene {
 	 */
 	public abstract void render();
 	
+	public abstract void activated();
+	
+	public abstract void deactivated();
+	
 }
