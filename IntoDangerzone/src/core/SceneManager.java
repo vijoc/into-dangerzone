@@ -9,6 +9,9 @@ public class SceneManager {
 	
 	public void addScene(Scene scene) {
 		scenes.add(scene);
+		if(scenes.size() == 1) {
+			setActiveScene(scene);
+		}
 	}
 	
 	public Scene getActiveScene() {
@@ -28,7 +31,12 @@ public class SceneManager {
 	public void setActiveScene(int index) {
 		if(index < 0 || index >= scenes.size()) return;
 		
-		activeScene = scenes.get(index);
+		Scene newScene = scenes.get(index);
+		if(newScene != activeScene) {
+			if(activeScene != null) activeScene.deactivated();
+			activeScene = newScene;
+			activeScene.activated();
+		}
 	}
 	
 	public void setActiveScene(Scene scene) {

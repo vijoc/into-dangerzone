@@ -48,4 +48,16 @@ public class Boids extends core.Scene {
 		flock.render();
 	}
 
+	@Override
+	public void activated() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deactivated() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
