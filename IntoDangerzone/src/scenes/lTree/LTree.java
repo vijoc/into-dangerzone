@@ -1,103 +1,223 @@
 package scenes.lTree;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+import java.util.Random;
+
+import math.Vector3D;
+import graphics.Camera;
 import ddf.minim.AudioSource;
 import audio.BeatListener;
 import processing.core.PApplet;
 
-public class LTree extends core.Scene {
+public class LTree extends core.Scene implements KeyEventDispatcher {
+
+	private enum RenderingMode {
+		LINES, POINTS
+	};
+
 	AudioSource audioSource;
 	BeatListener beatListener;
+
+	private Camera camera;
+
 	float curlX = 0;
 	float curlY = 0;
-	float f = 0; // (float) (Math.sqrt(2) / 2.0f);
+	int branchNumber = 15;
+
+	float branchRatio = 0;
+	float branchRatioTarget = 0.75f;
+	float branchRatioSpeed = 0.00025f;
+
 	float delay = 50;
-	float growth = 0;
-	float growthTarget = -8;
+
+	float growth = 0.15f;
+	float growthTarget = 1.1f;
+	float growthSpeed = 0.0005f;
+
 	float curlXTarget = 0;
 	float curlYTarget = 0;
+
+	float chanceOfChangeFromLines = 0.1f;
+	float chanceOfChangeFromPoints = 0.4f;
+	Random rand;
+
+	RenderingMode renderingMode;
 
 	public LTree(PApplet parent, AudioSource audioSource) {
 		super(parent);
 		this.audioSource = audioSource;
 		this.beatListener = new BeatListener(audioSource);
+		this.camera = new Camera(parent);
+		this.rand = new Random();
+		this.renderingMode = RenderingMode.LINES;
 	}
 
 	@Override
 	public void update(float dtSeconds) {
 		if (beatListener.isKick()) {
-			curlYTarget += parent.random(200) - 100;
-			curlXTarget += parent.random(200) - 100;
+			curlYTarget += rand.nextFloat() * 50 - 25;
+			if (rand.nextFloat() < getRenderingChangeChance())
+				changeRenderingMode();
 		}
 		if (beatListener.isSnare()) {
-			// curlYTarget += parent.random(200)-100;
+			curlXTarget += rand.nextFloat() * 50 - 25;
 		}
 		if (beatListener.isHat()) {
-			if (growthTarget < -3)
-				growthTarget += 0.01;
-			if (f < 0.9)
-				f += 0.001;
+			if (branchRatio < branchRatioTarget)
+				branchRatio += branchRatioSpeed;
+			if (growth < growthTarget)
+				growth += growthSpeed;
 		}
 	}
 
 	@Override
 	public void render() {
-		parent.background(250, 250, 250, 10);
-		parent.stroke(0, 0, 0, 25);
+		clearBackground();
+		parent.translate(0, 0);
+		parent.stroke(0, 0, 0, 50);
 		curlX += (PApplet.radians((float) (curlXTarget)) - curlX) / delay;
 		curlY += (PApplet.radians((float) (curlYTarget)) - curlY) / delay;
-		parent.translate(0, parent.height / 2);
-		parent.point(0,0);
-//		parent.line(0, 0, 0, parent.height);
-		branch(parent.height * 0.5, 17);
-		growth += (growthTarget / 10 - growth + 1.) / delay;
-		renderDebugTexts();
+		branch(parent.height / 3, branchNumber);
 	}
 
-	private void renderDebugTexts() {
-		parent.stroke(0);
-		parent.fill(0);
-		parent.textSize(32);
-		parent.text("curl X: " + curlX, parent.width / 2, 0);
-		parent.text("curl Y: " + curlY, parent.width / 2, 64);
-		parent.text("growth target: " + growthTarget, parent.width / 2, 128);
-		parent.text("f: " + f, parent.width / 2, 192);
-		parent.text("growth: " + growth, parent.width / 2, 256);
-		parent.text("fps: " + parent.frameRate, parent.width/2, 320);
-	}
-
-	private void branch(double d, int num) {
-		d *= f;
-		num -= 1;
-		if ((d > 1) && (num > 0)) {
+	private void branch(double length, int branchNum) {
+		length *= branchRatio;
+		branchNum -= 1;
+		if ((length > 1) && (branchNum > 0)) {
 			parent.pushMatrix();
 			parent.rotate(curlX);
-			parent.point(0, 0);
-			//parent.line(0, 0, 0, (float) -d);
-			parent.translate(0, (float) -d);
-			branch(d, num);
+			renderBranch(length);
+
+			parent.translate(0, (float) -length);
+			branch(length, branchNum);
 			parent.popMatrix();
 
-			d *= growth;
+			length *= growth;
 			parent.pushMatrix();
 			parent.rotate(curlX - curlY);
-			parent.point(0, 0);
-			//parent.line(0, 0, 0, (float) -d);
-			parent.translate(0, (float) -d);
-			branch(d, num);
+			renderBranch(length);
+
+			parent.translate(0, (float) -length);
+			branch(length, branchNum);
 			parent.popMatrix();
 		}
+	}
 
+	private void clearBackground() {
+		switch (renderingMode) {
+		case POINTS:
+			parent.fill(255, 10);
+			parent.noStroke();
+			parent.rectMode(PApplet.RADIUS);
+			parent.rect(0, 0, parent.width, parent.height);
+			parent.rectMode(PApplet.CORNER);
+			break;
+		case LINES:
+			parent.background(255, 255, 255);
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void renderBranch(double length) {
+		switch (renderingMode) {
+		case POINTS:
+			parent.point(0, 0);
+			break;
+		case LINES:
+			parent.line(0, 0, 0, (float) -length);
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void changeRenderingMode() {
+		switch (renderingMode) {
+		case LINES:
+			renderingMode = RenderingMode.POINTS;
+			break;
+		case POINTS:
+			renderingMode = RenderingMode.LINES;
+			break;
+		default:
+			break;
+		}
+	}
+
+	private float getRenderingChangeChance() {
+		float result = 1.0f;
+		switch (renderingMode) {
+		case LINES:
+			result = chanceOfChangeFromLines;
+			break;
+		case POINTS:
+			result = chanceOfChangeFromPoints;
+			break;
+		default:
+			break;
+		}
+		return result;
+	}
+
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent e) {
+		switch (e.getID()) {
+		case KeyEvent.KEY_PRESSED:
+			keyPress(e.getKeyCode());
+			break;
+		}
+		return false;
+	}
+
+	private void keyPress(int code) {
+		switch (code) {
+		case KeyEvent.VK_SPACE:
+			changeRenderingMode();
+			break;
+		case KeyEvent.VK_D:
+			break;
+		case KeyEvent.VK_UP:
+			curlXTarget += 10;
+			break;
+		case KeyEvent.VK_DOWN:
+			curlXTarget -= 10;
+			break;
+		case KeyEvent.VK_RIGHT:
+			curlYTarget += 10;
+			break;
+		case KeyEvent.VK_LEFT:
+			curlYTarget -= 10;
+			break;
+		}
 	}
 
 	@Override
 	public void activated() {
-		// TODO Auto-generated method stub
-		
+		updateCamera();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.addKeyEventDispatcher(this);
+	}
+
+	private void updateCamera() {
+		float fovRadians = (float) Math.toRadians(45); // ?
+		float zDistW = (float) ((parent.width / 2.0f) / Math
+				.tan(fovRadians / 2.0f));
+		float zDistH = (float) ((parent.height / 2.0f) / Math
+				.tan(fovRadians / 2.0f));
+		float zDist = Math.max(zDistW, zDistH);
+		camera.setPosition(new Vector3D(0, 0, zDist));
+		camera.setCenter(new Vector3D(0, 0, 0));
+		camera.update();
 	}
 
 	@Override
 	public void deactivated() {
-		// TODO Auto-generated method stub
-		
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.removeKeyEventDispatcher(this);
+
 	}
 }
