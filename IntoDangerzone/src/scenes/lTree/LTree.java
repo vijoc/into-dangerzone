@@ -28,11 +28,13 @@ public class LTree extends core.Scene implements KeyEventDispatcher {
 
 	float branchRatio = 0;
 	float branchRatioTarget = 0.75f;
+	float branchRatioSpeed = 0.00025f;
 
 	float delay = 50;
 
 	float growth = 0.15f;
 	float growthTarget = 1.1f;
+	float growthSpeed = 0.0005f;
 
 	float curlXTarget = 0;
 	float curlYTarget = 0;
@@ -64,9 +66,9 @@ public class LTree extends core.Scene implements KeyEventDispatcher {
 		}
 		if (beatListener.isHat()) {
 			if (branchRatio < branchRatioTarget)
-				branchRatio += 0.00025;
+				branchRatio += branchRatioSpeed;
 			if (growth < growthTarget)
-				growth += 0.0005;
+				growth += growthSpeed;
 		}
 	}
 
