@@ -14,7 +14,12 @@ public class JuliaSceneRenderer extends Renderer {
 		SOLID, STEPPED
 	}
 	
+	public enum ColorMode {
+		GRAYSCALE, BLUE_YELLOW
+	}
+	
 	private RenderMode mode = RenderMode.STEPPED;
+	private ColorMode colorMode = ColorMode.GRAYSCALE;
 
 	float translateX;
 	float translateY;
@@ -29,6 +34,10 @@ public class JuliaSceneRenderer extends Renderer {
 	
 	private boolean renderDebug;
 	
+	private int firstColor;
+	private int secondColor;
+	private int thirdColor;
+	
 	PGraphics context;
 	
 	public JuliaSceneRenderer(PApplet parent, JuliaSet set) {
@@ -42,16 +51,17 @@ public class JuliaSceneRenderer extends Renderer {
 		shrink = 2.0f / context.width;
 		shrinkv = shrink*2;
 		colorStep = 255 / this.set.getIterations();
+		setColorMode(colorMode);
 	}
 
 	@Override
 	public void render() {
 		parent.colorMode(PConstants.RGB, 255.0f);
-		parent.background(255);
+		//parent.background(255);
 		
-		context.beginDraw();		
-		context.clear(); // Doesn't seem to work?
-		Arrays.fill(context.pixels, context.color(255));
+		context.beginDraw();
+		//context.clear(); // Doesn't seem to work?
+		Arrays.fill(context.pixels, firstColor);
 		
 		Complex z;
 		for(float x = 0; x < context.width; x++) {
@@ -89,12 +99,49 @@ public class JuliaSceneRenderer extends Renderer {
 		this.mode = mode;
 	}
 	
+	public void toggleMode() {
+		switch(mode) {
+		case SOLID:
+			this.mode = RenderMode.STEPPED;
+			break;
+		case STEPPED:
+			this.mode = RenderMode.SOLID;
+			break;
+		}
+	}
+	
 	public void setDebug(boolean d) {
 		this.renderDebug = d;
 	}
 	
 	public void toggleDebug() {
 		setDebug(!renderDebug);
+	}
+	
+	public void setColorMode(ColorMode cMode) {
+		switch(cMode) {
+		case GRAYSCALE:
+			firstColor = parent.color(255);
+			secondColor = parent.color(0);
+			thirdColor = parent.color(255);
+			break;
+		case BLUE_YELLOW:
+			firstColor = parent.color(0, 0, 100);
+			secondColor = parent.color(125, 125, 0);
+			thirdColor = parent.color(255);
+		}
+		this.colorMode = cMode;
+	}
+	
+	public void toggleColorMode() {
+		switch(colorMode) {
+		case GRAYSCALE:
+			setColorMode(ColorMode.BLUE_YELLOW);
+			break;
+		case BLUE_YELLOW:
+			setColorMode(ColorMode.GRAYSCALE);
+			break;
+		}
 	}
 	
 	private int pixelIndex(float x, float y) {
@@ -114,9 +161,9 @@ public class JuliaSceneRenderer extends Renderer {
 			float val = (float) iter / set.getIterations();
 			int color;
 			if(val < 0.5) {
-				color = context.lerpColor(context.color(255, 255, 255), context.color(0,0,0), val * 2);
+				color = context.lerpColor(firstColor, secondColor, (val*2));
 			} else {
-				color = context.lerpColor(context.color(0, 0, 0), context.color(255, 255, 255), (val-0.5f)*2);
+				color = context.lerpColor(secondColor, thirdColor, (val-0.5f)*2);
 			}
 			
 			context.pixels[pixelIndex(x, y)] = color;

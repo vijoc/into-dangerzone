@@ -158,6 +158,12 @@ public class JuliaScene extends Scene implements KeyEventDispatcher {
 		case KeyEvent.VK_DOWN:
 			set.setIterations(set.getIterations()-1);
 			break;
+		case KeyEvent.VK_M:
+			renderer.toggleMode();
+			break;
+		case KeyEvent.VK_C:
+			renderer.toggleColorMode();
+			break;
 		}
 	}
 
