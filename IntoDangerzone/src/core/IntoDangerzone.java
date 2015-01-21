@@ -12,6 +12,7 @@ import processing.core.*;
 import processing.event.MouseEvent;
 import scenes.julia.JuliaScene;
 import scenes.lTree.*;
+import scenes.scope.ScopeScene;
 import scenes.boids.BoidsScene;
 import scenes.gameoflife.GameOfLifeScene;
 
@@ -34,12 +35,13 @@ public class IntoDangerzone extends PApplet {
 	private LTree lTreeScene;
 	private BoidsScene boidsScene;
 	private JuliaScene juliaScene;
+	private ScopeScene scopeScene;
 	
 	private long currentTime;
 	
 	@Override
 	public void setup() {
-		size(1024, 768, P3D);
+		size(1280, 1024, P3D);
 		background(0);
 		initializeAudioSource();
 		initializeScenes();
@@ -94,6 +96,9 @@ public class IntoDangerzone extends PApplet {
 		
 		juliaScene = new JuliaScene(this, getAudioSource());
 		sceneManager.addScene(juliaScene);
+		
+		scopeScene = new ScopeScene(this, getAudioSource());
+		sceneManager.addScene(scopeScene);
 		
 		sceneManager.setActiveScene(0);
 	}
