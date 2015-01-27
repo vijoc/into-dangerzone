@@ -2,6 +2,7 @@ package scenes.scope;
 
 import java.util.ArrayList;
 
+import math.Complex;
 import math.Vector2D;
 import ddf.minim.AudioSource;
 import graphics.Renderer;
@@ -47,8 +48,10 @@ public class ScopeRenderer extends Renderer {
 		for (int i = 0; i < lBuffer.length; i++) {
 			sumBuffer[i] = lBuffer[i] + rBuffer[i];
 		}
-//		renderDiagonalMirror();
-		renderDivisions();
+		// renderDiagonalMirror();
+		if (!divisions.isEmpty()) {
+			renderDivisions();
+		}
 	}
 
 	private void renderDivisions() {
@@ -59,15 +62,23 @@ public class ScopeRenderer extends Renderer {
 	}
 
 	private void renderDivision(Pair<Vector2D, Vector2D> division) {
-		applet.translate(-width/2, -height/2);
+		Vector2D start = division.x;
+		Vector2D end = division.y;
+		Vector2D difference = end.subtract(start);
+		float heading = difference.getHeading();
+
 		applet.stroke(255);
-		for (int i = 0; i < sumBuffer.length-1; i++) {
-			float x = PApplet.map(i, 0, sumBuffer.length, 0, applet.width);
+		applet.translate(-width / 2, -height / 2); // we're in TL corner now
+
+		for (int i = 0; i < sumBuffer.length - 1; i++) {
+			float d = PApplet.map(i, 0, sumBuffer.length, 0, 1); // d [0, 1]
 			
-			float x1 = PApplet.map(sumBuffer[i], -1, 1, 0, applet.width);
-			float y1 = PApplet.map(x, 0, applet.width, 0, applet.height);
-			float x2 = PApplet.map(sumBuffer[i + 1], -1, 1, 0, applet.width);
-			float y2 = PApplet.map(x, 0, applet.width, 0, applet.height);
+			Complex z = Complex.fromPolar(d, heading);
+
+			float x1 = PApplet.map(z.x(), 0, 1, 0, difference.getX());
+			float x2 = PApplet.map(z.x(), 0, 1, 0, difference.getX());
+			float y1 = PApplet.map(z.y() + sumBuffer[i], -2, 2, 0, difference.getY());
+			float y2 = PApplet.map(z.y() + sumBuffer[i + 1], -2, 2, 0, difference.getY());
 			applet.line(x1, y1, x2, y2);
 		}
 	}
