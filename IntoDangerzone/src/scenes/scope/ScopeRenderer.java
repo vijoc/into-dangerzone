@@ -35,11 +35,10 @@ public class ScopeRenderer extends Renderer {
 		Pair<Vector2D, Vector2D> mainDiagonal = new Pair<Vector2D, Vector2D>(
 				tlCorner, brCorner);
 		divisions.add(mainDiagonal);
-		
+
 		Vector2D foo = new Vector2D(0, height);
 		Vector2D bar = new Vector2D(width, 0);
-		Pair<Vector2D, Vector2D> foobar = new Pair<Vector2D, Vector2D>(
-				foo, bar);
+		Pair<Vector2D, Vector2D> foobar = new Pair<Vector2D, Vector2D>(foo, bar);
 		divisions.add(foobar);
 	}
 
@@ -62,6 +61,7 @@ public class ScopeRenderer extends Renderer {
 	}
 
 	private void renderDivisions() {
+		applet.translate(-width / 2, -height / 2); // we're in TL corner now
 		for (int i = 0; i < divisions.size(); i++) {
 			Pair<Vector2D, Vector2D> division = divisions.get(i);
 			renderDivision(division);
@@ -73,21 +73,29 @@ public class ScopeRenderer extends Renderer {
 		Vector2D end = division.y;
 		Vector2D difference = end.subtract(start);
 		float heading = difference.getHeading();
+		Complex w = Complex.fromPolar(1, heading);
 
 		applet.stroke(255);
-		applet.translate(-width / 2, -height / 2); // we're in TL corner now
+		float d = 0;
+		Complex z = Complex.fromPolar(d, heading); // abs(z) = d, arg(z) =
+													// arg(w)
+		float v = sumBuffer[0];
+		float x1 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
+		float y1 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY());
 
-		for (int i = 0; i < sumBuffer.length - 1; i++) {
-			float d = PApplet.map(i, 0, sumBuffer.length, 0, 1); // d [0, 1]
+		for (int i = 1; i < sumBuffer.length; i++) {
 
-			Complex z = Complex.fromPolar(d, heading);
-			Complex w = Complex.fromPolar(1, heading);
+			float x2 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
+			float y2 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY())
+					+ PApplet.map(v, -1, 1, start.getY(), end.getY());
 
-			float x1 = PApplet.map(z.x(), 0, w.x(), 0, difference.getX());
-			float x2 = PApplet.map(z.x(), 0, w.x(), 0, difference.getX());
-			float y1 = PApplet.map(z.y(), 0, w.y(), 0, difference.getY());
-			float y2 = y1 + PApplet.map(sumBuffer[i], 0, 1, 0, difference.getY());
 			applet.line(x1, y1, x2, y2);
+
+			d = PApplet.map(i, 0, sumBuffer.length, 0, 1); // d [0, 1]
+			z = Complex.fromPolar(d, heading); // abs(z) = d, arg(z) = arg(w)
+			v = sumBuffer[i];
+			x1 = x2;
+			y1 = y2;
 		}
 	}
 
