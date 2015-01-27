@@ -1,10 +1,14 @@
 package scenes.scope;
 
+import java.util.ArrayList;
+
+import math.Vector2D;
 import ddf.minim.AudioSource;
 import graphics.Renderer;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
+import util.Pair;
 
 public class ScopeRenderer extends Renderer {
 
@@ -17,7 +21,7 @@ public class ScopeRenderer extends Renderer {
 
 	int width;
 	int height;
-	Mirroring mirroring;
+	ArrayList<Pair<Vector2D, Vector2D>> divisions;
 
 	public ScopeRenderer(PApplet applet, AudioSource audioSource) {
 		super(applet);
@@ -25,11 +29,12 @@ public class ScopeRenderer extends Renderer {
 		this.applet = applet;
 		width = applet.width;
 		height = applet.height;
-		mirroring = Mirroring.DIAGONAL;
-	}
-
-	private enum Mirroring {
-		NONE, DIAGONAL, HORIZONTAL;
+		divisions = new ArrayList<>();
+		Vector2D tlCorner = new Vector2D(0, 0);
+		Vector2D brCorner = new Vector2D(width, height);
+		Pair<Vector2D, Vector2D> mainDiagonal = new Pair<Vector2D, Vector2D>(
+				tlCorner, brCorner);
+		divisions.add(mainDiagonal);
 	}
 
 	@Override
@@ -42,19 +47,28 @@ public class ScopeRenderer extends Renderer {
 		for (int i = 0; i < lBuffer.length; i++) {
 			sumBuffer[i] = lBuffer[i] + rBuffer[i];
 		}
+//		renderDiagonalMirror();
+		renderDivisions();
+	}
 
-		switch (mirroring) {
-		case NONE:
-			renderNormal();
-			break;
-		case DIAGONAL:
-			renderDiagonalMirror();
-			break;
-		case HORIZONTAL:
-			renderHorizontalMirror();
-			break;
-		default:
-			break;
+	private void renderDivisions() {
+		for (int i = 0; i < divisions.size(); i++) {
+			Pair<Vector2D, Vector2D> division = divisions.get(i);
+			renderDivision(division);
+		}
+	}
+
+	private void renderDivision(Pair<Vector2D, Vector2D> division) {
+		applet.translate(-width/2, -height/2);
+		applet.stroke(255);
+		for (int i = 0; i < sumBuffer.length-1; i++) {
+			float x = PApplet.map(i, 0, sumBuffer.length, 0, applet.width);
+			
+			float x1 = PApplet.map(sumBuffer[i], -1, 1, 0, applet.width);
+			float y1 = PApplet.map(x, 0, applet.width, 0, applet.height);
+			float x2 = PApplet.map(sumBuffer[i + 1], -1, 1, 0, applet.width);
+			float y2 = PApplet.map(x, 0, applet.width, 0, applet.height);
+			applet.line(x1, y1, x2, y2);
 		}
 	}
 
@@ -66,10 +80,10 @@ public class ScopeRenderer extends Renderer {
 		for (int i = 0; i < lBuffer.length - 1; i++) {
 			float x = PApplet.map(i, 0, lBuffer.length, 0, applet.width);
 			applet.line(x, lBuffer[i] * 1000, x, lBuffer[i + 1] * 1000);
-			
+
 			float x1 = PApplet.map(lBuffer[i], -1, 1, 0, applet.width);
 			float y1 = PApplet.map(x, 0, applet.width, 0, applet.height);
-			float x2 = PApplet.map(lBuffer[i+1], -1, 1, 0, applet.width);
+			float x2 = PApplet.map(lBuffer[i + 1], -1, 1, 0, applet.width);
 			float y2 = PApplet.map(x, 0, applet.width, 0, applet.height);
 			applet.line(x1, y1, x2, y2);
 		}
