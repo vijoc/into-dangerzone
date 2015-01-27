@@ -35,6 +35,12 @@ public class ScopeRenderer extends Renderer {
 		Pair<Vector2D, Vector2D> mainDiagonal = new Pair<Vector2D, Vector2D>(
 				tlCorner, brCorner);
 		divisions.add(mainDiagonal);
+		
+		Vector2D foo = new Vector2D(0, height);
+		Vector2D bar = new Vector2D(width, 0);
+		Pair<Vector2D, Vector2D> foobar = new Pair<Vector2D, Vector2D>(
+				foo, bar);
+		divisions.add(foobar);
 	}
 
 	@Override
