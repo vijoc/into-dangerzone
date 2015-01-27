@@ -55,5 +55,28 @@ public class ScopeRenderer extends Renderer {
 			float x = PApplet.map(i, 0, sumBuffer.length, 0, applet.width);
 			applet.line(x, sumBuffer[i]*1000, x, sumBuffer[i+1]*1000);
 		}
+		
+		mirrorLeft();
+		mirrorTop();
+	}
+	
+	private void mirrorLeft(){
+		applet.loadPixels();
+		for(int x = 0; x < width/2; x++){
+			for(int y = 0; y < height; y++){
+				applet.pixels[x+y*width] = applet.pixels[(width-x)+y*width-1];
+			}
+		}
+		applet.updatePixels();
+	}
+	
+	private void mirrorTop(){
+		applet.loadPixels();
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height/2; y++){
+				applet.pixels[x*height+y] = applet.pixels[x*height+(height-y)-1];
+			}
+		}
+		applet.updatePixels();		
 	}
 }
