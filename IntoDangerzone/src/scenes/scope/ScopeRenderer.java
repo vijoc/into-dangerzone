@@ -75,13 +75,12 @@ public class ScopeRenderer extends Renderer {
 			float d = PApplet.map(i, 0, sumBuffer.length, 0, 1); // d [0, 1]
 
 			Complex z = Complex.fromPolar(d, heading);
+			Complex w = Complex.fromPolar(1, heading);
 
-			float x1 = PApplet.map(z.x(), 0, 1, 0, difference.getX());
-			float x2 = PApplet.map(z.x(), 0, 1, 0, difference.getX());
-			float y1 = PApplet.map(z.y() + sumBuffer[i], -2, 2, 0,
-					difference.getY());
-			float y2 = PApplet.map(z.y() + sumBuffer[i + 1], -2, 2, 0,
-					difference.getY());
+			float x1 = PApplet.map(z.x(), 0, w.x(), 0, difference.getX());
+			float x2 = PApplet.map(z.x(), 0, w.x(), 0, difference.getX());
+			float y1 = PApplet.map(z.y(), 0, w.y(), 0, difference.getY());
+			float y2 = y1 + PApplet.map(sumBuffer[i], 0, 1, 0, difference.getY());
 			applet.line(x1, y1, x2, y2);
 		}
 	}
