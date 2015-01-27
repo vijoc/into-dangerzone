@@ -61,7 +61,9 @@ public class ScopeRenderer extends Renderer {
 	}
 
 	private void renderDivisions() {
-		applet.translate(-width / 2, -height / 2); // we're in TL corner now
+		applet.translate(-width / 2, -height); // we're in TL corner now
+		// TODO actually -height/2 would be top, dunno, there's something weird
+		// with my drawing routines
 		for (int i = 0; i < divisions.size(); i++) {
 			Pair<Vector2D, Vector2D> division = divisions.get(i);
 			renderDivision(division);
@@ -80,22 +82,22 @@ public class ScopeRenderer extends Renderer {
 		Complex z = Complex.fromPolar(d, heading); // abs(z) = d, arg(z) =
 													// arg(w)
 		float v = sumBuffer[0];
-		float x1 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
-		float y1 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY());
+		float x0 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
+		float y0 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY());
 
 		for (int i = 1; i < sumBuffer.length; i++) {
 
-			float x2 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
-			float y2 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY())
+			float x1 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
+			float y1 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY())
 					+ PApplet.map(v, -1, 1, start.getY(), end.getY());
 
-			applet.line(x1, y1, x2, y2);
+			applet.line(x0, y0, x1, y1);
 
 			d = PApplet.map(i, 0, sumBuffer.length, 0, 1); // d [0, 1]
 			z = Complex.fromPolar(d, heading); // abs(z) = d, arg(z) = arg(w)
 			v = sumBuffer[i];
-			x1 = x2;
-			y1 = y2;
+			x0 = x1;
+			y0 = y1;
 		}
 	}
 
