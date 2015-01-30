@@ -13,6 +13,7 @@ import processing.event.MouseEvent;
 import scenes.julia.JuliaScene;
 import scenes.lTree.*;
 import scenes.scope.ScopeScene;
+import scenes.scopeAndFFT.ScopeAndFFTScene;
 import scenes.boids.BoidsScene;
 import scenes.gameoflife.GameOfLifeScene;
 
@@ -36,6 +37,7 @@ public class IntoDangerzone extends PApplet {
 	private BoidsScene boidsScene;
 	private JuliaScene juliaScene;
 	private ScopeScene scopeScene;
+	private ScopeAndFFTScene scopeAndFFTScene;
 	
 	private long currentTime;
 	
@@ -99,6 +101,9 @@ public class IntoDangerzone extends PApplet {
 		
 		scopeScene = new ScopeScene(this, getAudioSource());
 		sceneManager.addScene(scopeScene);
+		
+		scopeAndFFTScene = new ScopeAndFFTScene(this, getAudioSource());
+		sceneManager.addScene(scopeAndFFTScene);
 		
 		sceneManager.setActiveScene(0);
 	}
