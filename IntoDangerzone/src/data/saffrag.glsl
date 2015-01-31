@@ -5,7 +5,7 @@ precision mediump int;
 
 varying vec4 vertColor;
 uniform float fft[];
-uniform float scope[];
+uniform float waveform[];
 
 void main() {
   /* invert colors */
