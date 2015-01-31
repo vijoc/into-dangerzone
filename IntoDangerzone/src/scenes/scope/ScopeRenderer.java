@@ -95,7 +95,6 @@ public class ScopeRenderer extends Renderer {
 		applet.translate(x0, y0);
 		applet.rotate(heading);
 		for (int i = 1; i < sumBuffer.length; i++) {
-			applet.line(0, 0, width, 0);
 			float x1 = PApplet.map(i, 0, sumBuffer.length, 0, difference.getLength());
 			float y1 = sumBuffer[i] * 1000; // TODO magic number here
 			applet.line(x0, y0, x1, y1);
