@@ -41,6 +41,11 @@ public class ScopeRenderer extends Renderer {
 		Vector2D bar = new Vector2D(width, 0);
 		Pair<Vector2D, Vector2D> foobar = new Pair<Vector2D, Vector2D>(foo, bar);
 		divisions.add(foobar);
+		
+		Vector2D iddqd = new Vector2D(width/2, 0);
+		Vector2D idkfa = new Vector2D(width/2, height);
+		Pair<Vector2D, Vector2D> doom = new Pair<Vector2D, Vector2D>(iddqd, idkfa);
+		divisions.add(doom);
 	}
 
 	@Override
@@ -81,17 +86,17 @@ public class ScopeRenderer extends Renderer {
 
 		applet.pushMatrix();
 		applet.translate(-width / 2, -height / 2);
-		// We're now in top-left corner - actually!
+		// We're now in top-left corner
 
 		float d = 0;
-		Complex z = Complex.fromPolar(d, heading); // abs(z) = d, arg(z) =
+		Complex z = Complex.fromPolar(d, heading);
 		float x0 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
 		float y0 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY());
 		applet.translate(x0, y0);
 		applet.rotate(heading);
 		for (int i = 1; i < sumBuffer.length; i++) {
 			applet.line(0, 0, width, 0);
-			float x1 = PApplet.map(i, 0, sumBuffer.length, 0, width);
+			float x1 = PApplet.map(i, 0, sumBuffer.length, 0, difference.getLength());
 			float y1 = sumBuffer[i] * 1000; // TODO magic number here
 			applet.line(x0, y0, x1, y1);
 			x0 = x1;
