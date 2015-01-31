@@ -1,7 +1,5 @@
 package scenes.scope;
 
-import java.util.ArrayList;
-
 import math.Complex;
 import math.Vector2D;
 import ddf.minim.AudioSource;
@@ -9,6 +7,8 @@ import graphics.Renderer;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import util.Pair;
+
+import java.util.ArrayList;
 
 public class ScopeRenderer extends Renderer {
 
@@ -45,6 +45,10 @@ public class ScopeRenderer extends Renderer {
 	@Override
 	public void render() {
 		applet.background(0);
+		applet.pushMatrix();
+		applet.translate(-width / 2, -height / 2);
+		// We're now in top-left corner - actually!
+
 		lBuffer = audioSource.left.toArray();
 		rBuffer = audioSource.right.toArray();
 		sumBuffer = new float[lBuffer.length];
@@ -58,12 +62,11 @@ public class ScopeRenderer extends Renderer {
 		} else {
 			renderNormal();
 		}
+
+		applet.popMatrix();
 	}
 
 	private void renderDivisions() {
-		applet.translate(-width / 2, -height); // we're in TL corner now
-		// TODO actually -height/2 would be top, dunno, there's something weird
-		// with my drawing routines
 		for (int i = 0; i < divisions.size(); i++) {
 			Pair<Vector2D, Vector2D> division = divisions.get(i);
 			renderDivision(division);
@@ -71,34 +74,32 @@ public class ScopeRenderer extends Renderer {
 	}
 
 	private void renderDivision(Pair<Vector2D, Vector2D> division) {
+		applet.stroke(255);
+
 		Vector2D start = division.x;
 		Vector2D end = division.y;
 		Vector2D difference = end.subtract(start);
 		float heading = difference.getHeading();
 		Complex w = Complex.fromPolar(1, heading);
 
-		applet.stroke(255);
 		float d = 0;
 		Complex z = Complex.fromPolar(d, heading); // abs(z) = d, arg(z) =
-													// arg(w)
-		float v = sumBuffer[0];
 		float x0 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
 		float y0 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY());
 
+		applet.pushMatrix();
+
+		applet.rotate(heading);
 		for (int i = 1; i < sumBuffer.length; i++) {
-
-			float x1 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
-			float y1 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY())
-					+ PApplet.map(v, -1, 1, start.getY(), end.getY());
-
+			applet.line(0, 0, width, 0);
+			float x1 = PApplet.map(i, 0, sumBuffer.length, 0, width);
+			float y1 = sumBuffer[i] * 1000; // TODO magic number here
 			applet.line(x0, y0, x1, y1);
-
-			d = PApplet.map(i, 0, sumBuffer.length, 0, 1); // d [0, 1]
-			z = Complex.fromPolar(d, heading); // abs(z) = d, arg(z) = arg(w)
-			v = sumBuffer[i];
 			x0 = x1;
 			y0 = y1;
 		}
+
+		applet.popMatrix();
 	}
 
 	private void renderNormal() {
