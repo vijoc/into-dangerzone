@@ -30,6 +30,7 @@ public class ScopeRenderer extends Renderer {
 		width = applet.width;
 		height = applet.height;
 		divisions = new ArrayList<>();
+
 		Vector2D tlCorner = new Vector2D(0, 0);
 		Vector2D brCorner = new Vector2D(width, height);
 		Pair<Vector2D, Vector2D> mainDiagonal = new Pair<Vector2D, Vector2D>(
@@ -44,10 +45,8 @@ public class ScopeRenderer extends Renderer {
 
 	@Override
 	public void render() {
+
 		applet.background(0);
-		applet.pushMatrix();
-		applet.translate(-width / 2, -height / 2);
-		// We're now in top-left corner - actually!
 
 		lBuffer = audioSource.left.toArray();
 		rBuffer = audioSource.right.toArray();
@@ -62,8 +61,6 @@ public class ScopeRenderer extends Renderer {
 		} else {
 			renderNormal();
 		}
-
-		applet.popMatrix();
 	}
 
 	private void renderDivisions() {
@@ -82,13 +79,15 @@ public class ScopeRenderer extends Renderer {
 		float heading = difference.getHeading();
 		Complex w = Complex.fromPolar(1, heading);
 
+		applet.pushMatrix();
+		applet.translate(-width / 2, -height / 2);
+		// We're now in top-left corner - actually!
+
 		float d = 0;
 		Complex z = Complex.fromPolar(d, heading); // abs(z) = d, arg(z) =
 		float x0 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
 		float y0 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY());
-
-		applet.pushMatrix();
-
+		applet.translate(x0, y0);
 		applet.rotate(heading);
 		for (int i = 1; i < sumBuffer.length; i++) {
 			applet.line(0, 0, width, 0);
@@ -98,7 +97,6 @@ public class ScopeRenderer extends Renderer {
 			x0 = x1;
 			y0 = y1;
 		}
-
 		applet.popMatrix();
 	}
 
