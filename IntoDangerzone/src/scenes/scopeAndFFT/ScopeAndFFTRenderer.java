@@ -52,12 +52,8 @@ public class ScopeAndFFTRenderer extends Renderer {
 		}
 		applet.updatePixels();*/
 		applet.translate(-width/2, -height/2);
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				applet.stroke(255);
-				//applet.point(i, j);
-			}
-		}
+		safshader.set("fft", realSpectrum);
+
 		applet.rect(0, 0, width, height);
 	}
 
