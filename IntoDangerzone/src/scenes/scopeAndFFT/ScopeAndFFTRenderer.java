@@ -5,6 +5,7 @@ import ddf.minim.AudioSource;
 import ddf.minim.analysis.FFT;
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.opengl.PShader;
 import graphics.Renderer;
 
 public class ScopeAndFFTRenderer extends Renderer {
@@ -15,6 +16,7 @@ public class ScopeAndFFTRenderer extends Renderer {
 	private float[] waveform;
 	private FFT spectrum;
 	PGraphics context;
+	PShader safshader;
 
 	int width;
 	int height;
@@ -27,18 +29,19 @@ public class ScopeAndFFTRenderer extends Renderer {
 
 		width = applet.getWidth();
 		height = applet.getHeight();
+		
+		safshader = applet.loadShader("saffrag.glsl", "safvert.glsl");
 	}
 
 	@Override
 	public void render() {
-		applet.loadPixels();
+		applet.shader(safshader);
 		waveform = audioAnalyser.getWaveform(audioSource.bufferSize());
 		int waveformLength = waveform.length;
-
 		spectrum = audioAnalyser.getFft();
 		spectrum.forward(waveform);
 		float[] realSpectrum = spectrum.getSpectrumReal();
-
+		/*applet.loadPixels();		
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				// TODO 2055 -> 255 :D
@@ -47,7 +50,15 @@ public class ScopeAndFFTRenderer extends Renderer {
 								* realSpectrum[j%realSpectrum.length]);
 			}
 		}
-		applet.updatePixels();
+		applet.updatePixels();*/
+		applet.translate(-width/2, -height/2);
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				applet.stroke(255);
+				//applet.point(i, j);
+			}
+		}
+		applet.rect(0, 0, width, height);
 	}
 
 }
