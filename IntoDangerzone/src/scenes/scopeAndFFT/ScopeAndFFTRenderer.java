@@ -53,6 +53,7 @@ public class ScopeAndFFTRenderer extends Renderer {
 		applet.updatePixels();*/
 		applet.translate(-width/2, -height/2);
 		safshader.set("fft", realSpectrum);
+		safshader.set("waveform", waveform);
 
 		applet.rect(0, 0, width, height);
 	}

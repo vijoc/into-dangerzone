@@ -10,5 +10,7 @@ uniform float waveform[];
 void main() {
   /* invert colors */
   /* gl_FragColor = vec4(vec3(1) - vertColor.xyz, 1); */
-  gl_FragColor = vec4(fft[0], fft[1], fft[2], fft[3]);
+  float x = float(1024);
+  float y = float(1024);
+  gl_FragColor = vec4(gl_FragCoord.x/x, gl_FragCoord.y/y, gl_FragCoord.x, 1);
 }
