@@ -2,20 +2,7 @@
 
 uniform mat4 transform;
 attribute vec4 vertex;
-varying vec4 vertColor;
-
-uniform float fft[1024];
-uniform float waveform[1024];
-int x;
-int y;
-vec4 color;
-float colorX;
 
 void main() {
   gl_Position = transform * vertex;
-  
-  x = int(vertex.x*255.0);
-  y = int(vertex.y*255.0);
-  color = vec4(x, y, 1, 1);
-  vertColor = color;
 }
