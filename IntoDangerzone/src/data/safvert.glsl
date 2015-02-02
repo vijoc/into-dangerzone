@@ -13,8 +13,9 @@ float colorX;
 
 void main() {
   gl_Position = transform * vertex;
-  x = int(gl_Position.x);
-  y = int(gl_Position.x);
+  
+  x = int(vertex.x*255.0);
+  y = int(vertex.y*255.0);
   color = vec4(x, y, 1, 1);
   vertColor = color;
 }
