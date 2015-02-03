@@ -1,5 +1,7 @@
 package scenes.gameoflife;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import audio.AudioAnalyser;
@@ -10,7 +12,7 @@ import core.Scene;
 import ddf.minim.AudioSource;
 import processing.core.PApplet;
 
-public class GameOfLifeScene extends Scene {
+public class GameOfLifeScene extends Scene implements KeyEventDispatcher {
 
 	private float generationTimer;
 	private float stepDuration;
@@ -39,7 +41,6 @@ public class GameOfLifeScene extends Scene {
 		super(parent);
 
 		this.beatListener = new BeatListener(audioSource);
-
 
 		gol = new GameOfLife(columns, rows);
 		gol.seedRandom();
@@ -110,7 +111,31 @@ public class GameOfLifeScene extends Scene {
 	@Override
 	public void deactivated() {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent e) {
+		switch (e.getID()) {
+		case KeyEvent.KEY_PRESSED:
+			keyPress(e.getKeyCode());
+			break;
+		}
+		return false;
+	}
+
+	//TODO yes it's duplicate code
+	private void keyPress(int code) {
+		switch (code) {
+		case KeyEvent.VK_SPACE:
+			RuleSet ruleSet = RULE_SETS[rand.nextInt(RULE_SETS.length)];
+			gol.setRuleSet(ruleSet);
+			break;
+		case KeyEvent.VK_B:
+			gol.insertShape(bomb, rand.nextInt(gol.getColumnCount()),
+					rand.nextInt(gol.getRowCount()));
+			break;
+		}
 	}
 
 }
