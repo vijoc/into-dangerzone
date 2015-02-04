@@ -31,6 +31,10 @@ public class ScopeRenderer extends Renderer {
 		height = applet.height;
 		divisions = new ArrayList<>();
 
+		initPairs();
+	}
+
+	private void initPairs() {
 		Vector2D tlCorner = new Vector2D(0, 0);
 		Vector2D brCorner = new Vector2D(width, height);
 		Pair<Vector2D, Vector2D> mainDiagonal = new Pair<Vector2D, Vector2D>(
@@ -62,11 +66,7 @@ public class ScopeRenderer extends Renderer {
 			sumBuffer[i] = lBuffer[i] + rBuffer[i];
 		}
 
-		if (!divisions.isEmpty()) {
-			renderDivisions();
-		} else {
-			renderNormal();
-		}
+		renderDivisions();
 	}
 
 	private void renderDivisions() {
@@ -106,39 +106,20 @@ public class ScopeRenderer extends Renderer {
 		applet.popMatrix();
 	}
 
-	private void renderNormal() {
-		applet.translate(-width / 2, 0);
-		applet.stroke(255);
-
-		applet.translate(0, -height / 4);
-		for (int i = 0; i < lBuffer.length - 1; i++) {
-			float x = PApplet.map(i, 0, lBuffer.length, 0, applet.width);
-			applet.line(x, lBuffer[i] * 1000, x, lBuffer[i + 1] * 1000);
-		}
-		applet.translate(0, height / 2);
-		for (int i = 0; i < rBuffer.length - 1; i++) {
-			float x = PApplet.map(i, 0, rBuffer.length, 0, applet.width);
-			applet.line(x, rBuffer[i] * 1000, x, rBuffer[i + 1] * 1000);
-		}
-		applet.translate(0, -height / 4);
-		for (int i = 0; i < sumBuffer.length - 1; i++) {
-			float x = PApplet.map(i, 0, sumBuffer.length, 0, applet.width);
-			applet.line(x, sumBuffer[i] * 1000, x, sumBuffer[i + 1] * 1000);
-		}
-	}
-
-	public void addPair(Vector2D start, Vector2D stop) {
-		Pair<Vector2D, Vector2D> pair = new Pair<Vector2D, Vector2D>(start,
-				stop);
-		this.divisions.add(pair);
-	}
-
 	public void addPair(Pair<Vector2D, Vector2D> pair) {
 		this.divisions.add(pair);
 	}
 
+	public void addpair() {
+		// TODO
+	}
+
+	public void distributePairs() {
+		// TODO
+	}
+
 	public void removePair() {
-		if (divisions.size() > 1) {
+		if (!divisions.isEmpty()) {
 			divisions.remove(divisions.size() - 1);
 		}
 	}
