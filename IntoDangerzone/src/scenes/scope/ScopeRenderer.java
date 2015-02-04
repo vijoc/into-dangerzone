@@ -55,7 +55,6 @@ public class ScopeRenderer extends Renderer {
 
 	@Override
 	public void render() {
-
 		applet.background(0);
 
 		lBuffer = audioSource.left.toArray();
