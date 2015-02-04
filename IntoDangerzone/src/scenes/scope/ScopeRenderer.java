@@ -124,4 +124,13 @@ public class ScopeRenderer extends Renderer {
 			applet.line(x, sumBuffer[i] * 1000, x, sumBuffer[i + 1] * 1000);
 		}
 	}
+	
+	public void addPair(Vector2D start, Vector2D stop){
+		Pair<Vector2D, Vector2D> pair = new Pair<Vector2D, Vector2D>(start, stop);
+		this.divisions.add(pair);
+	}
+	
+	public void addPair(Pair<Vector2D, Vector2D> pair) {
+		this.divisions.add(pair);
+	}
 }
