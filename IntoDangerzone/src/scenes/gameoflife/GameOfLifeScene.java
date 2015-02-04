@@ -1,6 +1,7 @@
 package scenes.gameoflife;
 
 import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
@@ -106,12 +107,14 @@ public class GameOfLifeScene extends Scene implements KeyEventDispatcher {
 	@Override
 	public void activated() {
 		updateCamera();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.addKeyEventDispatcher(this);
 	}
 
 	@Override
 	public void deactivated() {
-		// TODO Auto-generated method stub
-
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+				.removeKeyEventDispatcher(this);
 	}
 
 	@Override
@@ -124,7 +127,7 @@ public class GameOfLifeScene extends Scene implements KeyEventDispatcher {
 		return false;
 	}
 
-	//TODO yes it's duplicate code
+	// TODO yes it's duplicate code
 	private void keyPress(int code) {
 		switch (code) {
 		case KeyEvent.VK_SPACE:
