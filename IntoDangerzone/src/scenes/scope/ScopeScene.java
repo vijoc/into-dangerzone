@@ -65,6 +65,7 @@ public class ScopeScene extends core.Scene implements KeyEventDispatcher {
 			renderer.addPair(pair);
 			break;
 		case KeyEvent.VK_DOWN:
+			renderer.removePair();
 			break;
 		}
 	}

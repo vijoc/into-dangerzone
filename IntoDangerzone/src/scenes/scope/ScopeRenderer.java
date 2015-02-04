@@ -41,10 +41,11 @@ public class ScopeRenderer extends Renderer {
 		Vector2D bar = new Vector2D(width, 0);
 		Pair<Vector2D, Vector2D> foobar = new Pair<Vector2D, Vector2D>(foo, bar);
 		divisions.add(foobar);
-		
-		Vector2D iddqd = new Vector2D(width/2, 0);
-		Vector2D idkfa = new Vector2D(width/2, height);
-		Pair<Vector2D, Vector2D> doom = new Pair<Vector2D, Vector2D>(iddqd, idkfa);
+
+		Vector2D iddqd = new Vector2D(width / 2, 0);
+		Vector2D idkfa = new Vector2D(width / 2, height);
+		Pair<Vector2D, Vector2D> doom = new Pair<Vector2D, Vector2D>(iddqd,
+				idkfa);
 		divisions.add(doom);
 	}
 
@@ -95,7 +96,8 @@ public class ScopeRenderer extends Renderer {
 		applet.translate(x0, y0);
 		applet.rotate(heading);
 		for (int i = 1; i < sumBuffer.length; i++) {
-			float x1 = PApplet.map(i, 0, sumBuffer.length, 0, difference.getLength());
+			float x1 = PApplet.map(i, 0, sumBuffer.length, 0,
+					difference.getLength());
 			float y1 = sumBuffer[i] * 1000; // TODO magic number here
 			applet.line(x0, y0, x1, y1);
 			x0 = x1;
@@ -124,13 +126,20 @@ public class ScopeRenderer extends Renderer {
 			applet.line(x, sumBuffer[i] * 1000, x, sumBuffer[i + 1] * 1000);
 		}
 	}
-	
-	public void addPair(Vector2D start, Vector2D stop){
-		Pair<Vector2D, Vector2D> pair = new Pair<Vector2D, Vector2D>(start, stop);
+
+	public void addPair(Vector2D start, Vector2D stop) {
+		Pair<Vector2D, Vector2D> pair = new Pair<Vector2D, Vector2D>(start,
+				stop);
 		this.divisions.add(pair);
 	}
-	
+
 	public void addPair(Pair<Vector2D, Vector2D> pair) {
 		this.divisions.add(pair);
+	}
+
+	public void removePair() {
+		if (divisions.size() > 1) {
+			divisions.remove(divisions.size() - 1);
+		}
 	}
 }
