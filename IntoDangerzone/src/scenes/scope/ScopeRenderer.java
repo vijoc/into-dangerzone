@@ -21,6 +21,7 @@ public class ScopeRenderer extends Renderer {
 
 	int width;
 	int height;
+	int scaleFactor;
 	ArrayList<Pair<Vector2D, Vector2D>> divisions;
 
 	public ScopeRenderer(PApplet applet, AudioSource audioSource) {
@@ -30,8 +31,8 @@ public class ScopeRenderer extends Renderer {
 		width = applet.width;
 		height = applet.height;
 		divisions = new ArrayList<>();
-
-		initPairs();
+		scaleFactor = 1000;
+		// initPairs();
 	}
 
 	private void initPairs() {
@@ -90,14 +91,22 @@ public class ScopeRenderer extends Renderer {
 
 		float d = 0;
 		Complex z = Complex.fromPolar(d, heading);
-		float x0 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
-		float y0 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY());
+
+		float x0;
+		float y0;
+		x0 = PApplet.map(z.x(), 0, w.x(), start.getX(), end.getX());
+		if (heading != 0) {
+			y0 = PApplet.map(z.y(), 0, w.y(), start.getY(), end.getY());
+		}
+		else {
+			y0 = PApplet.map(z.y(), 0, 1, start.getY(), end.getY());
+		}
 		applet.translate(x0, y0);
 		applet.rotate(heading);
 		for (int i = 1; i < sumBuffer.length; i++) {
 			float x1 = PApplet.map(i, 0, sumBuffer.length, 0,
 					difference.getLength());
-			float y1 = sumBuffer[i] * 1000; // TODO magic number here
+			float y1 = sumBuffer[i] * scaleFactor;
 			applet.line(x0, y0, x1, y1);
 			x0 = x1;
 			y0 = y1;
@@ -109,8 +118,12 @@ public class ScopeRenderer extends Renderer {
 		this.divisions.add(pair);
 	}
 
-	public void addpair() {
-		// TODO
+	public void addPair() {
+		Vector2D start = new Vector2D(0, parent.height / 3);
+		Vector2D end = new Vector2D(parent.width, parent.height / 3);
+		Pair<Vector2D, Vector2D> pair = new Pair<Vector2D, Vector2D>(start,
+				end);
+		addPair(pair);
 	}
 
 	public void distributePairs() {

@@ -58,11 +58,7 @@ public class ScopeScene extends core.Scene implements KeyEventDispatcher {
 	private void keyPress(int code) {
 		switch (code) {
 		case KeyEvent.VK_UP:
-			Vector2D start = new Vector2D(0, parent.height / 3);
-			Vector2D end = new Vector2D(parent.width, 2 * parent.height / 3);
-			Pair<Vector2D, Vector2D> pair = new Pair<Vector2D, Vector2D>(start,
-					end);
-			renderer.addPair(pair);
+			renderer.addPair();
 			break;
 		case KeyEvent.VK_DOWN:
 			renderer.removePair();
