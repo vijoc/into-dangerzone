@@ -31,11 +31,13 @@ public class ScopeAndFFTRenderer extends Renderer {
 		height = applet.getHeight();
 
 		safshader = applet.loadShader("saffrag.glsl", "safvert.glsl");
+		applet.noStroke();
 	}
 
 	@Override
 	public void render() {
 		applet.shader(safshader);
+		applet.background(0);
 		waveform = audioAnalyser.getWaveform(audioSource.bufferSize());
 		int waveformLength = waveform.length;
 		spectrum = audioAnalyser.getFft();
@@ -43,11 +45,14 @@ public class ScopeAndFFTRenderer extends Renderer {
 		float[] realSpectrum = spectrum.getSpectrumReal();
 
 		applet.translate(-width / 2, -height / 2);
+		
+		safshader.set("resolution", (float) width, (float) height);
+		safshader.set("bufferLength", waveformLength);
 		safshader.set("fft", realSpectrum);
 		safshader.set("waveform", waveform);
-		safshader.set("width", (float) width);
-		safshader.set("height", (float) height);
-
+		//safshader.set("width", (float) width);
+		//safshader.set("height", (float) height);
+		applet.rect(0, 0, width, height);
 	}
 
 }
