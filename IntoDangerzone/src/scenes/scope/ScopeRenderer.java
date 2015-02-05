@@ -63,12 +63,12 @@ public class ScopeRenderer extends Renderer {
 
 	private void renderDivisions() {
 		for (int i = 0; i < divisions.size(); i++) {
-			Pair<Vector2D, Vector2D> division = divisions.get(i);
-			renderDivision(division);
+			renderDivision(i);
 		}
 	}
 
-	private void renderDivision(Pair<Vector2D, Vector2D> division) {
+	private void renderDivision(int divisionIndex) {
+		Pair<Vector2D, Vector2D> division = divisions.get(divisionIndex);
 		applet.stroke(255);
 		if (renderMode == RenderMode.INVERSE) {
 			applet.stroke(0);
@@ -97,10 +97,24 @@ public class ScopeRenderer extends Renderer {
 		}
 		applet.translate(x0, y0);
 		applet.rotate(heading);
-		for (int i = 1; i < sumBuffer.length; i++) {
-			float x1 = PApplet.map(i, 0, sumBuffer.length, 0,
+		float[] buffer;
+		switch (divisions.size()) {
+		case 1:
+			buffer = lBuffer;
+			break;
+		case 2:
+			buffer = rBuffer;
+			break;
+		case 3:
+			buffer = sumBuffer;
+			break;
+		default:
+			return;
+		}
+		for (int i = 1; i < buffer.length; i++) {
+			float x1 = PApplet.map(i, 0, buffer.length, 0,
 					difference.getLength());
-			float y1 = sumBuffer[i] * scaleFactor;
+			float y1 = buffer[i] * scaleFactor;
 			applet.line(x0, y0, x1, y1);
 			x0 = x1;
 			y0 = y1;
@@ -151,7 +165,7 @@ public class ScopeRenderer extends Renderer {
 	}
 
 	public void increaseScaling() {
-		if (scaleFactor < maximumScaleFactor){
+		if (scaleFactor < maximumScaleFactor) {
 			scaleFactor *= 1.1;
 		}
 	}
