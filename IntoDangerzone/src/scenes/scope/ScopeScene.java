@@ -57,11 +57,20 @@ public class ScopeScene extends core.Scene implements KeyEventDispatcher {
 
 	private void keyPress(int code) {
 		switch (code) {
-		case KeyEvent.VK_UP:
+		case KeyEvent.VK_RIGHT:
 			renderer.addPair();
 			break;
-		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_LEFT:
 			renderer.removePair();
+			break;
+		case KeyEvent.VK_UP:
+			renderer.increaseScaling();
+			break;
+		case KeyEvent.VK_DOWN:
+			renderer.decreaseScaling();
+			break;
+		case KeyEvent.VK_SPACE:
+			renderer.flipRender();
 			break;
 		}
 	}
