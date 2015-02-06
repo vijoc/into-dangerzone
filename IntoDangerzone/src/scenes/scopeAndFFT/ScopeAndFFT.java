@@ -40,12 +40,28 @@ public class ScopeAndFFT {
 		spectrumBufferLength = realSpectrum.length;
 	}
 	
+	public void changeWaveformScalingFactor(float step) {
+		waveformScalingFactor = clamp(waveformScalingFactor + step, 
+				MIN_WAVEFORM_SCALING_FACTOR, MAX_WAVEFORM_SCALING_FACTOR);
+	}
+	
+	public void changeSpectrumScalingFactor(float step) {
+		spectrumScalingFactor = clamp(spectrumScalingFactor + step,
+				MIN_SPECTRUM_SCALING_FACTOR, MAX_WAVEFORM_SCALING_FACTOR);
+	}
+	
 	public float getWaveform(int index) {
-		return 2055 * waveform[index % waveformBufferLength];
+		return waveformScalingFactor * 2055 * waveform[index % waveformBufferLength];
 	}
 	
 	public float getSpectrum(int index) {
-		return 255 * realSpectrum[index % spectrumBufferLength];
+		return spectrumScalingFactor * 255 * realSpectrum[index % spectrumBufferLength];
+	}
+	
+	private static float clamp(float value, float min, float max) {
+		if(value < min) return min;
+		if(value > max) return max;
+		return value;
 	}
 	
 }

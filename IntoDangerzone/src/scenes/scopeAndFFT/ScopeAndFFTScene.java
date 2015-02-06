@@ -1,17 +1,20 @@
 package scenes.scopeAndFFT;
 
-import audio.AudioAnalyser;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+
 import processing.core.PApplet;
 import ddf.minim.AudioSource;
-import ddf.minim.analysis.FFT;
 
-public class ScopeAndFFTScene extends core.Scene {
+public class ScopeAndFFTScene extends core.Scene implements KeyEventDispatcher {
+	
+	public static final float SPECTRUM_SCALING_FACTOR_STEP = 0.1f;
+	public static final float WAVEFORM_SCALING_FACTOR_STEP = 0.1f;
 
 	private ScopeAndFFTRenderer renderer;
 	private ScopeAndFFT model;
 	
-
-
 	public ScopeAndFFTScene(PApplet applet,
 			AudioSource audioSource) {
 		super(applet);
@@ -31,14 +34,42 @@ public class ScopeAndFFTScene extends core.Scene {
 
 	@Override
 	public void activated() {
-		// TODO Auto-generated method stub
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+			.addKeyEventDispatcher(this);
 		
 	}
 
 	@Override
 	public void deactivated() {
-		// TODO Auto-generated method stub
+		KeyboardFocusManager.getCurrentKeyboardFocusManager()
+			.removeKeyEventDispatcher(this);
 		
+	}
+
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent e) {
+		switch(e.getID()) {
+		case KeyEvent.KEY_PRESSED:
+			keyPress(e.getKeyCode());
+		}
+		return false;
+	}
+	
+	private void keyPress(int keycode) {
+		switch(keycode) {
+		case KeyEvent.VK_DOWN:
+			model.changeSpectrumScalingFactor(-SPECTRUM_SCALING_FACTOR_STEP);
+			break;
+		case KeyEvent.VK_UP:
+			model.changeSpectrumScalingFactor(SPECTRUM_SCALING_FACTOR_STEP);
+			break;
+		case KeyEvent.VK_LEFT:
+			model.changeWaveformScalingFactor(-WAVEFORM_SCALING_FACTOR_STEP);
+			break;
+		case KeyEvent.VK_RIGHT:
+			model.changeWaveformScalingFactor(WAVEFORM_SCALING_FACTOR_STEP);
+			break;
+		}
 	}
 
 }
