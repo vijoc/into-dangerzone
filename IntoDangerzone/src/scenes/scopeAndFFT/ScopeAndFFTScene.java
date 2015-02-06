@@ -3,21 +3,25 @@ package scenes.scopeAndFFT;
 import audio.AudioAnalyser;
 import processing.core.PApplet;
 import ddf.minim.AudioSource;
+import ddf.minim.analysis.FFT;
 
 public class ScopeAndFFTScene extends core.Scene {
 
 	private ScopeAndFFTRenderer renderer;
+	private ScopeAndFFT model;
+	
+
 
 	public ScopeAndFFTScene(PApplet applet,
 			AudioSource audioSource) {
 		super(applet);
-		renderer = new ScopeAndFFTRenderer(applet, audioSource);
+		this.model = new ScopeAndFFT(parent, audioSource);
+		renderer = new ScopeAndFFTRenderer(parent, model);
 	}
 
 	@Override
 	public void update(float dtSeconds) {
-		// TODO Auto-generated method stub
-		
+		model.update();		
 	}
 
 	@Override
