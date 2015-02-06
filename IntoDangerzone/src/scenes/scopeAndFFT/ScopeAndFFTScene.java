@@ -69,6 +69,8 @@ public class ScopeAndFFTScene extends core.Scene implements KeyEventDispatcher {
 		case KeyEvent.VK_RIGHT:
 			model.changeWaveformScalingFactor(WAVEFORM_SCALING_FACTOR_STEP);
 			break;
+		case KeyEvent.VK_SPACE:
+			model.setFolding(!model.getFolding());
 		}
 	}
 

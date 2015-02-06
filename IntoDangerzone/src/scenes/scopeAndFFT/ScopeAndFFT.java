@@ -19,11 +19,13 @@ public class ScopeAndFFT {
 	private float[] waveform;
 	private float[] realSpectrum;
 	
-	private float waveformScalingFactor = 1.0f;
+	private float waveformScalingFactor = 5.0f;
 	private float spectrumScalingFactor = 1.0f;
 	
 	private int waveformBufferLength;
 	private int spectrumBufferLength;
+	
+	private boolean folding = false;
 	
 	public ScopeAndFFT(PApplet applet, AudioSource audioSource) {
 		this.audioSource = audioSource;
@@ -51,17 +53,36 @@ public class ScopeAndFFT {
 	}
 	
 	public float getWaveform(int index) {
-		return waveformScalingFactor * 2055 * waveform[index % waveformBufferLength];
+		return fold(waveformScalingFactor * waveform[index % waveformBufferLength],
+				1.0f);
 	}
 	
 	public float getSpectrum(int index) {
-		return spectrumScalingFactor * 255 * realSpectrum[index % spectrumBufferLength];
+		return fold(spectrumScalingFactor * realSpectrum[index % spectrumBufferLength],
+				1.0f);
+	}
+	
+	public void setFolding(boolean val) {
+		folding = val;
+	}
+	
+	public boolean getFolding() {
+		return folding;
 	}
 	
 	private static float clamp(float value, float min, float max) {
 		if(value < min) return min;
 		if(value > max) return max;
 		return value;
+	}
+	
+	private float fold(float value, float threshold) {
+		if(!folding) return value;
+		int quotient = (int) (value / threshold);
+		if(quotient % 2 == 0) // positive
+			return value - threshold*quotient;
+		else
+			return threshold - (value - quotient * threshold);
 	}
 	
 }
